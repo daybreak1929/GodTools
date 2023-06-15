@@ -67,7 +67,7 @@ namespace GodTools.Code
                 }
                 if (!pActor.canAttackTarget(target))
                 {
-                    if(!pActor.targetsToIgnore.Contains(target)) pActor.targetsToIgnore.Add(target);
+                    if(!pActor._targets_to_ignore.Contains(target)) pActor._targets_to_ignore.Add(target);
                     return BehResult.Stop;
                 }
                 pActor.attackTarget = target;

@@ -112,7 +112,7 @@ namespace GodTools.Game
             {
                 Building building = Game.instance.input_controller.curr_main_object.b;
                 title.text = "";
-                icon.sprite = building.s_main_sprite==null?building.animData.main[0]:building.s_main_sprite;
+                icon.sprite = building.last_main_sprite == null?building.animData.main[0]:building.last_main_sprite;
                 icon.transform.localScale = Vector3.one;
                 health.setBar(building.data.health, building.getMaxHealth(), "/" + building.getMaxHealth().ToString(), false, false, true, false);
                 if (building.data.hasFlag(C.flag_in_progress))

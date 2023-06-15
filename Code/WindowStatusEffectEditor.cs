@@ -25,8 +25,8 @@ namespace GodTools.Code
                 Actor actor = Config.selectedUnit;
                 WindowStatusEffectEditor.instance.display_status_button.load(status_button.data);
                 WindowStatusEffectEditor.instance.selected_status_button = status_button;
-                WindowStatusEffectEditor.instance.status_effect_time_text.text = ((int)status_button.data.timer) + "s";
-                WindowStatusEffectEditor.instance.status_effect_time_slider.value = Mathf.Log10(status_button.data.timer) / 5;
+                WindowStatusEffectEditor.instance.status_effect_time_text.text = ((int)(float)status_button.data.getRemainingTime()) + "s";
+                WindowStatusEffectEditor.instance.status_effect_time_slider.value = Mathf.Log10((float)status_button.data.getRemainingTime()) / 5;
                 WindowStatusEffectEditor.instance.reload_statuses();
             }));
             if (WindowStatusEffectEditor.instance.display_status_button.data == null)
@@ -79,7 +79,7 @@ namespace GodTools.Code
                 }
                 else
                 {
-                    selected_actor.addStatusEffect(data.asset.id, data.timer);
+                    selected_actor.addStatusEffect(data.asset.id, (float)data.getRemainingTime());
                 }
                 selected_actor.updateStatusEffects(0);
                 WindowStatusEffectEditor.instance.reload_statuses();
@@ -262,18 +262,18 @@ namespace GodTools.Code
 
                 if(new_timer > status_data.asset.duration)
                 {
-                    status_data.timer = status_data.asset.duration > new_timer ? status_data.asset.duration : new_timer;
+                    status_data.setTimer(status_data.asset.duration > new_timer ? status_data.asset.duration : new_timer);
                     Actor actor = instance.actor;
                     if (actor.hasStatus(status_data.asset.id))
                     {
-                        actor.activeStatus_dict[status_data.asset.id].timer = status_data.timer;
+                        actor.activeStatus_dict[status_data.asset.id].setTimer((float)status_data.getRemainingTime());
                     }
                 }
                 else
                 {
                     instance.status_effect_time_slider.value = Mathf.Log10(status_data.asset.duration)/5;
                 }
-                slider_val_text.text = ((int)status_data.timer) + "s";
+                slider_val_text.text = ((int)status_data.getRemainingTime()) + "s";
 
             }));
 
@@ -301,7 +301,7 @@ namespace GodTools.Code
             basic_statuses.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(10, 0);
             advance_statuses.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(10, 0);
             clear_statuses();
-            instance.status_effect_time_slider.value = Mathf.Log10(instance.display_status_button.data.timer) / 5;
+            instance.status_effect_time_slider.value = Mathf.Log10((float)instance.display_status_button.data.getRemainingTime()) / 5;
             this.avatar_element.avatarLoader.load(actor);
             load_current_actor_statuses();
         }

@@ -181,15 +181,15 @@ namespace GodTools.Code
 			if (__instance.kingdom.cities.Count == 1) __result++;
         }
         [HarmonyPostfix]
-        [HarmonyPatch(typeof(BatchBuildings),nameof(BatchBuildings.updateMain))]
+        [HarmonyPatch(typeof(BatchBuildings),nameof(BatchBuildings.updateStatusEffects))]
 		public static void update_progress(BatchBuildings __instance)
         {
 			if (__instance._list == null) return; // check cur container make _list=null or simplelist
 			for(int i = 0; i < __instance._list.Count; i++)
             {
-				__instance._building = __instance._list[i];
-				if (!__instance._building.data.hasFlag(C.flag_in_progress)) continue;
-				__instance._building.updateProgress();
+				Building building = __instance._list[i];
+				if (!building.data.hasFlag(C.flag_in_progress)) continue;
+				building.updateProgress();
             }
         }
     }

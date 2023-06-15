@@ -31,8 +31,8 @@ namespace GodTools.Code
             //Main.log("Spawn Unit:" + custom_str);
             if (building.kingdom.capital.getPopulationTotal() >= building.kingdom.capital.getPopulationMaximum()) return false;
 
-            WorldTile spawn_tile = building.frontTiles.Count == 0 ? building.currentTile : building.frontTiles.GetRandom();
-            Actor spawned_unit = World.world.units.spawnNewUnit(custom_str, spawn_tile, 0);
+            WorldTile spawn_tile = building.currentTile;
+            Actor spawned_unit = World.world.units.spawnNewUnit(custom_str, spawn_tile, true, 0);
 
             if (spawned_unit == null) return false;
 

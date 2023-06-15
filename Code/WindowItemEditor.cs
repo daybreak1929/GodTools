@@ -557,7 +557,7 @@ namespace GodTools.Code
                 list.Sort((a, b) => { return a.id.CompareTo(b.id); });
             }
             valid_modifiers.Remove("normal");
-            actor.item_sprite_dirty = true;
+            actor.dirty_sprite_item = true;
             actor.setStatsDirty();
         }
         void OnDisable()
