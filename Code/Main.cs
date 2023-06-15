@@ -1,0 +1,71 @@
+using System;
+using NCMS;
+using UnityEngine;
+using ReflectionUtility;
+using HarmonyLib;
+using UnityEngine.UI;
+using UnityEngine.Events;
+using GodTools.Game;
+
+namespace GodTools.Code
+{
+    public class Mod
+    {
+        public static ModDeclaration.Info Info;
+        public static GameObject GameObject;
+    }
+    [ModEntry]
+    class Main : MonoBehaviour{
+        private bool initialized = false;
+        private PosShowEffect last_pos_show;
+
+        public PosShowEffect actor_select_effect;
+        public static BuildingProgressLibrary building_progresses;
+        public static Main instance;
+        public static Game.Game game = new Game.Game();
+        public SimpleEffectController<PosShowEffect> pos_show_effect_controller = new SimpleEffectController<PosShowEffect>(Resources.Load<GameObject>("effects/PrefabUnitSelectionEffect"));
+        public static void warn(string str)
+        {
+            UnityEngine.Debug.LogWarning($"[{Mod.Info.Name}]:{str}");
+        }
+        public static void log(string str)
+        {
+            UnityEngine.Debug.Log($"[{Mod.Info.Name}]:{str}");
+        }
+        void Update()
+        {
+            if (!initialized)
+            {
+                if(GameObject.Find("/Canvas Container Main/Canvas - Windows/windows/welcome/Background/BottomBg")==null) return;
+                initialized = true;
+                instance = this;
+                foreach(NCMod mod in NCMS.ModLoader.Mods)
+                {
+                    if(mod.name == C.MOD_NAME)
+                    {
+                        Mod.Info = (ModDeclaration.Info)AccessTools.Constructor(typeof(ModDeclaration.Info), new Type[] { typeof(NCMod) }, false).Invoke(new object[] { mod });
+                        Mod.GameObject = this.gameObject;
+                        break;
+                    }
+                }
+
+                AllPatch.patch_all(C.PATCH_ID);
+                MyLocalizedTextManager.init();
+                MyActorJobs.init();
+                MyActorTasks.init();
+                MyCityJobs.init();
+                MyKingdomJobs.init();
+                MyPowers.init();
+                MyStatusEffects.init();
+                MyTab.create_tab();
+                MyTab.add_buttons();
+                MyTab.apply_buttons();
+                game.init();
+                building_progresses = new BuildingProgressLibrary();
+                AssetManager.instance.add(building_progresses, nameof(building_progresses));
+            }
+            game.update(Time.fixedDeltaTime);
+            pos_show_effect_controller.update(Time.fixedDeltaTime * C.pos_show_effect_time_scale);
+        }
+    }
+}
