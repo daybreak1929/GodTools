@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using ReflectionUtility;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -43,6 +45,7 @@ namespace GodTools.Code
             get { return Config.selectedUnit; }
         }
         private static bool initialized = false;
+        private static bool first_open = true;
         public static WindowStatusEffectEditor instance;
         private StatusEffectButton prefab_status_button;
         private UiUnitAvatarElement avatar_element;
@@ -59,6 +62,7 @@ namespace GodTools.Code
             add_entry_button(creature_window);
 
             ScrollWindow scroll_window = NCMS.Utils.Windows.CreateNewWindow(C.status_effect_editor_id, "人物状态编辑器");
+            
             //scroll_window.gameObject.SetActive(false);
             instance = scroll_window.gameObject.AddComponent<WindowStatusEffectEditor>();
             Transform background_transform = scroll_window.transform.Find("Background");
@@ -179,6 +183,11 @@ namespace GodTools.Code
             advance_statuses_text.transform.SetParent(content_transform);
             instance.advance_statuses.title = advance_statuses_text;
 
+            
+            RectTransform basic_statuses_rect = basic_statuses.GetComponent<RectTransform>();
+            RectTransform advance_statuses_rect = advance_statuses.GetComponent<RectTransform>(); 
+
+            
             foreach (StatusEffect status in AssetManager.status.list)
             {
                 if(status.tier == StatusTier.Basic)
@@ -190,10 +199,7 @@ namespace GodTools.Code
                     instance.advance_statuses.add_status(status, instance.prefab_status_button);
                 }
             }
-            RectTransform basic_statuses_rect = basic_statuses.GetComponent<RectTransform>();
-            RectTransform advance_statuses_rect = advance_statuses.GetComponent<RectTransform>(); 
-
-
+            
 
             content_transform.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 197+ (instance.basic_statuses.statuses.Count - 1) / 6 * 28 + (instance.advance_statuses.statuses.Count - 1) / 6 * 28);
 
@@ -264,9 +270,25 @@ namespace GodTools.Code
                 {
                     status_data.setTimer(status_data.asset.duration > new_timer ? status_data.asset.duration : new_timer);
                     Actor actor = instance.actor;
-                    if (actor.hasStatus(status_data.asset.id))
+                    
+                    if (actor.activeStatus_dict!=null && actor.activeStatus_dict.TryGetValue(status_data.asset.id, out StatusEffectData status_data_in_actor))
                     {
-                        actor.activeStatus_dict[status_data.asset.id].setTimer((float)status_data.getRemainingTime());
+                        status_data_in_actor.setTimer((float)status_data.getRemainingTime());
+                    }
+                    else if(Main.CW_loaded)
+                    {
+                        try
+                        {
+                            object cw_status = System.Type.GetType("CW_Actor")?.GetMethod("get_status")
+                                ?.Invoke(actor, new object[] { status_data.asset.id });
+
+                            cw_status.GetType().GetField("left_time", BindingFlags.Public | BindingFlags.Instance)
+                                .SetValue(cw_status, (float)status_data.getRemainingTime());
+                        }
+                        catch (NullReferenceException e)
+                        {
+                            // ignored
+                        }
                     }
                 }
                 else
@@ -277,6 +299,7 @@ namespace GodTools.Code
 
             }));
 
+            scroll_window.gameObject.SetActive(false);
             initialized = true;
         }
 
@@ -298,6 +321,10 @@ namespace GodTools.Code
         void OnEnable()
         {
             if (actor == null || !initialized) return;
+            if (first_open) {
+                
+                first_open = false;
+            }
             basic_statuses.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(10, 0);
             advance_statuses.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(10, 0);
             clear_statuses();
@@ -337,9 +364,50 @@ namespace GodTools.Code
         {
             if (actor.activeStatus_dict != null)
             {
-                foreach(StatusEffectData status in actor.activeStatus_dict.Values)
+                foreach (StatusEffectData status in actor.activeStatus_dict.Values)
                 {
                     load_status_button(status);
+                }
+            }
+
+            if (Main.CW_loaded)
+            {
+                try
+                { // TODO: 完善
+                    Type cw_actor_type = Type.GetType("启源核心.Cultivation_Way.Core.CW_Actor");
+                    Type cw_status_effect_type =
+                        Type.GetType(
+                            "Cultivation_Way.Core.CW_StatusEffect, 启源核心, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null");
+                    Type cw_status_effect_data_type =
+                        Type.GetType(
+                            "Cultivation_Way.Core.CW_StatusEffectData, 启源核心, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null");
+                    Dictionary<string, object> cw_status_dict =
+                        (Dictionary<string, object>)(cw_actor_type
+                            .GetField("statuses", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
+                            .GetValue(actor));
+                    foreach (object cw_status_data in cw_status_dict.Values)
+                    {
+                        if (!(bool)cw_status_effect_data_type.GetField("finished")
+                                .GetValue(cw_status_data))
+                            continue;
+
+                        object asset = cw_status_effect_data_type.GetField("status_asset")
+                            .GetValue(cw_status_data);
+                        string asset_id =
+                            cw_status_effect_type.GetField("id").GetValue(asset) as string;
+
+                        StatusEffectData status_data_to_show =
+                            new StatusEffectData(actor, AssetManager.status.get(asset_id));
+                        status_data_to_show.setTimer((float)cw_status_effect_data_type
+                            .GetField("left_time")
+                            .GetValue(cw_status_data));
+
+                        load_status_button(status_data_to_show);
+                    }
+                }
+                catch (Exception e)
+                {
+                    // ignored
                 }
             }
         }

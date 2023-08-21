@@ -9,6 +9,7 @@ namespace GodTools
     internal class C
     {
         public const string MOD_NAME = "GodTools";
+        public const string CW_MOD_NAME = "启源核心";
         public const string PATCH_ID = "inmny.GodTools";
         public const string _default = "gt_default";
         public const string first_in = "first_in";

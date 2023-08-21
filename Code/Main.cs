@@ -20,6 +20,7 @@ namespace GodTools.Code
         private PosShowEffect last_pos_show;
 
         public PosShowEffect actor_select_effect;
+        public static bool CW_loaded = false;
         public static BuildingProgressLibrary building_progresses;
         public static Main instance;
         public static Game.Game game = new Game.Game();
@@ -45,7 +46,10 @@ namespace GodTools.Code
                     {
                         Mod.Info = (ModDeclaration.Info)AccessTools.Constructor(typeof(ModDeclaration.Info), new Type[] { typeof(NCMod) }, false).Invoke(new object[] { mod });
                         Mod.GameObject = this.gameObject;
-                        break;
+                    }
+                    else if (mod.name == C.CW_MOD_NAME)
+                    {
+                        CW_loaded = true;
                     }
                 }
 
