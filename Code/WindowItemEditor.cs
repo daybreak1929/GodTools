@@ -145,7 +145,6 @@ namespace GodTools.Code
             if (initialized) return;
             add_entry_button(creature_window);
             ScrollWindow scroll_window = NCMS.Utils.Windows.CreateNewWindow(C.item_editor_id, "装备编辑器");
-            //scroll_window.gameObject.SetActive(false);
             instance = scroll_window.gameObject.AddComponent<WindowItemEditor>();
             Transform background_transform = scroll_window.transform.Find("Background");
 
@@ -517,6 +516,7 @@ namespace GodTools.Code
             instance.new_item_button_prefab = new_item.GetComponent<NewItemButton>();
             instance.pool_new_item = new ObjectPoolGenericMono<NewItemButton>(instance.new_item_button_prefab, item_display_grid_transform);
 
+            scroll_window.gameObject.SetActive(false);
             initialized = true;
         }
 
