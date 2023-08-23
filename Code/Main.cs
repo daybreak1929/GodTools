@@ -23,6 +23,7 @@ namespace GodTools.Code
         public static bool CW_loaded = false;
         public static BuildingProgressLibrary building_progresses;
         public static Main instance;
+        public static Transform prefab_library;
         public static Game.Game game = new Game.Game();
         public SimpleEffectController<PosShowEffect> pos_show_effect_controller = new SimpleEffectController<PosShowEffect>(Resources.Load<GameObject>("effects/PrefabUnitSelectionEffect"));
         public static void warn(string str)
@@ -40,6 +41,10 @@ namespace GodTools.Code
                 if(GameObject.Find("/Canvas Container Main/Canvas - Windows/windows/welcome/Background/BottomBg")==null) return;
                 initialized = true;
                 instance = this;
+                prefab_library = new GameObject("Prefabs").transform;
+                prefab_library.SetParent(transform);
+                prefab_library.localPosition = Vector3.positiveInfinity;
+                
                 foreach(NCMod mod in NCMS.ModLoader.Mods)
                 {
                     if(mod.name == C.MOD_NAME)
@@ -61,6 +66,7 @@ namespace GodTools.Code
                 MyKingdomJobs.init();
                 MyPowers.init();
                 MyStatusEffects.init();
+                MyTooltips.init();
                 MyTab.create_tab();
                 MyTab.add_buttons();
                 MyTab.apply_buttons();

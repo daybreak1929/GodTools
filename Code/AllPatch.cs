@@ -184,12 +184,12 @@ namespace GodTools.Code
         [HarmonyPatch(typeof(BatchBuildings),nameof(BatchBuildings.updateStatusEffects))]
 		public static void update_progress(BatchBuildings __instance)
         {
-			if (__instance._list == null) return; // check cur container make _list=null or simplelist
+			if (__instance._list == null) return;
 			for(int i = 0; i < __instance._list.Count; i++)
             {
 				Building building = __instance._list[i];
 				if (!building.data.hasFlag(C.flag_in_progress)) continue;
-				building.updateProgress();
+				building.update_progress();
             }
         }
     }

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace GodTools.Code
 {
-    internal class MyStatusEffects
+    internal static class MyStatusEffects
     {
         public static void init()
         {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GodTools.Code
 {
-    internal class MyCityJobs
+    internal static class MyCityJobs
     {
         public static void init()
         {

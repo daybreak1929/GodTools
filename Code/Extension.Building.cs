@@ -8,7 +8,7 @@ namespace GodTools.Extension
 {
     internal static class BuildingExtension
     {
-        public static void addProgress(this Building building, string progress_id, string custom_str="", float custom_val=0)
+        public static void add_progress(this Building building, string progress_id, string custom_str="", float custom_val=0)
         {
             BuildingProgressAsset progress_asset = Main.building_progresses.get(progress_id);
             if (!building.data.hasFlag(C.flag_in_progress)) { building.data.addFlag(C.flag_in_progress); building.data.set(C.status_in_progress, progress_asset.progress); }
@@ -25,7 +25,7 @@ namespace GodTools.Extension
             building.data.set(C.progress_free_val, custom_val);
            
         }
-        public static void updateProgress(this Building building)
+        public static void update_progress(this Building building)
         {
             building.data.get(C.status_in_progress, out float cur_progress, 999);
             cur_progress -= World.world.elapsed;

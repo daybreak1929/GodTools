@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GodTools.Code
 {
-    internal class MyLocalizedTextManager
+    internal static class MyLocalizedTextManager
     {
         public static void init()
         {

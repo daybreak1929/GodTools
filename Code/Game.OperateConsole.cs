@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using GodTools.Extension;
+using GodTools.Game.UI;
+
 namespace GodTools.Game
 {
     internal class OperateConsole : MonoBehaviour
@@ -14,6 +16,7 @@ namespace GodTools.Game
         private GameObject special_container;
         private GameObject common_container;
         private GameObject map_container;
+        private ResourceDisplay resource_display;
         public void init()
         {
             this.transform.localPosition = new Vector3(0, 0);
@@ -22,13 +25,14 @@ namespace GodTools.Game
             exit_button.transform.localPosition = new Vector3(860, 480);
             exit_button.transform.localScale = new Vector3(0.8f, 0.8f);
 
-            GameObject top = new GameObject("Top", typeof(Image));
+            GameObject top = new GameObject("Top", typeof(Image), typeof(ResourceDisplay));
             top.transform.SetParent(this.transform);
             top.GetComponent<Image>().sprite = Helper.get_button();
             top.GetComponent<Image>().type = Image.Type.Sliced;
             top.GetComponent<RectTransform>().sizeDelta = new Vector2(1700, 60);
             top.transform.localPosition = new Vector3(-52.2f, 480);
             top.transform.localScale = new Vector3(1, 1);
+            resource_display = top.GetComponent<ResourceDisplay>();
 
             GameObject modes = new GameObject("Modes", typeof(Image));
             modes.transform.SetParent(this.transform);
@@ -165,6 +169,7 @@ namespace GodTools.Game
             if (Game.instance.input_controller.curr_main_object == null || !Game.instance.input_controller.curr_main_object.isAlive()) return;
             update_common_container(Game.instance.input_controller.curr_main_object);
             update_special_container(Game.instance.input_controller.curr_main_object);
+            resource_display.update();
         }
 
         private void add_diplomacy_buttons()
@@ -205,7 +210,7 @@ namespace GodTools.Game
                         {
                             if (obj.objectType != MapObjectType.Building || obj.b.asset != Game.instance.input_controller.curr_main_object.b.asset) continue;
 
-                            obj.b.addProgress(C.progress_spawn, actor_asset.id);
+                            obj.b.add_progress(C.progress_spawn, actor_asset.id);
                         }
                     }), C.wait);
                 add_building_button("Hall_"+actor_asset.race, citizen_produce);
@@ -279,6 +284,9 @@ namespace GodTools.Game
                 {
                     case nameof(SB.type_hall):
                         common_container.GetComponent<ButtonContainerController>().switch_to_page("Hall_" + curr_main_object.b.asset.race);
+                        break;
+                    case nameof(SB.type_house):
+                        common_container.GetComponent<ButtonContainerController>().switch_to_container("House_"+curr_main_object.b.asset.race);
                         break;
                 }
             }

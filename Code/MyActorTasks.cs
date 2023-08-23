@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GodTools.Code
 {
-    internal class MyActorTasks
+    internal static class MyActorTasks
     {
         public static void init()
         {

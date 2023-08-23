@@ -12,6 +12,7 @@ namespace GodTools
         public const string CW_MOD_NAME = "启源核心";
         public const string PATCH_ID = "inmny.GodTools";
         public const string _default = "gt_default";
+        public const string mod_prefix = "gt_";
         public const string first_in = "first_in";
         public const string GT_force_attack = "GT_ForceAttack";
         public const string GT_about_this = "GT_AboutThis";
@@ -71,9 +72,11 @@ namespace GodTools
         public const string task_construct_new_building = "gt_construct_building";
         public const string job_player_kingdom = "simple_player_kingdom";
         public const string job_player_city = "simple_player_city";
-
+        
         public const string progress_spawn = "spawn_unit";
         public static readonly string progress_spawn_localized = progress_spawn + localied_postfix;
+
+        public static readonly string action_with_cost_tooltip = mod_prefix + "action_with_cost";
 
         public const string localized_part_actor_asset = "$actor$";
     }

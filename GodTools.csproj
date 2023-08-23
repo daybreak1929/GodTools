@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -197,6 +198,7 @@
     <Compile Include="Code\Game.InfoDisplayer.cs" />
     <Compile Include="Code\Game.InputController.cs" />
     <Compile Include="Code\Game.ObjectRectSelector.cs" />
+    <Compile Include="Code\Game.UI.ResourceDisplay.cs" />
     <Compile Include="Code\MyActorJobs.cs" />
     <Compile Include="Code\Helper.cs" />
     <Compile Include="Code\Main.cs" />
@@ -212,6 +214,8 @@
     <Compile Include="Code\Game.PosShowEffect.cs" />
     <Compile Include="Code\Game.RectSelector.cs" />
     <Compile Include="Code\Game.SimpleEffectController.cs" />
+    <Compile Include="Code\MyTooltips.cs" />
+    <Compile Include="Code\Prefabs.cs" />
     <Compile Include="Code\WindowCultureTechEditor.cs" />
     <Compile Include="Code\WindowItemEditor.cs" />
     <Compile Include="Code\WindowStatusEffectEditor.cs" />

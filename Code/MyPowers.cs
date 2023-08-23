@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GodTools.Code
 {
-    internal class MyPowers
+    internal static class MyPowers
     {
         public static Dictionary<string, PowerButtonClickAction> post_actions = new Dictionary<string, PowerButtonClickAction>();
         public static void init()
