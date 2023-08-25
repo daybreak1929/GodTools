@@ -14,32 +14,7 @@ namespace GodTools.Code
         {
             Harmony.CreateAndPatchAll(typeof(AllPatch), id);
         }
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(CultureWindow), "OnEnable")]
-        public static void culture_tech_editor_init(CultureWindow __instance)
-        {
-            WindowCultureTechEditor.init(__instance);
-        }
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(WindowCreatureInfo), "OnEnable")]
-        public static void status_effect_editor_init(WindowCreatureInfo __instance)
-        {
-            WindowStatusEffectEditor.init(__instance);
-        }
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(WindowCreatureInfo), "OnEnable")]
-        public static void item_editor_init(WindowCreatureInfo __instance)
-        {
-            if (Config.selectedUnit.asset.use_items)
-            {
-                WindowItemEditor.init(__instance);
-                WindowItemEditor.entry_button.SetActive(true);
-            }
-            else if (WindowItemEditor.entry_button != null)
-            {
-                WindowItemEditor.entry_button.SetActive(false);
-            }
-        }
+        
         [HarmonyPostfix]
         [HarmonyPatch(typeof(PowerButton), nameof(PowerButton.unselectActivePower))]
         public static void post_poweraction(PowerButton __instance)
@@ -61,11 +36,11 @@ namespace GodTools.Code
         [HarmonyPatch(typeof(MoveCamera), nameof(MoveCamera.updateMouseCameraDrag))]
         public static bool fix_mouse_drag(MoveCamera __instance)
         {
-            __fix_mouse_drage(__instance);
+            __fix_mouse_drag(__instance);
             return false;
         }
 
-        private static void __fix_mouse_drage(MoveCamera instance)
+        private static void __fix_mouse_drag(MoveCamera instance)
         {
 			MoveCamera.cameraDragRun = false;
 			bool flag = false;
@@ -174,12 +149,6 @@ namespace GodTools.Code
 			mapMark2.spriteRenderer.sortingOrder = 10;
 			return false;
 		}
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(City),nameof(City.getPopulationTotal))]
-		public static void add_player_to_pop(City __instance, ref int __result)
-        {
-			if (__instance.kingdom.cities.Count == 1) __result++;
-        }
         [HarmonyPostfix]
         [HarmonyPatch(typeof(BatchBuildings),nameof(BatchBuildings.updateStatusEffects))]
 		public static void update_progress(BatchBuildings __instance)
