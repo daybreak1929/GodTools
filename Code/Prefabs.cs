@@ -39,6 +39,10 @@ namespace GodTools.Code
             _tooltip_data = tooltip_data;
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(action);
+            tip_button.hoverAction = () =>
+            {
+                Tooltip.show(this.gameObject, C.action_with_cost_tooltip, _tooltip_data);
+            };
         }
     }
     public static class Prefabs

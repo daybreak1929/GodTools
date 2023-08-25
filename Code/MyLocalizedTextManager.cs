@@ -43,6 +43,9 @@ namespace GodTools.Code
             set(C.exit + C.title_postfix, "退出");
             set(C.explore + C.title_postfix, "探索");
             set(C.progress_spawn_localized, "正在生产:$actor$");
+            set(C.mod_prefix+"tent", "帐篷");
+            set(C.mod_prefix + "build_tent", "建造帐篷");
+            set(C.mod_prefix + "resource_cost", "资源消耗");
         }
         private static void set(string key, string value)
         {

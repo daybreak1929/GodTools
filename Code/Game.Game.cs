@@ -9,7 +9,7 @@ namespace GodTools.Game
 {
     internal class Game
     {
-        public bool IsRunning { get; private set; }
+        public bool is_running { get; private set; }
         private GameObject m_gameobject;
         public InputController input_controller;
         private OperateConsole console;
@@ -33,20 +33,20 @@ namespace GodTools.Game
         }
         public void start()
         {
-            this.IsRunning = true;
+            this.is_running = true;
             m_gameobject.SetActive(true);
             console.active();
         }
 
         internal void update(float elapsed)
         {
-            if (!IsRunning) return;
+            if (!is_running) return;
             input_controller.update(elapsed);
             console.update(elapsed);
         }
         public void end()
         {
-            this.IsRunning = false;
+            this.is_running = false;
             input_controller.disable();
             m_gameobject.SetActive(false);
         }

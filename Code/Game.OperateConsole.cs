@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GodTools.Code;
 using UnityEngine;
 using UnityEngine.UI;
 using GodTools.Extension;
 using GodTools.Game.UI;
+using Newtonsoft.Json;
 
 namespace GodTools.Game
 {
@@ -33,6 +35,7 @@ namespace GodTools.Game
             top.transform.localPosition = new Vector3(-52.2f, 480);
             top.transform.localScale = new Vector3(1, 1);
             resource_display = top.GetComponent<ResourceDisplay>();
+            resource_display.init();
 
             GameObject modes = new GameObject("Modes", typeof(Image));
             modes.transform.SetParent(this.transform);
@@ -192,7 +195,7 @@ namespace GodTools.Game
                         BuildingAsset building_asset = building;
                         BuildingPlacer.building_to_place = BuildingPlacer.building_to_place == building_asset ? null : building_asset;
                     }), C.wait);
-                add_building_button(C.first_in, main_base);
+                add_button_to_building_page(C.first_in, main_base);
             }
             #endregion
             #region 选中Hall时各个种族的市民生成，建筑页表(Hall_{race_name})
@@ -213,7 +216,7 @@ namespace GodTools.Game
                             obj.b.add_progress(C.progress_spawn, actor_asset.id);
                         }
                     }), C.wait);
-                add_building_button("Hall_"+actor_asset.race, citizen_produce);
+                add_button_to_building_page("Hall_"+actor_asset.race, citizen_produce);
             }
             #endregion
         }
@@ -229,7 +232,7 @@ namespace GodTools.Game
                     obj.a.ai.setJob(C.wait);
                 }
             }), C.wait);
-            add_unit_button(C._default, wait_for_cmd);
+            add_button_to_unit_page(C._default, wait_for_cmd);
             GameObject explore = Helper.create_button_with_bg("Explore", "gt_windows/move_to_point", new UnityEngine.Events.UnityAction(() =>
             {
                 if (Game.instance.input_controller.selector.type_to_select == MapObjectType.Building) return;
@@ -239,25 +242,10 @@ namespace GodTools.Game
                     obj.a.ai.setJob(C.explore);
                 }
             }), C.explore);
-            add_unit_button(C._default, explore);
+            add_button_to_unit_page(C._default, explore);
 
-            GameObject house_0 = Helper.create_button_with_bg("Tent0", AssetManager.buildings.get(SB.tent_human).sprites.animationData[0].list_main[0],
-                new UnityEngine.Events.UnityAction(() =>
-                {
-                    if (Game.instance.player == null || !Game.instance.player.isAlive()) return;
-                    if (Game.instance.input_controller.selector.type_to_select == MapObjectType.Building) return;
-
-                    BuildingAsset building_asset = AssetManager.buildings.get(SB.tent_human);
-                    if (BuildingPlacer.building_to_place == building_asset)
-                    {
-                        BuildingPlacer.building_to_place = null;
-                    }
-                    else
-                    {
-                        BuildingPlacer.building_to_place = building_asset;
-                    }
-                }), C.wait);
-            add_unit_button(C._default, house_0);
+            ActionWithCostButton build_tent = create_place_building_button(SB.tent_human);
+            add_button_to_unit_page(C._default, build_tent.gameObject);
         }
 
         public void active()
@@ -267,9 +255,42 @@ namespace GodTools.Game
             common_container.SetActive(false);
             map_container.SetActive(false);
         }
-        private void add_unit_button(string page, GameObject button_obj) { common_container.GetComponent<ButtonContainerController>().add_button( "Units", page, button_obj); }
-        private void add_building_button(string page, GameObject button_obj) { common_container.GetComponent<ButtonContainerController>().add_button( "Buildings", page, button_obj); }
-        private void add_diplomacy_button(string page, GameObject button_obj) { common_container.GetComponent<ButtonContainerController>().add_button( "Diplomacy", page, button_obj); }
+
+        private ActionWithCostButton create_place_building_button(string building_id)
+        {
+            BuildingAsset building_asset = AssetManager.buildings.get(building_id);
+            ActionWithCostButton button = Instantiate(Prefabs.action_with_cost_button_prefab);
+            button.load(building_asset.sprites.animationData[0].list_main[0], new (48,48), new TooltipData()
+            {
+                tip_name = building_id,
+                tip_description = C.mod_prefix + "resource_cost",
+                tip_description_2 = JsonConvert.SerializeObject(new Dictionary<string, int>()
+                {
+                    {SR.gold, building_asset.cost.gold},
+                    {SR.wood, building_asset.cost.wood},
+                    {SR.stone, building_asset.cost.stone},
+                    {SR.common_metals, building_asset.cost.common_metals}
+                })
+            }, () =>
+            {
+                if (Game.instance.player == null || !Game.instance.player.isAlive()) return;
+                if (Game.instance.input_controller.selector.type_to_select == MapObjectType.Building) return;
+
+                if (BuildingPlacer.building_to_place == building_asset)
+                {
+                    BuildingPlacer.building_to_place = null;
+                }
+                else
+                {
+                    BuildingPlacer.building_to_place = building_asset;
+                }
+            });
+            button.gameObject.SetActive(true);
+            return button;
+        }
+        private void add_button_to_unit_page(string page, GameObject button_obj) { common_container.GetComponent<ButtonContainerController>().add_button( "Units", page, button_obj); }
+        private void add_button_to_building_page(string page, GameObject button_obj) { common_container.GetComponent<ButtonContainerController>().add_button( "Buildings", page, button_obj); }
+        private void add_button_to_diplomacy_page(string page, GameObject button_obj) { common_container.GetComponent<ButtonContainerController>().add_button( "Diplomacy", page, button_obj); }
 
         private void update_special_container(BaseSimObject curr_main_object)
         {

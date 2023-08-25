@@ -43,7 +43,7 @@ namespace GodTools.Code
                 instance = this;
                 prefab_library = new GameObject("Prefabs").transform;
                 prefab_library.SetParent(transform);
-                prefab_library.localPosition = Vector3.positiveInfinity;
+                prefab_library.localPosition = new(9999999,9999999,0);
                 
                 foreach(NCMod mod in NCMS.ModLoader.Mods)
                 {
@@ -60,6 +60,7 @@ namespace GodTools.Code
 
                 AllPatch.patch_all(C.PATCH_ID);
                 MyLocalizedTextManager.init();
+                Prefabs.init();
                 MyActorJobs.init();
                 MyActorTasks.init();
                 MyCityJobs.init();
