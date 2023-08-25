@@ -14,7 +14,7 @@ namespace GodTools
         private static Sprite window_bg;
         private static GameObject button_with_bg_prefab;
         private static GameObject button_without_bg_prefab;
-        public static GameObject create_button_with_bg(string name, string path_to_img, UnityEngine.Events.UnityAction action, string key=C.GT_about_this)
+        public static GameObject create_button_with_bg(string name, string path_to_img, UnityEngine.Events.UnityAction action, string key=C.about_this)
         {
             if(button_with_bg_prefab == null)
             {
@@ -36,7 +36,7 @@ namespace GodTools
             if (LocalizedTextManager.stringExists(key + C.desc_postfix)) ret.transform.Find("Button").GetComponent<TipButton>().textOnClickDescription = key + C.desc_postfix;
             return ret;
         }
-        public static GameObject create_button_with_bg(string name, Sprite icon, UnityEngine.Events.UnityAction action, string key = C.GT_about_this)
+        public static GameObject create_button_with_bg(string name, Sprite icon, UnityEngine.Events.UnityAction action, string key = C.about_this)
         {
             if (button_with_bg_prefab == null)
             {
@@ -58,7 +58,7 @@ namespace GodTools
             if (LocalizedTextManager.stringExists(key + C.desc_postfix)) ret.transform.Find("Button").GetComponent<TipButton>().textOnClickDescription = key + C.desc_postfix;
             return ret;
         }
-        public static GameObject create_button_without_bg(string name, string path_to_img, UnityEngine.Events.UnityAction action, string key = C.GT_about_this)
+        public static GameObject create_button_without_bg(string name, string path_to_img, UnityEngine.Events.UnityAction action, string key = C.about_this)
         {
             if (button_without_bg_prefab == null)
             {

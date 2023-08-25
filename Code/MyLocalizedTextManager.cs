@@ -1,55 +1,59 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace GodTools.Code
 {
     internal static class MyLocalizedTextManager
     {
+        /// <summary>
+        ///     存储额外加载的所有语言的key和text
+        ///     能写多少，顶多多用几MB的内存，全存了
+        /// </summary>
+        private static readonly Dictionary<string, Dictionary<string, string>> languages_key_text = new();
+
+        private static readonly HashSet<string> loaded_path = new();
+
         public static void init()
         {
-            set(EquipmentType.Weapon.ToString(), "武器");
-            set(EquipmentType.Boots.ToString(), "靴子");
-            set(EquipmentType.Helmet.ToString(), "头盔");
-            set(EquipmentType.Ring.ToString(), "戒指");
-            set(EquipmentType.Amulet.ToString(), "项链");
-            set(EquipmentType.Armor.ToString(), "胸甲");
-            set(C.item_editor_description, "上方选择装备，下方编辑");
-            set(C.item_template, "样式");
-            set(C.item_by, "锻造者");
-            set(C.item_from, "锻造地");
-            set(C.item_year, "锻造年份");
-            set(C.item_material, "材质");
-            set(C.item_modifier, "词缀");
-            set(C.success, "成功");
-            set(C.fail, "失败");
-            set(C.aboutthis_title, "此模组");
-            set(C.worldlaw_title, "世界法则");
-            set(C.force_attack_title, "强制攻击");
-            set(C.select_units_title, "选择单位");
-            set(C.equipments, "装备");
-            set(C.action_controller_title, "行动");
-            set(C.attack_controller_title, "攻击");
-            set(C.job_controller_title, "职业");
-            set(C.action_controller_desc, "描述");
-            set(C.attack_controller_desc, "描述");
-            set(C.job_controller_desc, "描述");
-            set(C.move_to_point + C.title_postfix, "移动至");
-            set(C.wait + C.title_postfix, "待命");
-            set(C.attack_unit + C.title_postfix, "攻击");
-            set(C.defense + C.title_postfix, "驻守");
-            set(C.exit + C.title_postfix, "退出");
-            set(C.explore + C.title_postfix, "探索");
-            set(C.progress_spawn_localized, "正在生产:$actor$");
-            set(C.mod_prefix+"tent", "帐篷");
-            set(C.mod_prefix + "build_tent", "建造帐篷");
-            set(C.mod_prefix + "resource_cost", "资源消耗");
+            load_json(Path.Combine(Mod.Info.Path, "Locales/cz.json"), "cz");
+            load_json(Path.Combine(Mod.Info.Path, "Locales/tc.json"), "tc");
+            load_json(Path.Combine(Mod.Info.Path, "Locales/en.json"), "en");
         }
-        private static void set(string key, string value)
+
+        private static void load_json(string path, string language)
         {
-            NCMS.Utils.Localization.Set(key, value);
+            if (loaded_path.Contains(path)) return;
+            string json = File.ReadAllText(path);
+            Dictionary<string, string> key_text = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+            if (!languages_key_text.ContainsKey(language)) languages_key_text[language] = key_text;
+            else
+            {
+                foreach (KeyValuePair<string, string> key_text_pair in key_text)
+                {
+                    languages_key_text[language][key_text_pair.Key] = key_text_pair.Value;
+                }
+            }
+
+            loaded_path.Add(path);
+        }
+
+        public static void apply_localization(Dictionary<string, string> target_dict, string language)
+        {
+            if (language != "cz" && language != "tc" && language != "en")
+            {
+                load_json(Path.Combine(Mod.Info.Path, "GameResources/cw_locales/en.json"), language);
+            }
+
+            Dictionary<string, string> key_text = languages_key_text[language];
+            foreach (KeyValuePair<string, string> key_text_pair in key_text)
+            {
+                target_dict[key_text_pair.Key] = key_text_pair.Value;
+            }
         }
     }
 }

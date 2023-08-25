@@ -94,31 +94,31 @@ namespace GodTools.Code
             PowerButton button;
             add_button(
                 create_button(
-                    C.GT_about_this, "ui/Icons/iconabout",
+                    C.about_this, "ui/Icons/iconabout",
                     show_window_about_this
                     ),
                 Tab_Button_Type.INFO
                 );
             add_button(
                 create_button(
-                    C.GT_world_law, "ui/Icons/iconworldlaws",
+                    C.world_law, "ui/Icons/iconworldlaws",
                     null
                     ),
                 Tab_Button_Type.TOOL
                 );
             add_button(
                 create_button(
-                    C.GT_force_attack, $"ui/Icons/{C.icon_GP_force_attack}",
+                    C.force_attack, $"ui/Icons/{C.icon_GP_force_attack}",
                     null, ButtonType.GodPower
                     ),
                 Tab_Button_Type.TOOL
                 );
             add_button(
                 create_button(
-                    C.GT_new_game, $"ui/Icons/{C.icon_GP_force_attack}",
+                    C.new_game, $"ui/Icons/{C.icon_GP_force_attack}",
                     Main.game.start
                     ),
-                Tab_Button_Type.TOOL
+                Tab_Button_Type.OTHERS
                 );
         }
 

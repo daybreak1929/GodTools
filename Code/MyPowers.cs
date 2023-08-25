@@ -15,7 +15,7 @@ namespace GodTools.Code
 
             // 强制攻击
             GodPower power = new GodPower();
-            power.id = C.GT_force_attack;
+            power.id = C.force_attack;
             power.name = power.id;
             power.path_icon = C.icon_GP_force_attack;
             power.select_button_action = (PowerButtonClickAction)Delegate.Combine(power.select_button_action, new PowerButtonClickAction(MyPowerActionLibrary.init_click_force_attack));

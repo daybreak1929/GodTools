@@ -59,7 +59,9 @@ namespace GodTools.Code
                 }
 
                 AllPatch.patch_all(C.PATCH_ID);
+                HarmonySpace.Manager.init();
                 MyLocalizedTextManager.init();
+                MyLocalizedTextManager.apply_localization(LocalizedTextManager.instance.localizedText, LocalizedTextManager.instance.language);
                 Prefabs.init();
                 MyActorJobs.init();
                 MyActorTasks.init();

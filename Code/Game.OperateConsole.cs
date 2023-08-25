@@ -262,7 +262,7 @@ namespace GodTools.Game
             ActionWithCostButton button = Instantiate(Prefabs.action_with_cost_button_prefab);
             button.load(building_asset.sprites.animationData[0].list_main[0], new (48,48), new TooltipData()
             {
-                tip_name = building_id,
+                tip_name = building_asset.type,
                 tip_description = C.mod_prefix + "resource_cost",
                 tip_description_2 = JsonConvert.SerializeObject(new Dictionary<string, int>()
                 {

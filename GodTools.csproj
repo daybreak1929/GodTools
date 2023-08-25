@@ -202,6 +202,8 @@
     <Compile Include="Code\Game.InputController.cs" />
     <Compile Include="Code\Game.ObjectRectSelector.cs" />
     <Compile Include="Code\Game.UI.ResourceDisplay.cs" />
+    <Compile Include="Code\HarmonySpace.H_LocalizedTextManager.cs" />
+    <Compile Include="Code\HarmonySpace.Manager.cs" />
     <Compile Include="Code\MyActorJobs.cs" />
     <Compile Include="Code\Helper.cs" />
     <Compile Include="Code\Main.cs" />
@@ -276,6 +278,9 @@
     <Content Include="Includes\UnityEngine.UIElementsModule.dll" />
     <Content Include="Includes\UnityEngine.UIElementsNativeModule.dll" />
     <Content Include="Includes\UnityEngine.UIModule.dll" />
+    <Content Include="Locales\cz.json" />
+    <Content Include="Locales\en.json" />
+    <Content Include="Locales\tc.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LICENSE" />
