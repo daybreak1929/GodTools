@@ -10,43 +10,32 @@ namespace GodTools.Game
 {
     internal class ButtonContainer : MonoBehaviour
     {
-        private static ButtonContainerPage page_prefab;
-        private Dictionary<string, ButtonContainerPage> pages = new Dictionary<string, ButtonContainerPage>();
-        public void create_page(string page_id)
-        {
-            if (page_prefab == null)
-            {
-                create_page_prefab();
-            }
-            ButtonContainerPage page = Instantiate(page_prefab, this.transform);
-            page.name = page_id;
-            pages[page_id] = page;
-        }
-
-        private void create_page_prefab()
-        {
-            page_prefab = new GameObject("Button Container Page Prefab", typeof(ButtonContainerPage), typeof(GridLayoutGroup)).GetComponent<ButtonContainerPage>();
-            GridLayoutGroup grid_layout_group = page_prefab.GetComponent<GridLayoutGroup>();
-            grid_layout_group.cellSize = new Vector2(60, 60);
-            grid_layout_group.spacing = new Vector2(10, 10);
-            grid_layout_group.constraint = GridLayoutGroup.Constraint.FixedRowCount;
-            page_prefab.GetComponent<RectTransform>().sizeDelta = new Vector2(1560, 200);
-        }
-
+        private Dictionary<string, GameObject> buttons = new();
         public void add_button(GameObject button_obj, string page_id="")
         {
-            if (!this.pages.ContainsKey(page_id)) create_page(page_id);
-            this.pages[page_id].add_button(button_obj);
+            button_obj.transform.SetParent(transform);
+            buttons[button_obj.name] = button_obj;
         }
 
-        internal void switch_to_page(string @default)
+        public void try_to_activate_button(string button_id)
         {
-            if (!pages.ContainsKey(@default)) create_page(@default);
-            foreach(ButtonContainerPage page in pages.Values)
+            if (buttons.ContainsKey(button_id))
             {
-                page.gameObject.SetActive(false);
+                buttons[button_id].SetActive(true);
             }
-            pages[@default].gameObject.SetActive(true);
+        }
+
+        public void inactivate_button(string button_id)
+        {
+            buttons[button_id].SetActive(false);
+        }
+
+        public void inactivate_all_buttons()
+        {
+            foreach (GameObject obj in buttons.Values)
+            {
+                obj.SetActive(false);
+            }
         }
     }
 }

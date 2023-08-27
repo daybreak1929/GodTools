@@ -24,6 +24,7 @@ namespace GodTools.Code
         public static BuildingProgressLibrary building_progresses;
         public static Main instance;
         public static Transform prefab_library;
+        public static Transform game_ui_object_temp_library;
         public static Game.Game game = new Game.Game();
         public SimpleEffectController<PosShowEffect> pos_show_effect_controller = new SimpleEffectController<PosShowEffect>(Resources.Load<GameObject>("effects/PrefabUnitSelectionEffect"));
         public static void warn(string str)
@@ -44,6 +45,9 @@ namespace GodTools.Code
                 prefab_library = new GameObject("Prefabs").transform;
                 prefab_library.SetParent(transform);
                 prefab_library.localPosition = new(9999999,9999999,0);
+                game_ui_object_temp_library = new GameObject("Game UI Objects").transform;
+                game_ui_object_temp_library.SetParent(transform);
+                game_ui_object_temp_library.localPosition = new(9999999, 9999999, 0);
                 
                 foreach(NCMod mod in NCMS.ModLoader.Mods)
                 {

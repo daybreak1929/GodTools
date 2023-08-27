@@ -13,11 +13,18 @@ namespace GodTools
         public const string PATCH_ID = "inmny.GodTools";
         public const string _default = "gt_default";
         public const string mod_prefix = "gt_";
+        public const string build_prefix = "build_";
+        public const string spawn_prefix = "spawn_";
+        public const string place_prefix = "place_";
+        public const string title_postfix = "_title";
+        public const string desc_postfix = "_description";
+        public const string localied_postfix = "_localizedkey";
         public const string first_in = "first_in";
         public const string force_attack = "gt_force_attack";
         public const string about_this = "gt_about_this";
         public const string world_law = "gt_world_law";
         public const string new_game = "gt_new_game";
+        public const string resource_cost = "gt_resource_cost";
         public const string icon_GP_force_attack = "iconDamage";
         public const float pos_show_effect_time_scale = 5f;
         public const string status_effect_editor_id = "gt_creature_status_effect_editor";
@@ -32,9 +39,6 @@ namespace GodTools
         public const string success = "gt_success";
         public const string fail = "gt_fail";
         public const string exit = "gt_exit";
-        public const string title_postfix = "_title";
-        public const string desc_postfix = "_description";
-        public const string localied_postfix = "_localizedkey";
         public const int find_near_unit_size = 2;
         public const int find_near_building_size = 2;
         public const string flag_in_progress = "gt_building_in_progress";
@@ -60,7 +64,7 @@ namespace GodTools
         
         public const string progress_spawn = "gt_spawn_unit";
         public static readonly string progress_spawn_localized = progress_spawn + localied_postfix;
-
+        
         public static readonly string action_with_cost_tooltip = mod_prefix + "action_with_cost";
 
         public const string localized_part_actor_asset = "$actor$";

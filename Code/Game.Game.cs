@@ -10,15 +10,21 @@ namespace GodTools.Game
     internal class Game
     {
         public bool is_running { get; private set; }
-        private GameObject m_gameobject;
-        public InputController input_controller;
-        private OperateConsole console;
         public static Game instance;
+        public static NormalData normal_data;
+        public static CurrentData current_data;
+        
+        private GameObject m_gameobject;
+        private OperateConsole console;
+        public InputController input_controller;
         public Kingdom player;
 
         internal void init()
         {
             instance = this;
+            normal_data = new();
+            normal_data.init();
+            current_data = new();
             m_gameobject = new GameObject("GT Game");
             m_gameobject.transform.SetParent(CanvasMain.instance.canvas_ui.transform);
             m_gameobject.transform.localPosition = Vector3.zero;
@@ -34,6 +40,7 @@ namespace GodTools.Game
         public void start()
         {
             this.is_running = true;
+            current_data.reset(normal_data);
             m_gameobject.SetActive(true);
             console.active();
         }

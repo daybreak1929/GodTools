@@ -34,16 +34,30 @@ namespace GodTools.Game
             if (!containers.ContainsKey(container_id)) return;
             foreach (ButtonContainer container in containers.Values) container.gameObject.SetActive(false);
             containers[container_id].gameObject.SetActive(true);
-            containers[container_id].switch_to_page(C._default);
             curr_container_id = container_id;
         }
         private void create_button_container_prefab()
         {
-            button_container_prefab = new GameObject("Button Container Prefab", typeof(ButtonContainer)).GetComponent<ButtonContainer>();
+            button_container_prefab = new GameObject("Button Container Prefab", typeof(ButtonContainer), typeof(RectTransform), typeof(GridLayoutGroup)).GetComponent<ButtonContainer>();
+            GridLayoutGroup layout_group = button_container_prefab.GetComponent<GridLayoutGroup>();
+            layout_group.constraint = GridLayoutGroup.Constraint.FixedRowCount;
+            layout_group.spacing = new(10, 10);
+            layout_group.cellSize = new(60, 60);
+            layout_group.startCorner = GridLayoutGroup.Corner.UpperLeft;
+            button_container_prefab.GetComponent<RectTransform>().sizeDelta = new(1560, 200);
         }
+
         public void switch_to_page(string page_id)
         {
-            containers[curr_container_id].switch_to_page(page_id);
+            Debug.LogWarning($"Try to switch to page {page_id}");
+            ButtonContainer button_container = containers[curr_container_id];
+            
+            button_container.inactivate_all_buttons();
+            List<string> active_page_buttons = Game.current_data.get_page(page_id);
+            foreach (string button_id in active_page_buttons)
+            {
+                button_container.try_to_activate_button(button_id);
+            }
         }
     }
 }
