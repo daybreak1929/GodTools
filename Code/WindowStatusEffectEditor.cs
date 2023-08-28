@@ -21,7 +21,12 @@ namespace GodTools.Code
             statuses.Add(status);
             StatusEffectButton status_button = GameObject.Instantiate(prefab, transform);
             all_buttons.Add(status_button);
+            if (string.IsNullOrEmpty(status.path_icon))
+            {
+                status.path_icon = "ui/icons/aboutthis";
+            }
             status_button.load(new StatusEffectData(null, status));
+
             status_button.button.onClick.AddListener(new UnityEngine.Events.UnityAction(() =>
             {
                 Actor actor = Config.selectedUnit;
