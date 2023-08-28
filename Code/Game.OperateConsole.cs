@@ -256,19 +256,11 @@ namespace GodTools.Game
         {
             if(curr_main_object.objectType == MapObjectType.Building)
             {
-                switch (curr_main_object.b.asset.type)
-                {
-                    case nameof(SB.type_hall):
-                        common_container.GetComponent<ButtonContainerController>().switch_to_page("Hall_" + curr_main_object.b.asset.race);
-                        break;
-                    case nameof(SB.type_house):
-                        common_container.GetComponent<ButtonContainerController>().switch_to_container("House_"+curr_main_object.b.asset.race);
-                        break;
-                }
+                common_container.GetComponent<ButtonContainerController>().switch_to_page(curr_main_object.b.asset.id);
             }
             else
             {
-
+                common_container.GetComponent<ButtonContainerController>().switch_to_page(curr_main_object.a.asset.id);
             }
         }
     }

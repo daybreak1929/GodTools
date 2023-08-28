@@ -12,6 +12,7 @@ namespace GodTools.Game
     {
         private static ButtonContainer button_container_prefab;
         private string curr_container_id;
+        private bool container_changed = false;
         private Dictionary<string, ButtonContainer> containers = new Dictionary<string, ButtonContainer>();
         public void init(List<string> container_ids)
         {
@@ -32,6 +33,8 @@ namespace GodTools.Game
         public void switch_to_container(string container_id)
         {
             if (!containers.ContainsKey(container_id)) return;
+            if (curr_container_id == container_id) return;
+            container_changed = true;
             foreach (ButtonContainer container in containers.Values) container.gameObject.SetActive(false);
             containers[container_id].gameObject.SetActive(true);
             curr_container_id = container_id;
@@ -49,11 +52,15 @@ namespace GodTools.Game
 
         public void switch_to_page(string page_id)
         {
-            Debug.LogWarning($"Try to switch to page {page_id}");
             ButtonContainer button_container = containers[curr_container_id];
             
-            button_container.inactivate_all_buttons();
             List<string> active_page_buttons = Game.current_data.get_page(page_id);
+
+            if (container_changed || !button_container.contains_all_active_buttons(active_page_buttons))
+            {
+                container_changed = false;
+                button_container.inactivate_all_buttons();
+            }
             foreach (string button_id in active_page_buttons)
             {
                 button_container.try_to_activate_button(button_id);

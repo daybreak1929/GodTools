@@ -105,15 +105,17 @@ namespace GodTools.Game
                 title.text = actor.getName();
                 icon.sprite = actor.getSpriteToRender();
                 icon.transform.localScale = new Vector3(actor.asset.inspectAvatarScale*0.3f, actor.asset.inspectAvatarScale*0.3f, actor.asset.inspectAvatarScale*0.1f);
+                icon.GetComponent<RectTransform>().sizeDelta = new(100, 100);
                 health.setBar(actor.data.health, actor.getMaxHealth(), "/" + actor.getMaxHealth().ToString(), false, false, true, false);
                 if(progress.gameObject.activeSelf)progress.gameObject.SetActive(false);
             }
             else if(Game.instance.input_controller.curr_main_object.objectType == MapObjectType.Building)
             {
                 Building building = Game.instance.input_controller.curr_main_object.b;
-                title.text = "";
+                title.text = LocalizedTextManager.getText(building.asset.type);
                 icon.sprite = building.last_main_sprite == null?building.animData.main[0]:building.last_main_sprite;
                 icon.transform.localScale = Vector3.one;
+                icon.GetComponent<RectTransform>().sizeDelta = Helper.get_resized(icon.sprite, 100);
                 health.setBar(building.data.health, building.getMaxHealth(), "/" + building.getMaxHealth().ToString(), false, false, true, false);
                 if (building.data.hasFlag(C.flag_in_progress))
                 {

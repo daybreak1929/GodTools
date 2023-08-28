@@ -95,12 +95,16 @@ public class NormalData
             if(!allowed_races.Contains(actor_asset.race)) continue;
 
             List<BuildingAsset> building_assets = race_buildings[actor_asset.race];
-            foreach (BuildingAsset building_asset in building_assets.Where(building_asset => !string.IsNullOrEmpty(building_asset.upgradedFrom)))
+            foreach (BuildingAsset building_asset in building_assets.Where(building_asset => string.IsNullOrEmpty(building_asset.upgradedFrom)))
             {
-                if(units_buttons.ContainsKey(C.build_prefix + building_asset.id)) continue;
                 units_all_allowed_actions[actor_asset.id].Add(C.build_prefix + building_asset.id);
+                if(units_buttons.ContainsKey(C.build_prefix + building_asset.id)) continue;
                 GameObject obj = create_build_action_button(building_asset.id);
-                if (obj == null) continue;
+                if (obj == null)
+                {
+                    Debug.LogWarning($"Cannot create {building_asset.id} button");
+                    continue;
+                }
                 units_buttons[C.build_prefix + building_asset.id] = obj;
             }
         }
@@ -117,8 +121,8 @@ public class NormalData
                 if (building_asset.upgradeLevel == 0) continue;
                 foreach (ActorAsset actor_asset in race_actors[building_asset.race].Where(actor_asset => actor_asset.unit))
                 {
-                    if (buildings_buttons.ContainsKey(C.spawn_prefix + actor_asset.id)) continue;
                     buildings_all_allowed_actions[building_asset.id].Add(C.spawn_prefix + actor_asset.id);
+                    if (buildings_buttons.ContainsKey(C.spawn_prefix + actor_asset.id)) continue;
                     GameObject obj = create_spawn_action_button(actor_asset.id);
                     if (obj == null) continue;
                     buildings_buttons[C.spawn_prefix + actor_asset.id] = obj;
@@ -145,7 +149,7 @@ public class NormalData
         }
         catch (Exception)
         {
-            return null;
+            spawn_actor_resource_cost = new();
         }
         
         if (spawn_actor_resource_cost.Count == 0)
@@ -188,7 +192,7 @@ public class NormalData
         }
         catch (Exception)
         {
-            return null;
+            buildings_all_allowed_actions = new();
         }
 
         if (build_building_resource_cost.Count == 0)
@@ -198,7 +202,9 @@ public class NormalData
             if (building_asset.cost.stone > 0) build_building_resource_cost[SR.stone] = building_asset.cost.stone;
             if (building_asset.cost.common_metals > 0) build_building_resource_cost[SR.common_metals] = building_asset.cost.common_metals;
         }
-        button.load(building_asset.sprites.animationData[0].list_main[0], new(60,60), new TooltipData()
+
+        Sprite icon = building_asset.sprites.animationData[0].list_main[0];
+        button.load(icon, Helper.get_resized(icon, 56), new TooltipData()
         {
             tip_name = building_asset.type,
             tip_description = C.resource_cost,
@@ -219,15 +225,20 @@ public class NormalData
         ActionWithCostButton button =
             Object.Instantiate(Prefabs.action_with_cost_button_prefab, Main.game_ui_object_temp_library);
         BuildingAsset building_asset = AssetManager.buildings.get(building_asset_id);
-        
-        button.load(building_asset.sprites.animationData[0].list_main[0], new(60,60), new TooltipData()
+
+        Sprite icon = building_asset.sprites.animationData[0].list_main[0];
+        button.load(icon, Helper.get_resized(icon, 56), new TooltipData()
         {
             tip_name = building_asset.type,
             tip_description = C.resource_cost,
             tip_description_2 = JsonConvert.SerializeObject(new())
         }, action ?? (() =>
         {
-            if (Game.instance.player != null && Game.instance.player.isAlive()) return;
+            if (Game.instance.player != null && Game.instance.player.isAlive())
+            {
+                BuildingPlacer.building_to_place = null;
+                return;
+            }
 
             BuildingPlacer.building_to_place = BuildingPlacer.building_to_place == building_asset ? null : building_asset;
         }));
