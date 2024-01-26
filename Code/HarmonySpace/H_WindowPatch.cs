@@ -1,8 +1,9 @@
+using GodTools.UI;
 using HarmonyLib;
 
-namespace GodTools.Code.HarmonySpace;
+namespace GodTools.HarmonySpace;
 
-internal static class H_WindowCreatureInfo
+internal static class H_WindowPatch
 {
     [HarmonyPostfix]
     [HarmonyPatch(typeof(WindowCreatureInfo), "OnEnable")]

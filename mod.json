@@ -3,6 +3,6 @@
     "author": "一米",
     "version": "1.0.0",
     "description": "你猜",
-	  "targetGameBuild": 550,
+    "targetGameBuild": 552,
     "iconPath": "icon.png"
 }
