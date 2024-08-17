@@ -9,7 +9,7 @@ namespace GodTools.UI;
 internal class StatusEffectGroupElement : MonoBehaviour
 {
     public static List<StatusEffectButton> all_buttons = new();
-    public Text title;
+    public Text               title;
     public List<StatusEffect> statuses = new();
 
     public void add_status(StatusEffect status, StatusEffectButton prefab)
@@ -27,6 +27,7 @@ internal class StatusEffectGroupElement : MonoBehaviour
             WindowStatusEffectEditor.instance.selected_status_button = status_button;
             WindowStatusEffectEditor.instance.status_effect_time_text.text =
                 (int)(float)status_button.data.getRemainingTime() + "s";
+            Main.LogInfo($"{status_button.data.getRemainingTime()}");
             WindowStatusEffectEditor.instance.status_effect_time_slider.value =
                 Mathf.Log10((float)status_button.data.getRemainingTime()) / 5;
             WindowStatusEffectEditor.instance.reload_statuses();
@@ -41,18 +42,18 @@ internal class StatusEffectGroupElement : MonoBehaviour
 
 internal class WindowStatusEffectEditor : MonoBehaviour
 {
-    private static bool initialized;
-    private static bool first_open = true;
-    public static WindowStatusEffectEditor instance;
-    private StatusEffectGroupElement advance_statuses;
-    private UiUnitAvatarElement avatar_element;
-    private StatusEffectGroupElement basic_statuses;
-    private Transform curr_statuses_transform;
-    internal StatusEffectButton display_status_button;
-    private StatusEffectButton prefab_status_button;
-    internal StatusEffectButton selected_status_button;
-    internal Slider status_effect_time_slider;
-    internal Text status_effect_time_text;
+    private static bool                     initialized;
+    private static bool                     first_open = true;
+    public static  WindowStatusEffectEditor instance;
+    private        StatusEffectGroupElement advance_statuses;
+    private        UiUnitAvatarElement      avatar_element;
+    private        StatusEffectGroupElement basic_statuses;
+    private        Transform                curr_statuses_transform;
+    internal       StatusEffectButton       display_status_button;
+    private        StatusEffectButton       prefab_status_button;
+    internal       StatusEffectButton       selected_status_button;
+    internal       Slider                   status_effect_time_slider;
+    internal       Text                     status_effect_time_text;
 
     private Actor actor => Config.selectedUnit;
 
@@ -154,7 +155,7 @@ internal class WindowStatusEffectEditor : MonoBehaviour
         var rect = __statuses_group.GetComponent<RectTransform>();
         rect.sizeDelta = new Vector2(191.33f, 30f);
         var __statuses_grid = new GameObject("Grid", typeof(StatusEffectGroupElement), typeof(GridLayoutGroup),
-            typeof(ContentSizeFitter));
+                                             typeof(ContentSizeFitter));
         __statuses_grid.transform.SetParent(__statuses_group.transform);
         var group_element = __statuses_grid.GetComponent<StatusEffectGroupElement>();
         var grid_layout_group = __statuses_grid.GetComponent<GridLayoutGroup>();
@@ -163,7 +164,7 @@ internal class WindowStatusEffectEditor : MonoBehaviour
         grid_layout_group.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
         grid_layout_group.constraintCount = 6;
 
-        var basic_statuses = Instantiate(__statuses_group, content_transform).transform;
+        Transform basic_statuses = Instantiate(__statuses_group, content_transform).transform;
         var advance_statuses = Instantiate(__statuses_group, content_transform).transform;
         basic_statuses.gameObject.name = "Basic Statuses";
         advance_statuses.gameObject.name = "Advance Statuses";
@@ -217,24 +218,27 @@ internal class WindowStatusEffectEditor : MonoBehaviour
         basic_statuses.transform.localPosition =
             new Vector3(129.4f, -103.5f - (instance.basic_statuses.statuses.Count - 1) / 6 * 14);
         basic_statuses_text.transform.localPosition = new Vector3(129.4f,
-            basic_statuses.transform.localPosition.y + basic_statuses_rect.sizeDelta.y / 2 + 8);
+                                                                  basic_statuses.transform.localPosition.y +
+                                                                  basic_statuses_rect.sizeDelta.y / 2      + 8);
         instance.basic_statuses.transform.localPosition = new Vector3(-78, basic_statuses_rect.sizeDelta.y / 2);
 
         advance_statuses_rect.sizeDelta =
             new Vector2(191.33f, 30 + (instance.advance_statuses.statuses.Count - 1) / 6 * 28);
         advance_statuses.transform.localPosition = new Vector3(129.4f,
-            basic_statuses.transform.localPosition.y - basic_statuses_rect.sizeDelta.y / 2 - 30f -
-            advance_statuses_rect.sizeDelta.y / 2);
+                                                               basic_statuses.transform.localPosition.y -
+                                                               basic_statuses_rect.sizeDelta.y   / 2    - 30f -
+                                                               advance_statuses_rect.sizeDelta.y / 2);
         advance_statuses_text.transform.localPosition = new Vector3(129.4f,
-            advance_statuses.transform.localPosition.y + advance_statuses_rect.sizeDelta.y / 2 + 8);
+                                                                    advance_statuses.transform.localPosition.y +
+                                                                    advance_statuses_rect.sizeDelta.y / 2      + 8);
         instance.advance_statuses.transform.localPosition = new Vector3(-78, advance_statuses_rect.sizeDelta.y / 2);
 
 
         var effect_time_slider = new GameObject("effect_time_slider", typeof(Slider));
         var slider_background = new GameObject("background", typeof(Image));
-        var slider_fill = new GameObject("fill", typeof(Image));
-        var slider_handle = new GameObject("handle", typeof(Image));
-        var slider_val_shower = new GameObject("val", typeof(Text));
+        var slider_fill = new GameObject("fill",             typeof(Image));
+        var slider_handle = new GameObject("handle",         typeof(Image));
+        var slider_val_shower = new GameObject("val",        typeof(Text));
         effect_time_slider.transform.SetParent(content_transform);
         slider_background.transform.SetParent(effect_time_slider.transform);
         slider_fill.transform.SetParent(effect_time_slider.transform);

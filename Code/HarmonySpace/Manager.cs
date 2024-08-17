@@ -10,7 +10,7 @@ internal static class Manager
         var all_types = Assembly.GetExecutingAssembly().GetTypes();
         foreach (var type in all_types)
         {
-            if (type.Namespace != $"{nameof(GodTools)}.{nameof(GodTools)}.{nameof(HarmonySpace)}") continue;
+            if (type.Namespace != $"{nameof(GodTools)}.{nameof(HarmonySpace)}") continue;
 
             if (type.Name.StartsWith("H_"))
                 Harmony.CreateAndPatchAll(

@@ -4,5 +4,8 @@
     "version": "1.0.0",
     "description": "你猜",
     "targetGameBuild": 552,
-    "iconPath": "icon.png"
+    "iconPath": "icon.png",
+    "OptionalDependencies": [
+        "启源_启源核心"
+    ]
 }

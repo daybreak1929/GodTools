@@ -4,12 +4,14 @@ using GodTools.HarmonySpace;
 using GodTools.UI;
 using NCMS;
 using NeoModLoader.api;
+using NeoModLoader.api.attributes;
+using NeoModLoader.services;
 using UnityEngine;
 
 namespace GodTools;
 
 [ModEntry]
-internal class Main : MonoBehaviour, IMod, ILocalizable
+internal class Main : MonoBehaviour, IMod, ILocalizable, IReloadable
 {
     public static Main instance;
     public static Transform prefab_library;
@@ -64,16 +66,26 @@ internal class Main : MonoBehaviour, IMod, ILocalizable
         Manager.init();
         MyPowers.init();
         MyStatusEffects.init();
+
+        WindowModInfo.CreateWindow(C.mod_prefix + nameof(WindowModInfo), nameof(WindowModInfo));
+        WindowCreatureSpriteEditor.CreateWindow(nameof(WindowCreatureSpriteEditor), nameof(WindowCreatureSpriteEditor));
+        WindowCreatureDataEditor.CreateWindow(nameof(WindowCreatureDataEditor), nameof(WindowCreatureDataEditor));
+
         MyTab.create_tab();
-        MyTab.add_buttons();
-        MyTab.apply_buttons();
+    }
+
+    public void Reload()
+    {
     }
 
     public static void LogWarning(string str)
     {
+        LogService.LogWarning($"[GodTools]:{str}");
     }
 
+    [Hotfixable]
     public static void LogInfo(string str)
     {
+        LogService.LogInfo($"[GodTools]:{str}");
     }
 }

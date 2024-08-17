@@ -1,0 +1,16 @@
+key,cz,en
+Weapon,武器,Weapon
+Boots,靴子,Boots
+Helmet,头盔,Helmet
+Ring,戒指,Ring
+Amulet,护身符,Amulet
+Armor,盔甲,Armor
+equipments,装备,Equipment
+item_template,样式,Equipment Template
+item_by,锻造者,Forger
+item_from,锻造地,Forging Place
+item_year,锻造年份,Forging Year
+item_material,材质,Material
+item_modifier,词缀,Modifier
+WindowModInfo,模组介绍,Mod Info
+WindowCreatureSpriteEditor,生物贴图修改,Creature Sprite Editor
