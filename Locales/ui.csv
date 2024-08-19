@@ -12,5 +12,20 @@ item_from,锻造地,Forging Place
 item_year,锻造年份,Forging Year
 item_material,材质,Material
 item_modifier,词缀,Modifier
+INFO,信息,Information
+WORLD,世界,World
+ACTOR,生物,Creature
+BUILDING,建筑,Building
+CITY,城市,City
+KINGDOM,国家,Kingdom
+CULTURE,文化,Culture
+CLAN,氏族,Clan
+TILE,地块,Tile
+OTHERS,其他,Others
+DEBUG,调试,Debug
+gt_WindowModInfo,模组介绍,Mod Info
+gt_debug,DEBUG窗口,Debug Window
+gt_console,控制台,Console
+gt_debug_info,详细信息,Detailed Debug Info
 WindowModInfo,模组介绍,Mod Info
 WindowCreatureSpriteEditor,生物贴图修改,Creature Sprite Editor

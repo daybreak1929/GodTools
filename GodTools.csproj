@@ -40,6 +40,9 @@
         <Reference Include="Purchasing.Common">
             <HintPath>..\..\worldbox_Data\Managed\Purchasing.Common.dll</HintPath>
         </Reference>
+        <Reference Include="Unity.TextMeshPro">
+            <HintPath>..\..\worldbox_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+        </Reference>
         <Reference Include="UnityEngine">
             <HintPath>..\..\worldbox_Data\Managed\UnityEngine.dll</HintPath>
         </Reference>
@@ -57,6 +60,9 @@
         </Reference>
         <Reference Include="UnityEngine.GridModule">
             <HintPath>..\..\worldbox_Data\Managed\UnityEngine.GridModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.IMGUIModule">
+            <HintPath>..\..\worldbox_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
         </Reference>
         <Reference Include="UnityEngine.InputLegacyModule">
             <HintPath>..\..\worldbox_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
@@ -140,6 +146,10 @@
 
     <ItemGroup>
         <ProjectReference Include="..\CW_Core\Cultivation-Way-Core.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Plugins\"/>
     </ItemGroup>
 
 </Project>

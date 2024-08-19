@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GodTools.Abstract;
 using NeoModLoader.General;
 using NeoModLoader.General.UI.Tab;
 using UnityEngine;
@@ -21,13 +22,14 @@ internal enum TabButtonType
     DEBUG
 }
 
-internal static class MyTab
+internal class MyTab : IManager
 {
     public static           PowersTab                            powers_tab;
     private static readonly Dictionary<TabButtonType, Transform> button_groups = new();
     private static          RectTransform                        top_container;
 
-    internal static void create_tab()
+
+    public void Initialize()
     {
         top_container = new GameObject("TopContainer", typeof(RectTransform)).GetComponent<RectTransform>();
         top_container.pivot = new Vector2(0, 0.5f);

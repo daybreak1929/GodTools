@@ -5,6 +5,16 @@ namespace GodTools.Utils;
 
 public static class UIHelper
 {
+    public static Vector2 WorldToMapWarpPosition(Vector3 position)
+    {
+        Vector2 vector = World.world.camera.WorldToViewportPoint(position);
+        return new Vector2(
+            vector.x                                        * MapNamesManager.instance.canvasRect.sizeDelta.x -
+            MapNamesManager.instance.canvasRect.sizeDelta.x * 0.5f,
+            vector.y                                        * MapNamesManager.instance.canvasRect.sizeDelta.y -
+            MapNamesManager.instance.canvasRect.sizeDelta.y * 0.5f);
+    }
+
     [Hotfixable]
     public static Vector2 ClampPosition(Vector2 position, RectTransform rect_transform)
     {
