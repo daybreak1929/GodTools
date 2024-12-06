@@ -18,7 +18,14 @@ internal static class H_WindowPatch
         if (!initialized)
         {
             initialized = true;
-            AddEntryButtonForWindow(__instance, nameof(WindowCreatureSpriteEditor));
+            AddEntryButtonForWindow(__instance, nameof(WindowCreatureSpriteEditor), "ui/icons/iconAttractive");
+            AddEntryButtonForWindow(__instance, nameof(WindowCreatureDataEditor), "ui/icons/iconOptions");
+#if 一米_中文名
+            __instance.nameInput.addListener(new_name =>
+            {
+                
+            });
+#endif
         }
 
         WindowStatusEffectEditor.init(__instance);
@@ -33,10 +40,10 @@ internal static class H_WindowPatch
         }
     }
 
-    private static void AddEntryButtonForWindow(WindowCreatureInfo target_window, string entry_window_id)
+    private static void AddEntryButtonForWindow(WindowCreatureInfo target_window, string entry_window_id, string icon)
     {
         PowerButtonCreator.CreateWindowButton(entry_window_id, entry_window_id,
-                                              SpriteTextureLoader.getSprite("ui/Icons/iconAttractive"),
+                                              SpriteTextureLoader.getSprite(icon),
                                               target_window.transform.Find("Background"), new Vector2(156, _last_y));
         _last_y -= 40;
     }

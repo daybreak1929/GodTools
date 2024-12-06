@@ -51,6 +51,8 @@ internal class MyTab : IManager
         AddInfoButtons();
         AddWorldButtons();
         AddDebugButtons();
+        
+        SwitchTab(TabButtonType.INFO);
     }
 
     private static void AddDebugButtons()

@@ -6,7 +6,7 @@
         <Nullable>disable</Nullable>
         <OutputType>Library</OutputType>
         <RootNamespace>GodTools</RootNamespace>
-        <DefineConstants>启源_启源核心</DefineConstants>
+        <DefineConstants>启源_启源核心;一米_中文名</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

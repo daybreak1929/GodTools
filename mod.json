@@ -6,6 +6,7 @@
     "targetGameBuild": 552,
     "iconPath": "icon.png",
     "OptionalDependencies": [
-        "启源_启源核心"
+        "启源_启源核心",
+        "一米_中文名"
     ]
 }
