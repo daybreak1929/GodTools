@@ -35,7 +35,7 @@ internal class MyTab : IManager
         top_container.pivot = new Vector2(0, 0.5f);
 
         powers_tab = TabManager.CreateTab("GodTools", "GodTools", "GodTools Description",
-                                          SpriteTextureLoader.getSprite("gt_windows/iconTab"));
+            SpriteTextureLoader.getSprite("gt_windows/iconTab"));
         powers_tab.SetLayout(new List<string>
         {
             "Controller", "Container"
@@ -51,7 +51,7 @@ internal class MyTab : IManager
         AddInfoButtons();
         AddWorldButtons();
         AddDebugButtons();
-        
+
         SwitchTab(TabButtonType.INFO);
     }
 
@@ -59,14 +59,14 @@ internal class MyTab : IManager
     {
         PowerButton button;
         button = PowerButtonCreator.CreateWindowButton(C.mod_prefix + "debug", "debug",
-                                                       SpriteTextureLoader.getSprite("ui/icons/iconDebug"));
+            SpriteTextureLoader.getSprite("ui/icons/iconDebug"));
         AddButton(TabButtonType.DEBUG, button);
         button = PowerButtonCreator.CreateSimpleButton($"{C.mod_prefix}console", World.world.console.Show,
-                                                       SpriteTextureLoader.getSprite("ui/icons/iconCommunity"));
+            SpriteTextureLoader.getSprite("ui/icons/iconCommunity"));
         AddButton(TabButtonType.DEBUG, button);
         button = PowerButtonCreator.CreateSimpleButton($"{C.mod_prefix}debug_info",
-                                                       () => { DebugConfig.createTool("Game Info"); },
-                                                       SpriteTextureLoader.getSprite("ui/icons/iconNewWorld"));
+            () => { DebugConfig.createTool("Game Info"); },
+            SpriteTextureLoader.getSprite("ui/icons/iconNewWorld"));
         AddButton(TabButtonType.DEBUG, button);
     }
 
@@ -78,7 +78,10 @@ internal class MyTab : IManager
     {
         PowerButton button;
         button = PowerButtonCreator.CreateWindowButton(WindowModInfo.WINDOW_ID, WindowModInfo.WINDOW_ID,
-                                                       SpriteTextureLoader.getSprite("ui/icons/iconAbout"));
+            SpriteTextureLoader.getSprite("ui/icons/iconAbout"));
+        AddButton(TabButtonType.INFO, button);
+        button = PowerButtonCreator.CreateWindowButton(WindowTops.WindowId, WindowTops.WindowId,
+            SpriteTextureLoader.getSprite("ui/icons/iconAbout"));
         AddButton(TabButtonType.INFO, button);
     }
 
@@ -96,8 +99,8 @@ internal class MyTab : IManager
     private static void ConstructTabContainer(TabButtonType type, Sprite icon)
     {
         powers_tab.AddPowerButton("Controller",
-                                  PowerButtonCreator.CreateSimpleButton(type.ToString(), () => { SwitchTab(type); },
-                                                                        icon));
+            PowerButtonCreator.CreateSimpleButton(type.ToString(), () => { SwitchTab(type); },
+                icon));
         Transform transform = new GameObject(type.ToString(), typeof(GridLayoutGroup), typeof(ContentSizeFitter))
             .transform;
         transform.SetParent(top_container);

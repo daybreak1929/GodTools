@@ -97,10 +97,11 @@ internal class Main : MonoBehaviour, IMod, ILocalizable, IReloadable
         WindowModInfo.CreateWindow(C.mod_prefix + nameof(WindowModInfo), nameof(WindowModInfo));
         WindowCreatureSpriteEditor.CreateWindow(nameof(WindowCreatureSpriteEditor), nameof(WindowCreatureSpriteEditor));
         WindowCreatureDataEditor.CreateWindow(nameof(WindowCreatureDataEditor), nameof(WindowCreatureDataEditor));
+        WindowTops.CreateAndInit(C.mod_prefix + nameof(WindowTops));
 
         var manager_types = Assembly.GetExecutingAssembly().GetTypes()
-                                    .Where(t => typeof(IManager).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
-                                    .ToList();
+            .Where(t => typeof(IManager).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
+            .ToList();
         SortManagerTypes(manager_types);
         foreach (Type t in manager_types)
             try
