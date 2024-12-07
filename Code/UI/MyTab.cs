@@ -44,12 +44,13 @@ internal class MyTab : IManager
 
         ConstructTabContainer(TabButtonType.INFO,  SpriteTextureLoader.getSprite("ui/icons/iconAbout"));
         ConstructTabContainer(TabButtonType.WORLD, SpriteTextureLoader.getSprite("ui/icons/iconWorldInfo"));
-        ConstructTabContainer(TabButtonType.ACTOR, SpriteTextureLoader.getSprite("ui/icons/iconInspect"));
+        ConstructTabContainer(TabButtonType.ACTOR, SpriteTextureLoader.getSprite("ui/icons/iconHumans"));
         ConstructTabContainer(TabButtonType.DEBUG, SpriteTextureLoader.getSprite("ui/icons/iconDebug"));
 
         powers_tab.UpdateLayout();
         AddInfoButtons();
         AddWorldButtons();
+        AddCreatureButtons();
         AddDebugButtons();
 
         SwitchTab(TabButtonType.INFO);
@@ -83,6 +84,14 @@ internal class MyTab : IManager
         button = PowerButtonCreator.CreateWindowButton(WindowTops.WindowId, WindowTops.WindowId,
             SpriteTextureLoader.getSprite("ui/icons/iconAbout"));
         AddButton(TabButtonType.INFO, button);
+    }
+
+    private static void AddCreatureButtons()
+    {
+        PowerButton button;
+        button = PowerButtonCreator.CreateWindowButton(WindowCreatureSearch.WindowId, WindowCreatureSearch.WindowId,
+            SpriteTextureLoader.getSprite("ui/icons/iconInspect"));
+        AddButton(TabButtonType.ACTOR, button);
     }
 
     private static void AddButton(TabButtonType type, PowerButton button)
