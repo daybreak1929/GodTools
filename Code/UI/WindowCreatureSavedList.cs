@@ -124,6 +124,7 @@ public class WindowCreatureSavedList : AbstractWindow<WindowCreatureSavedList>
             {
                 UnsaveActorData(data);
                 _list.RemoveAt(idx);
+                Main.LogInfo("delete");
             });
             card.transform.localPosition = new Vector2(0, start_y - i * single_element_height);
         }
