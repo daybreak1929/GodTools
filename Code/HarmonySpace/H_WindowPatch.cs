@@ -1,5 +1,6 @@
 using GodTools.UI;
 using HarmonyLib;
+using NeoModLoader.api.attributes;
 using NeoModLoader.General;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,11 +13,13 @@ internal static class H_WindowPatch
 
     private static float _last_y = 84;
     private static Image gender_image;
+    private static Image saved_image;
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(WindowCreatureInfo), "OnEnable")]
     public static void item_editor_init(WindowCreatureInfo __instance)
     {
+        Actor actor = __instance.actor;
         if (!initialized)
         {
             initialized = true;
@@ -42,13 +45,33 @@ internal static class H_WindowPatch
 
             AddEntryButtonForWindow(__instance, nameof(WindowCreatureSpriteEditor), "ui/icons/iconAttractive");
             AddEntryButtonForWindow(__instance, nameof(WindowCreatureDataEditor), "ui/icons/iconOptions");
+
+            GameObject entry =
+                Object.Instantiate(__instance.buttonTraitEditor, __instance.transform.Find("Background"));
+            entry.transform.localPosition = new Vector3(116.8f, -112f);
+            entry.transform.localScale = new Vector3(1,         1);
+            saved_image = entry.transform.Find("Button Trait/Icon").GetComponent<Image>();
+            saved_image.sprite =
+                Resources.Load<Sprite>("gt_windows/save_actor");
+            var button = entry.transform.Find("Button Trait").GetComponent<Button>();
+            button.onClick = new Button.ButtonClickedEvent();
+            button.onClick.AddListener([Hotfixable]() =>
+            {
+                WindowCreatureSavedList save_list = WindowCreatureSavedList.Instance;
+                if (save_list.ActorSaved(__instance.actor))
+                    save_list.UnsaveActor(__instance.actor);
+                else
+                    save_list.SaveActor(__instance.actor);
+
+                CheckSave(__instance.actor, saved_image);
+            });
+            button.GetComponent<TipButton>().textOnClick = "save_actor";
 #if 一米_中文名
             __instance.nameInput.addListener(new_name => { });
 #endif
         }
 
         WindowStatusEffectEditor.init(__instance);
-        Actor actor = __instance.actor;
         if (actor.asset.use_items)
         {
             WindowItemEditor.init(__instance);
@@ -60,6 +83,16 @@ internal static class H_WindowPatch
         }
 
         CheckGender(actor);
+        CheckSave(actor, saved_image);
+    }
+
+    private static void CheckSave(Actor actor, Image image)
+    {
+        WindowCreatureSavedList save_list = WindowCreatureSavedList.Instance;
+        if (save_list.ActorSaved(actor))
+            image.color = Color.white;
+        else
+            image.color = Color.gray;
     }
 
     private static void CheckGender(Actor actor)
@@ -79,6 +112,14 @@ internal static class H_WindowPatch
     }
 
     private static void AddEntryButtonForWindow(WindowCreatureInfo target_window, string entry_window_id, string icon)
+    {
+        PowerButtonCreator.CreateWindowButton(entry_window_id, entry_window_id,
+            SpriteTextureLoader.getSprite(icon),
+            target_window.transform.Find("Background"), new Vector2(156, _last_y));
+        _last_y -= 40;
+    }
+
+    private static void AddSideButton(WindowCreatureInfo target_window, string entry_window_id, string icon)
     {
         PowerButtonCreator.CreateWindowButton(entry_window_id, entry_window_id,
             SpriteTextureLoader.getSprite(icon),

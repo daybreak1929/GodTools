@@ -92,6 +92,10 @@ internal class MyTab : IManager
         button = PowerButtonCreator.CreateWindowButton(WindowCreatureSearch.WindowId, WindowCreatureSearch.WindowId,
             SpriteTextureLoader.getSprite("ui/icons/iconInspect"));
         AddButton(TabButtonType.ACTOR, button);
+        button = PowerButtonCreator.CreateWindowButton(WindowCreatureSavedList.WindowId,
+            WindowCreatureSavedList.WindowId,
+            SpriteTextureLoader.getSprite("gt_windows/save_actor_list"));
+        AddButton(TabButtonType.ACTOR, button);
     }
 
     private static void AddButton(TabButtonType type, PowerButton button)

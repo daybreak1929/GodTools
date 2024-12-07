@@ -98,6 +98,7 @@ internal class Main : MonoBehaviour, IMod, ILocalizable, IReloadable
         WindowCreatureSpriteEditor.CreateWindow(nameof(WindowCreatureSpriteEditor), nameof(WindowCreatureSpriteEditor));
         WindowCreatureDataEditor.CreateWindow(nameof(WindowCreatureDataEditor), nameof(WindowCreatureDataEditor));
         WindowCreatureSearch.CreateWindow(nameof(WindowCreatureSearch), nameof(WindowCreatureSearch));
+        WindowCreatureSavedList.CreateAndInit(nameof(WindowCreatureSavedList));
         WindowTops.CreateAndInit(C.mod_prefix + nameof(WindowTops));
 
         var manager_types = Assembly.GetExecutingAssembly().GetTypes()

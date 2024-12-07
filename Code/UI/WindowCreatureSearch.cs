@@ -17,7 +17,7 @@ public class WindowCreatureSearch : SingleAutoLayoutWindow<WindowCreatureSearch>
         AutoVertLayoutGroup search_group = this.BeginVertGroup();
         InputBar search_bar = Instantiate(InputBar.Prefab, search_group.transform);
         search_bar.SetSize(new Vector2(180, 24));
-        search_bar.Setup(ApplySearch);
+        search_bar.Setup("", ApplySearch);
 
         display_group = this.BeginVertGroup(pSpacing: 8);
         display_group.GetComponent<RectTransform>().pivot = new Vector2(0.5f, 1f);

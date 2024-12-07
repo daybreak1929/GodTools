@@ -17,7 +17,8 @@ public class InputBar : APrefab<InputBar>
         InputField = transform.Find("Input").GetComponent<InputField>();
     }
 
-    public void Setup(Action<string> on_value_changed = null, Action<string> on_value_submitted = null)
+    public void Setup(string         text_on_empty      = "", Action<string> on_value_changed = null,
+                      Action<string> on_value_submitted = null)
     {
         Init();
         if (on_value_changed != null)

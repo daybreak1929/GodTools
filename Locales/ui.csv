@@ -6,6 +6,7 @@ Ring,戒指,Ring
 Amulet,护身符,Amulet
 Armor,盔甲,Armor
 equipments,装备,Equipment
+save_actor,保存人物,Save Actor
 item_template,样式,Equipment Template
 item_by,锻造者,Forger
 item_from,锻造地,Forging Place
@@ -32,3 +33,5 @@ gt_WindowTops Title,世界生物相关排行,World Tops
 WindowModInfo,模组介绍,Mod Info
 WindowCreatureSpriteEditor,生物贴图修改,Creature Sprite Editor
 WindowCreatureSearch,生物搜索,Creature Search
+WindowCreatureSavedList Title,保存的生物,Saved Creatures
+WindowCreatureSavedList,保存的生物,Saved Creatures

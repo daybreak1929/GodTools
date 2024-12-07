@@ -42,7 +42,7 @@ public class RawText : APrefab<RawText>
         text.font = LocalizedTextManager.currentFont;
         text.resizeTextForBestFit = true;
         text.resizeTextMaxSize = 12;
-        text.resizeTextMinSize = 8;
+        text.resizeTextMinSize = 1;
         text.alignment = TextAnchor.UpperLeft;
         text.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 240);
 
