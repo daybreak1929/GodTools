@@ -93,6 +93,7 @@ internal class Main : MonoBehaviour, IMod, ILocalizable, IReloadable
         Manager.init();
         MyPowers.init();
         MyStatusEffects.init();
+        Tooltips.init();
 
         WindowModInfo.CreateWindow(C.mod_prefix + nameof(WindowModInfo), nameof(WindowModInfo));
         WindowCreatureSpriteEditor.CreateWindow(nameof(WindowCreatureSpriteEditor), nameof(WindowCreatureSpriteEditor));

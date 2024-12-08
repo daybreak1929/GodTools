@@ -1,9 +1,12 @@
+using System;
+using DG.Tweening;
 using GodTools.UI;
 using HarmonyLib;
 using NeoModLoader.api.attributes;
 using NeoModLoader.General;
 using UnityEngine;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace GodTools.HarmonySpace;
 
@@ -46,14 +49,39 @@ internal static class H_WindowPatch
             //AddEntryButtonForWindow(__instance, nameof(WindowCreatureSpriteEditor), "ui/icons/iconAttractive");
             AddEntryButtonForWindow(__instance, nameof(WindowCreatureDataEditor), "ui/icons/iconOptions");
 
-            GameObject entry =
+            Image mood_image = __instance.moodSprite;
+            var mood_modify_button = mood_image.gameObject.AddComponent<Button>();
+            var mood_tip_button = mood_image.gameObject.AddComponent<TipButton>();
+            mood_tip_button.hoverAction = () =>
+            {
+                Tooltip.show(mood_image.gameObject, "mood", new TooltipData
+                {
+                    actor = actor
+                });
+                mood_image.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
+                mood_image.transform.DOKill();
+                mood_image.transform.DOScale(1f, 0.1f)
+                    .SetEase(Ease.InBack);
+            };
+            mood_modify_button.onClick.AddListener(() =>
+            {
+                var mood_list = AssetManager.moods.list;
+                var curr_mood_idx = mood_list.FindIndex(x => x == AssetManager.moods.get(actor.data.mood));
+                MoodAsset new_mood =
+                    mood_list[Math.Min(mood_list.Count - 1, Math.Max(0, (curr_mood_idx + 1) % (mood_list.Count - 1)))];
+                actor.changeMood(new_mood.id);
+                mood_image.sprite = new_mood.getSprite();
+            });
+
+
+            GameObject save_actor =
                 Object.Instantiate(__instance.buttonTraitEditor, __instance.transform.Find("Background"));
-            entry.transform.localPosition = new Vector3(116.8f, -112f);
-            entry.transform.localScale = new Vector3(1,         1);
-            saved_image = entry.transform.Find("Button Trait/Icon").GetComponent<Image>();
+            save_actor.transform.localPosition = new Vector3(116.8f, -112f);
+            save_actor.transform.localScale = new Vector3(1,         1);
+            saved_image = save_actor.transform.Find("Button Trait/Icon").GetComponent<Image>();
             saved_image.sprite =
                 Resources.Load<Sprite>("gt_windows/save_actor");
-            var button = entry.transform.Find("Button Trait").GetComponent<Button>();
+            var button = save_actor.transform.Find("Button Trait").GetComponent<Button>();
             button.onClick = new Button.ButtonClickedEvent();
             button.onClick.AddListener([Hotfixable]() =>
             {
