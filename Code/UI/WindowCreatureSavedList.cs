@@ -65,7 +65,7 @@ public class WindowCreatureSavedList : AbstractWindow<WindowCreatureSavedList>
         File.WriteAllText(_save_path, JsonConvert.SerializeObject(saved_actors));
     }
 
-    private ActorData Copy(ActorData data)
+    private static ActorData Copy(ActorData data)
     {
         var copied_data = JsonConvert.DeserializeObject<ActorData>(JsonConvert.SerializeObject(data));
         if (copied_data.custom_data_bool?.dict == null) copied_data.custom_data_bool = null;
@@ -118,7 +118,7 @@ public class WindowCreatureSavedList : AbstractWindow<WindowCreatureSavedList>
             card.Setup(data, () =>
             {
                 ScrollWindow.hideAllEvent();
-                _selected_data = Copy(data);
+                _selected_data = data;
                 _power_button.clickActivePower();
             }, () =>
             {
@@ -138,18 +138,19 @@ public class WindowCreatureSavedList : AbstractWindow<WindowCreatureSavedList>
     [Hotfixable]
     public static bool SpawnSelectedSavedActor(WorldTile tile, string power_id)
     {
-        _selected_data.id = World.world.mapStats.getNextId("unit");
-        if (World.world.cities.get(_selected_data.cityID) == null) _selected_data.cityID = "";
+        ActorData data = Copy(_selected_data);
+        data.id = World.world.mapStats.getNextId("unit");
+        if (World.world.cities.get(data.cityID) == null) data.cityID = "";
 
-        if (World.world.clans.get(_selected_data.clan) == null) _selected_data.clan = "";
+        if (World.world.clans.get(data.clan) == null) data.clan = "";
 
-        if (World.world.cultures.get(_selected_data.culture) == null) _selected_data.culture = "";
+        if (World.world.cultures.get(data.culture) == null) data.culture = "";
 
-        _selected_data.homeBuildingID = "";
-        _selected_data.transportID = "";
-        _selected_data.x = tile.pos.x;
-        _selected_data.y = tile.pos.y;
-        World.world.units.loadObject(_selected_data);
+        data.homeBuildingID = "";
+        data.transportID = "";
+        data.x = tile.pos.x;
+        data.y = tile.pos.y;
+        World.world.units.loadObject(data);
         return true;
     }
 }
