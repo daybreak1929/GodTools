@@ -56,7 +56,7 @@ internal static class H_WindowPatch
             {
                 Tooltip.show(mood_image.gameObject, "mood", new TooltipData
                 {
-                    actor = actor
+                    actor = __instance.actor
                 });
                 mood_image.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
                 mood_image.transform.DOKill();
@@ -66,10 +66,10 @@ internal static class H_WindowPatch
             mood_modify_button.onClick.AddListener(() =>
             {
                 var mood_list = AssetManager.moods.list;
-                var curr_mood_idx = mood_list.FindIndex(x => x == AssetManager.moods.get(actor.data.mood));
+                var curr_mood_idx = mood_list.FindIndex(x => x == AssetManager.moods.get(__instance.actor.data.mood));
                 MoodAsset new_mood =
                     mood_list[Math.Min(mood_list.Count - 1, Math.Max(0, (curr_mood_idx + 1) % (mood_list.Count - 1)))];
-                actor.changeMood(new_mood.id);
+                __instance.actor.changeMood(new_mood.id);
                 mood_image.sprite = new_mood.getSprite();
             });
 
