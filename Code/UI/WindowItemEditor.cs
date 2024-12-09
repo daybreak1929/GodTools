@@ -10,7 +10,7 @@ namespace GodTools.UI;
 
 internal class ModifierEditorElement : MonoBehaviour
 {
-    public Text text;
+    public Text   text;
     public Button up;
     public Button down;
     public Button left;
@@ -119,10 +119,10 @@ internal class WindowItemEditor : MonoBehaviour
     private static readonly List<string> equipment_blacklist = new()
         { "claws", "jaws", "base", "hands", "fire_hands", "bite", "rocks", "snowball" };
 
-    private static bool initialized;
-    public static WindowItemEditor instance;
-    public static GameObject entry_button;
-    public List<string> cur_valid_modifier_types = new();
+    private static bool             initialized;
+    public static  WindowItemEditor instance;
+    public static  GameObject       entry_button;
+    public         List<string>     cur_valid_modifier_types = new();
 
     private readonly List<EquipmentButton> equipment_buttons = new();
     private readonly List<ModifierEditorElement> modifier_elements = new();
@@ -130,7 +130,7 @@ internal class WindowItemEditor : MonoBehaviour
     private readonly List<string> valid_material = new();
     private readonly List<ItemAsset> valid_templates = new();
 
-    private Actor actor;
+    private Actor      actor;
     private InputField by_editor;
     private RectTransform content_rect;
     private GameObject cur_material_icon;
@@ -151,10 +151,10 @@ internal class WindowItemEditor : MonoBehaviour
     private ObjectPoolGenericMono<EquipmentButton> pool_equipment;
     private ObjectPoolGenericMono<ModifierEditorElement> pool_modifiers;
     private ObjectPoolGenericMono<NewItemButton> pool_new_item;
-    private GameObject prefab_item;
-    private EquipmentButton selected_equipment_button;
-    public Dictionary<string, List<ItemAsset>> valid_modifiers = new();
-    private InputField year_editor;
+    private GameObject                           prefab_item;
+    private EquipmentButton                      selected_equipment_button;
+    public  Dictionary<string, List<ItemAsset>>  valid_modifiers = new();
+    private InputField                           year_editor;
 
     private void OnEnable()
     {
@@ -184,6 +184,8 @@ internal class WindowItemEditor : MonoBehaviour
     {
         equipment_buttons.Clear();
         modifier_elements.Clear();
+        actor.dirty_sprite_item = true;
+        actor.setStatsDirty();
     }
 
     public static void init(WindowCreatureInfo creature_window)
@@ -388,7 +390,7 @@ internal class WindowItemEditor : MonoBehaviour
         rect = material_selector.GetComponent<RectTransform>();
         rect.sizeDelta = new Vector2(160, 25);
 
-        var material_icon = new GameObject("Icon", typeof(Image));
+        var material_icon = new GameObject("Icon",        typeof(Image));
         var material_left_button = new GameObject("Left", typeof(Image), typeof(Button));
         var material_right_button = new GameObject("Right", typeof(Image), typeof(Button));
         instance.cur_material_icon = material_icon;
@@ -404,7 +406,7 @@ internal class WindowItemEditor : MonoBehaviour
         material_left_button.transform.localPosition = new Vector3(-60, 0);
         material_right_button.transform.localPosition = new Vector3(60, 0);
 
-        material_icon.transform.localScale = new Vector3(1, 1);
+        material_icon.transform.localScale = new Vector3(1,        1);
         material_left_button.transform.localScale = new Vector3(1, 1);
         material_right_button.transform.localScale = new Vector3(1, 1);
 
@@ -504,8 +506,8 @@ internal class WindowItemEditor : MonoBehaviour
         rect.sizeDelta = new Vector2(160, 20);
         modifier_editor.transform.localScale = new Vector3(1, 1);
 
-        var modifier_text = new GameObject("Text", typeof(Text));
-        var modifier_left_button = new GameObject("Left", typeof(Image), typeof(Button));
+        var modifier_text = new GameObject("Text",          typeof(Text));
+        var modifier_left_button = new GameObject("Left",   typeof(Image), typeof(Button));
         var modifier_right_button = new GameObject("Right", typeof(Image), typeof(Button));
         var modifier_level_up_button = new GameObject("Up", typeof(Image), typeof(Button));
         var modifier_level_down_button = new GameObject("Down", typeof(Image), typeof(Button));
@@ -527,15 +529,15 @@ internal class WindowItemEditor : MonoBehaviour
         modifier_text.transform.SetParent(modifier_editor.transform);
 
 
-        modifier_text.transform.localPosition = new Vector3(0, 0);
-        modifier_left_button.transform.localPosition = new Vector3(-30, 0);
-        modifier_right_button.transform.localPosition = new Vector3(30, 0);
+        modifier_text.transform.localPosition = new Vector3(0,              0);
+        modifier_left_button.transform.localPosition = new Vector3(-30,     0);
+        modifier_right_button.transform.localPosition = new Vector3(30,     0);
         modifier_level_up_button.transform.localPosition = new Vector3(-60, 0);
         modifier_level_down_button.transform.localPosition = new Vector3(60, 0);
 
-        modifier_text.transform.localScale = new Vector3(1, 1);
-        modifier_left_button.transform.localScale = new Vector3(1, 1);
-        modifier_right_button.transform.localScale = new Vector3(1, 1);
+        modifier_text.transform.localScale = new Vector3(1,            1);
+        modifier_left_button.transform.localScale = new Vector3(1,     1);
+        modifier_right_button.transform.localScale = new Vector3(1,    1);
         modifier_level_up_button.transform.localScale = new Vector3(1, 1);
         modifier_level_down_button.transform.localScale = new Vector3(1, 1);
 
