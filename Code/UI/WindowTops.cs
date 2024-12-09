@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace GodTools.UI;
 
-public class WindowTops : AbstractWindow<WindowTops>
+public class WindowTops : AbstractWideWindow<WindowTops>
 {
     private const float                             single_element_height = 35;
     private const float                             start_y               = -17.5f;
@@ -25,6 +25,8 @@ public class WindowTops : AbstractWindow<WindowTops>
     {
         content_rect = ContentTransform.GetComponent<RectTransform>();
         scroll_view_rect = content_rect.parent.parent.GetComponent<RectTransform>();
+        scroll_view_rect.localPosition = Vector3.zero;
+        scroll_view_rect.sizeDelta = new Vector2(200, 250);
         content_rect.pivot = new Vector2(0.5f, 1);
         _pool = new ObjectPoolGenericMono<ActorLevel>(ActorLevel.Prefab, ContentTransform);
     }

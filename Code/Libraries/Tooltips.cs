@@ -1,14 +1,14 @@
+using GodTools.Abstract;
 using NeoModLoader.General;
 
 namespace GodTools.Libraries;
 
-internal static class Tooltips
+public class Tooltips : ExtendLibrary<TooltipAsset, Tooltips>
 {
-    public static TooltipAsset mood;
+    [CloneSource("tip")] public static TooltipAsset mood { get; private set; }
 
-    public static void init()
+    protected override void OnInit()
     {
-        mood = AssetManager.tooltips.clone(nameof(mood), "tip");
         mood.callback = (tooltip, type, data) =>
         {
             Actor actor = data.actor;

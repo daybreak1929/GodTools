@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GodTools.Utils;
 
-public static class UIHelper
+public static class UITools
 {
     public static Vector2 WorldToMapWarpPosition(Vector3 position)
     {

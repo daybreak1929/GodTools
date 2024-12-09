@@ -5,8 +5,6 @@ namespace GodTools.Utils;
 
 internal class Helper
 {
-    private static Sprite button;
-
     public static Sprite get_inner_sliced()
     {
         return SpriteTextureLoader.getSprite("ui/special/windowInnerSliced");

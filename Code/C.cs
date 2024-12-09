@@ -1,10 +1,11 @@
 ﻿namespace GodTools;
 
-internal class C
+internal static class C
 {
+    public const string mod_prefix = "inmny.godtools";
+
     public const string MOD_NAME                   = "GodTools";
     public const string PATCH_ID                   = "inmny.GodTools";
-    public const string mod_prefix                 = "gt_";
     public const string desc_postfix               = " Description";
     public const string force_attack               = "gt_force_attack";
     public const string about_this                 = "gt_about_this";

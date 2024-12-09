@@ -6,7 +6,7 @@ namespace GodTools.Effect;
 internal class PosShowEffect : SimpleEffect
 {
     public UnitSelectionEffect effect;
-    public float left_time;
+    public float         left_time;
     public BaseSimObject selected_object;
 
     public void update(float pElapsed)
@@ -38,7 +38,7 @@ internal class PosShowEffect : SimpleEffect
 
     public void create(GameObject prefab)
     {
-        effect = Object.Instantiate(prefab, Main.instance.gameObject.transform).GetComponent<UnitSelectionEffect>();
+        effect = Object.Instantiate(prefab, Main.I.gameObject.transform).GetComponent<UnitSelectionEffect>();
         effect.create();
     }
 

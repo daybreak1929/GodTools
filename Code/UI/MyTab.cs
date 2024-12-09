@@ -35,7 +35,7 @@ internal class MyTab : IManager
         top_container.pivot = new Vector2(0, 0.5f);
 
         powers_tab = TabManager.CreateTab("GodTools", "GodTools", "GodTools Description",
-            SpriteTextureLoader.getSprite("gt_windows/iconTab"));
+            SpriteTextureLoader.getSprite("inmny/godtools/icons/iconTab"));
         powers_tab.SetLayout(new List<string>
         {
             "Controller", "Container"
@@ -59,13 +59,13 @@ internal class MyTab : IManager
     private static void AddDebugButtons()
     {
         PowerButton button;
-        button = PowerButtonCreator.CreateWindowButton(C.mod_prefix + "debug", "debug",
+        button = PowerButtonCreator.CreateWindowButton($"{C.mod_prefix}.debug", "debug",
             SpriteTextureLoader.getSprite("ui/icons/iconDebug"));
         AddButton(TabButtonType.DEBUG, button);
-        button = PowerButtonCreator.CreateSimpleButton($"{C.mod_prefix}console", World.world.console.Show,
+        button = PowerButtonCreator.CreateSimpleButton($"{C.mod_prefix}.console", World.world.console.Show,
             SpriteTextureLoader.getSprite("ui/icons/iconCommunity"));
         AddButton(TabButtonType.DEBUG, button);
-        button = PowerButtonCreator.CreateSimpleButton($"{C.mod_prefix}debug_info",
+        button = PowerButtonCreator.CreateSimpleButton($"{C.mod_prefix}.debug_info",
             () => { DebugConfig.createTool("Game Info"); },
             SpriteTextureLoader.getSprite("ui/icons/iconNewWorld"));
         AddButton(TabButtonType.DEBUG, button);

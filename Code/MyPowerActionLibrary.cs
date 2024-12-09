@@ -19,7 +19,7 @@ internal static class MyPowerActionLibrary
 
             Main.LogInfo($"Attacker is:{force_attack_attacker.data.id}");
             WorldTip.showNow($"选中攻击方:{force_attack_attacker.getName()}", false, "top");
-            Main.instance.pos_show_effect_controller.get()
+            Main.I.pos_show_effect_controller.get()
                 .show(force_attack_attacker, force_attack_attacker.currentScale, 2f);
             return true;
         }
@@ -36,7 +36,7 @@ internal static class MyPowerActionLibrary
 
             WorldTip.showNow($"选中受击方:{force_attack_defender.getName()}", false, "top");
             Main.LogInfo($"Defender is:{force_attack_defender.data.id}");
-            Main.instance.pos_show_effect_controller.get()
+            Main.I.pos_show_effect_controller.get()
                 .show(force_attack_defender, force_attack_defender.currentScale, 0.8f);
         }
 
@@ -68,7 +68,7 @@ internal static class MyPowerActionLibrary
         force_attack_attacker.stats[S.range] = tmp;
         World.world.worldLaws.world_law_angry_civilians.boolVal = angry_civillians;
 
-        Main.instance.pos_show_effect_controller.get()
+        Main.I.pos_show_effect_controller.get()
             .show(force_attack_attacker, force_attack_attacker.currentScale, 2f);
 
         force_attack_defender = null;

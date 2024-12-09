@@ -4,15 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using GodTools.Abstract;
-using GodTools.Attributes;
 using GodTools.Effect;
-using GodTools.HarmonySpace;
-using GodTools.Libraries;
-using GodTools.UI;
-using NCMS;
 using NeoModLoader.api;
-using NeoModLoader.api.attributes;
-using NeoModLoader.services;
 using NeoModLoader.utils;
 using TMPro;
 using UnityEngine;
@@ -20,10 +13,8 @@ using Object = UnityEngine.Object;
 
 namespace GodTools;
 
-[ModEntry]
-internal class Main : MonoBehaviour, IMod, ILocalizable, IReloadable
+internal class Main : BasicMod<Main>
 {
-    public static Main          instance;
     public static Transform     prefab_library;
     public static Transform     game_ui_object_temp_library;
     public static TMP_FontAsset default_font;
@@ -43,30 +34,28 @@ internal class Main : MonoBehaviour, IMod, ILocalizable, IReloadable
         pos_show_effect_controller.update(Time.fixedDeltaTime * C.pos_show_effect_time_scale);
     }
 
-    public string GetLocaleFilesDirectory(ModDeclare pModDeclare)
+    public void Reload()
     {
-        return Path.Combine(pModDeclare.FolderPath, "Locales");
     }
 
-    public ModDeclare GetDeclaration()
+    private static void SortManagerTypes(List<Type> manager_types)
     {
-        return Mod;
+        for (var i = 0; i < manager_types.Count; i++)
+        {
+            var i_attr = manager_types[i].GetCustomAttribute<DependencyAttribute>();
+            if (i_attr == null) continue;
+            for (var j = i + 1; j < manager_types.Count; j++)
+                if (i_attr.Types.Contains(manager_types[j]))
+                {
+                    manager_types.Swap(i, j);
+                    break;
+                }
+        }
     }
 
-    public GameObject GetGameObject()
+    protected override void OnModLoad()
     {
-        return gameObject;
-    }
-
-    public string GetUrl()
-    {
-        return Mod.RepoUrl;
-    }
-
-    public void OnLoad(ModDeclare pModDecl, GameObject pGameObject)
-    {
-        Mod = pModDecl;
-        instance = this;
+        Mod = GetDeclaration();
         prefab_library = new GameObject("Prefabs").transform;
         prefab_library.SetParent(transform);
         prefab_library.localPosition = new Vector3(9999999, 9999999, 0);
@@ -89,19 +78,6 @@ internal class Main : MonoBehaviour, IMod, ILocalizable, IReloadable
 
         default_font = Resources.Load<TMP_FontAsset>("fonts & materials/notosanssc-regular sdf");
 
-
-        Manager.init();
-        MyPowers.init();
-        MyStatusEffects.init();
-        Tooltips.init();
-
-        WindowModInfo.CreateWindow(C.mod_prefix + nameof(WindowModInfo), nameof(WindowModInfo));
-        WindowCreatureSpriteEditor.CreateWindow(nameof(WindowCreatureSpriteEditor), nameof(WindowCreatureSpriteEditor));
-        WindowCreatureDataEditor.CreateWindow(nameof(WindowCreatureDataEditor), nameof(WindowCreatureDataEditor));
-        WindowCreatureSearch.CreateWindow(nameof(WindowCreatureSearch), nameof(WindowCreatureSearch));
-        WindowCreatureSavedList.CreateAndInit(nameof(WindowCreatureSavedList));
-        WindowTops.CreateAndInit(C.mod_prefix + nameof(WindowTops));
-
         var manager_types = Assembly.GetExecutingAssembly().GetTypes()
             .Where(t => typeof(IManager).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
             .ToList();
@@ -117,35 +93,5 @@ internal class Main : MonoBehaviour, IMod, ILocalizable, IReloadable
             {
                 LogWarning($"Failed to initialize manager: {t.FullName}\n{e.Message}\n{e.StackTrace}");
             }
-    }
-
-    public void Reload()
-    {
-    }
-
-    private static void SortManagerTypes(List<Type> manager_types)
-    {
-        for (var i = 0; i < manager_types.Count; i++)
-        {
-            var i_attr = manager_types[i].GetCustomAttribute<ManagerInitializeAfterAttribute>();
-            if (i_attr == null) continue;
-            for (var j = i + 1; j < manager_types.Count; j++)
-                if (i_attr.after_types.Contains(manager_types[j]))
-                {
-                    manager_types.Swap(i, j);
-                    break;
-                }
-        }
-    }
-
-    public static void LogWarning(string str)
-    {
-        LogService.LogWarning($"[GodTools]:{str}");
-    }
-
-    [Hotfixable]
-    public static void LogInfo(string str)
-    {
-        LogService.LogInfo($"[GodTools]:{str}");
     }
 }

@@ -94,7 +94,7 @@ public class ColorSelector : APrefab<ColorSelector>
         public void OnDrag(PointerEventData eventData)
         {
             Vector2 rel_pos =
-                UIHelper.GetRelativePosition(UIHelper.ClampPosition(eventData.position, _transform), _transform);
+                UITools.GetRelativePosition(UITools.ClampPosition(eventData.position, _transform), _transform);
             y = rel_pos.y;
             UpdateHue();
         }
@@ -102,9 +102,9 @@ public class ColorSelector : APrefab<ColorSelector>
         [Hotfixable]
         public void OnPointerDown(PointerEventData eventData)
         {
-            if (!UIHelper.IsInRect(eventData.position, _transform)) return;
+            if (!UITools.IsInRect(eventData.position, _transform)) return;
 
-            Vector2 rel_pos = UIHelper.GetRelativePosition(eventData.position, _transform);
+            Vector2 rel_pos = UITools.GetRelativePosition(eventData.position, _transform);
             y = rel_pos.y;
             UpdateHue();
         }
@@ -140,7 +140,7 @@ public class ColorSelector : APrefab<ColorSelector>
             _texture.SetPixels(_texture_pixels);
             _texture.Apply();
             _pos.position = new Vector3(_transform.position.x,
-                                        _transform.position.y + (_transform.rect.y + y) * _transform.lossyScale.y);
+                _transform.position.y + (_transform.rect.y + y) * _transform.lossyScale.y);
 
             if (update_color) on_hue_changed?.Invoke(y / height);
         }
@@ -179,7 +179,7 @@ public class ColorSelector : APrefab<ColorSelector>
         public void OnDrag(PointerEventData eventData)
         {
             Vector2 rel_pos =
-                UIHelper.GetRelativePosition(UIHelper.ClampPosition(eventData.position, _transform), _transform);
+                UITools.GetRelativePosition(UITools.ClampPosition(eventData.position, _transform), _transform);
             y = rel_pos.y;
             x = rel_pos.x;
             UpdateSelectedColor();
@@ -188,9 +188,9 @@ public class ColorSelector : APrefab<ColorSelector>
         [Hotfixable]
         public void OnPointerDown(PointerEventData eventData)
         {
-            if (!UIHelper.IsInRect(eventData.position, _transform)) return;
+            if (!UITools.IsInRect(eventData.position, _transform)) return;
 
-            Vector2 rel_pos = UIHelper.GetRelativePosition(eventData.position, _transform);
+            Vector2 rel_pos = UITools.GetRelativePosition(eventData.position, _transform);
             y = rel_pos.y;
             x = rel_pos.x;
             UpdateSelectedColor();
@@ -237,7 +237,7 @@ public class ColorSelector : APrefab<ColorSelector>
             if (update_color) on_color_changed?.Invoke(_color);
 
             _pos.position = new Vector3(_transform.position.x + (_transform.rect.x + x) * _transform.lossyScale.x,
-                                        _transform.position.y + (_transform.rect.y + y) * _transform.lossyScale.y);
+                _transform.position.y + (_transform.rect.y + y) * _transform.lossyScale.y);
         }
 
         private static void _init()

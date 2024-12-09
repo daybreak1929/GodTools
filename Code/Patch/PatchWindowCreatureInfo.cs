@@ -8,9 +8,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
-namespace GodTools.HarmonySpace;
+namespace GodTools.Patch;
 
-internal static class H_WindowPatch
+internal static class PatchWindowCreatureInfo
 {
     private static bool initialized;
 
@@ -19,8 +19,8 @@ internal static class H_WindowPatch
     private static Image saved_image;
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(WindowCreatureInfo), "OnEnable")]
-    public static void item_editor_init(WindowCreatureInfo __instance)
+    [HarmonyPatch(typeof(WindowCreatureInfo), nameof(WindowCreatureInfo.OnEnable))]
+    public static void OnEnable_postfix(WindowCreatureInfo __instance)
     {
         Actor actor = __instance.actor;
         if (!initialized)

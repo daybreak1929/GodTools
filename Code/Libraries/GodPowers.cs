@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+using GodTools.Abstract;
 using GodTools.UI;
 
 namespace GodTools.Libraries;
 
-internal static class MyPowers
+public class GodPowers : ExtendLibrary<GodPower, GodPowers>
 {
-    public static Dictionary<string, PowerButtonClickAction> post_actions = new();
     public static GodPower place_saved_actor { get; private set; }
 
-    public static void init()
+    protected override void OnInit()
     {
+        RegisterAssets();
+        /*
         var powers = AssetManager.powers;
 
         // 强制攻击
@@ -26,13 +26,9 @@ internal static class MyPowers
             new PowerActionWithID(
                 MyPowerActionLibrary.click_force_attack));
         powers.add(power);
-
-        power = new GodPower();
-        power.id = nameof(place_saved_actor);
-        power.name = power.id;
-        power.path_icon = "gt_windows/save_actor_list";
-        power.click_action = WindowCreatureSavedList.SpawnSelectedSavedActor;
-        powers.add(power);
-        place_saved_actor = power;
+        */
+        place_saved_actor.name = place_saved_actor.id;
+        place_saved_actor.path_icon = "gt_windows/save_actor_list";
+        place_saved_actor.click_action = WindowCreatureSavedList.SpawnSelectedSavedActor;
     }
 }
