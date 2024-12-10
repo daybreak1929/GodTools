@@ -47,6 +47,7 @@ inmny.godtools.debug_info,详细信息,Detailed Debug Info
 inmny.godtools.WindowTops,世界生物相关排行,World Tops
 inmny.godtools.WindowTops Title,世界生物相关排行,World Tops
 WindowModInfo,模组介绍,Mod Info
+WindowCreatureDataEditor,生物数据修改,Creature Data Editor
 WindowCreatureSpriteEditor,生物贴图修改,Creature Sprite Editor
 WindowCreatureSearch,生物搜索,Creature Search
 WindowCreatureSavedList Title,保存的生物,Saved Creatures

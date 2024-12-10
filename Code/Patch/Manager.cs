@@ -12,12 +12,11 @@ internal class Manager : IManager
         var ns = GetType().Namespace ?? "";
         foreach (var type in all_types)
         {
-            if (type.Namespace?.StartsWith(ns) ?? true) continue;
-
-            if (type.Name.StartsWith("Patch"))
-                Harmony.CreateAndPatchAll(
-                    type, C.mod_prefix
-                );
+            if (type.Namespace?.StartsWith(ns) ?? false)
+                if (type.Name.StartsWith("Patch"))
+                    Harmony.CreateAndPatchAll(
+                        type, C.mod_prefix
+                    );
         }
     }
 }

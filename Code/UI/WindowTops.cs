@@ -18,17 +18,19 @@ public class WindowTops : AbstractWideWindow<WindowTops>
 {
     private const float single_element_height = 40;
     private const float start_y               = -single_element_height / 2;
-    private       List<Actor>                       _list;
-    private       ObjectPoolGenericMono<ActorLevel> _pool;
 
-    private readonly HashSet<string>           blacklist_filter_groups = new();
-    private          RectTransform             content_rect;
-    private          MonoObjPool<FilterButton> filter_button_pool;
+    private readonly HashSet<string> blacklist_filter_groups = new();
+    private readonly List<Filter>    filters                 = new();
 
-    private          RectTransform filter_content_rect;
-    private readonly List<Filter>  filters = new();
-    private          RectTransform keyword_content_rect;
-    private          int           last_view_end = -1;
+    private readonly List<SortKey>                     sort_keys = new();
+    private          List<Actor>                       _list;
+    private          ObjectPoolGenericMono<ActorLevel> _pool;
+    private          RectTransform                     content_rect;
+    private          MonoObjPool<FilterButton>         filter_button_pool;
+
+    private RectTransform filter_content_rect;
+    private RectTransform keyword_content_rect;
+    private int           last_view_end = -1;
 
     private int           last_view_start = 9999;
     private RectTransform scroll_view_rect;
@@ -37,9 +39,7 @@ public class WindowTops : AbstractWideWindow<WindowTops>
     private SingleRowGrid selected_keywords;
 
     private MonoObjPool<SortKeyButton> sort_button_pool;
-
-    private readonly List<SortKey> sort_keys        = new();
-    private          bool          ui_filters_dirty = true;
+    private bool ui_filters_dirty = true;
 
     private bool ui_sort_keys_dirty = true;
 
@@ -286,7 +286,6 @@ public class WindowTops : AbstractWideWindow<WindowTops>
     {
         _list = World.world.units.getSimpleList();
         ApplyFilter();
-        ApplySort();
     }
 
     [Hotfixable]
@@ -385,6 +384,7 @@ public class WindowTops : AbstractWideWindow<WindowTops>
         public void Setup(SortKey key)
         {
             GetComponent<Image>().sprite = key.Icon;
+            GetComponent<Button>().onClick.RemoveAllListeners();
             GetComponent<Button>().onClick.AddListener(() =>
             {
                 key.Switch();

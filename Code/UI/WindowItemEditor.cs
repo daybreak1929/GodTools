@@ -184,8 +184,11 @@ internal class WindowItemEditor : MonoBehaviour
     {
         equipment_buttons.Clear();
         modifier_elements.Clear();
-        actor.dirty_sprite_item = true;
-        actor.setStatsDirty();
+        if (actor != null)
+        {
+            actor.dirty_sprite_item = true;
+            actor?.setStatsDirty();
+        }
     }
 
     public static void init(WindowCreatureInfo creature_window)
