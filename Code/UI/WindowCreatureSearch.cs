@@ -1,5 +1,5 @@
 using GodTools.UI.Prefabs;
-using NeoModLoader.General;
+using NeoModLoader.api.attributes;
 using NeoModLoader.General.UI.Window;
 using NeoModLoader.General.UI.Window.Layout;
 using NeoModLoader.General.UI.Window.Utils.Extensions;
@@ -22,9 +22,10 @@ public class WindowCreatureSearch : SingleAutoLayoutWindow<WindowCreatureSearch>
         display_group = this.BeginVertGroup(pSpacing: 8);
         display_group.GetComponent<RectTransform>().pivot = new Vector2(0.5f, 1f);
         _pool = new ObjectPoolGenericMono<PrefabUnitElement>(
-            ResourcesFinder.FindResource<PrefabUnitElement>("list_element_favorites"), display_group.transform);
+            Resources.Load<WindowFavorites>("windows/favorites").element_prefab, display_group.transform);
     }
 
+    [Hotfixable]
     private void ApplySearch(string name)
     {
         _pool.clear();

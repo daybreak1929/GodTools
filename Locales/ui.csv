@@ -24,6 +24,22 @@ CLAN,氏族,Clan
 TILE,地块,Tile
 OTHERS,其他,Others
 DEBUG,调试,Debug
+inmny.godtools.ui.switch_bw_list,切换黑/白名单,Switch to Black/White List
+inmny.godtools.ui.filter.blacklist,黑名单,Black List
+inmny.godtools.ui.filter.whitelist,白名单,White List
+inmny.godtools.ui.filter,过滤,Filters
+inmny.godtools.ui.filter.race,种族,Race
+inmny.godtools.ui.filter.race.human,人类,Humans
+inmny.godtools.ui.sort.ascending,升序,Ascending
+inmny.godtools.ui.sort.descending,降序,Descending
+inmny.godtools.ui.keyword,关键词,Keywords
+inmny.godtools.ui.keyword.vanilla,原版,Vanilla
+inmny.godtools.ui.keyword.vanilla.level,等级,Level
+inmny.godtools.ui.keyword.vanilla.kills,击杀,Kills
+inmny.godtools.ui.keyword.vanilla.birth,年龄,Age
+inmny.godtools.ui.keyword.inmny_custommodt001,特质武道,Inmny CustomMod T1
+inmny.godtools.ui.keyword.inmny_custommodt001.talent,武道天赋,Talent
+inmny.godtools.ui.keyword.inmny_custommodt001.level,武道境界,Level
 inmny.godtools.WindowModInfo,模组介绍,Mod Info
 inmny.godtools.debug,DEBUG窗口,Debug Window
 inmny.godtools.console,控制台,Console

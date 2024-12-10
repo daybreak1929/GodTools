@@ -9,6 +9,7 @@ public class Tooltips : ExtendLibrary<TooltipAsset, Tooltips>
 
     protected override void OnInit()
     {
+        RegisterAssets();
         mood.callback = (tooltip, type, data) =>
         {
             Actor actor = data.actor;

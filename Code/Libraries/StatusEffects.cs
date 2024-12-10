@@ -9,6 +9,7 @@ public class StatusEffects : ExtendLibrary<StatusEffect, StatusEffects>
 
     protected override void OnInit()
     {
+        RegisterAssets();
         attack_unit.animated = true;
         attack_unit.texture = "aaa";
         attack_unit.sprite_list = new[] { Resources.Load<Sprite>("gt_windows/attack_unit") };

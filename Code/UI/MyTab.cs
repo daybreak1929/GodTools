@@ -22,6 +22,7 @@ internal enum TabButtonType
     DEBUG
 }
 
+[Dependency(typeof(UIManager))]
 internal class MyTab : IManager
 {
     public static           PowersTab                            powers_tab;
@@ -81,9 +82,6 @@ internal class MyTab : IManager
         button = PowerButtonCreator.CreateWindowButton(WindowModInfo.WINDOW_ID, WindowModInfo.WINDOW_ID,
             SpriteTextureLoader.getSprite("ui/icons/iconAbout"));
         AddButton(TabButtonType.INFO, button);
-        button = PowerButtonCreator.CreateWindowButton(WindowTops.WindowId, WindowTops.WindowId,
-            SpriteTextureLoader.getSprite("ui/icons/iconAbout"));
-        AddButton(TabButtonType.INFO, button);
     }
 
     private static void AddCreatureButtons()
@@ -95,6 +93,9 @@ internal class MyTab : IManager
         button = PowerButtonCreator.CreateWindowButton(WindowCreatureSavedList.WindowId,
             WindowCreatureSavedList.WindowId,
             SpriteTextureLoader.getSprite("gt_windows/save_actor_list"));
+        AddButton(TabButtonType.ACTOR, button);
+        button = PowerButtonCreator.CreateWindowButton(WindowTops.WindowId, WindowTops.WindowId,
+            SpriteTextureLoader.getSprite("inmny/godtools/icons/iconCreatureTop"));
         AddButton(TabButtonType.ACTOR, button);
     }
 

@@ -1,46 +1,39 @@
 using NeoModLoader.General.UI.Prefabs;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace GodTools.UI.Prefabs.TopElementPrefabs;
 
 public class ActorLevel : APrefab<ActorLevel>
 {
-    public RawText Name { get; private set; }
+    public RawText           Order   { get; private set; }
+    public PrefabUnitElement Element { get; private set; }
 
     protected override void Init()
     {
         if (Initialized) return;
         base.Init();
-
-        Name = transform.Find(nameof(Name)).GetComponent<RawText>();
+        Element = GetComponent<PrefabUnitElement>();
+        Order = transform.Find(nameof(Order)).GetComponent<RawText>();
     }
 
     public void Setup(Actor actor, int order)
     {
         Init();
-
-        Name.Setup($"{order}, {actor.getName()}: {actor.data.level}-{actor.data.experience}");
+        Order.Setup(order.ToString());
+        Element.show(actor);
     }
 
     private static void _init()
     {
-        var obj = new GameObject(nameof(ActorLevel), typeof(Image));
-        obj.transform.SetParent(Main.prefabs);
+        GameObject obj = Instantiate(Resources.Load<WindowFavorites>("windows/favorites").element_prefab.gameObject,
+            Main.prefabs);
+        obj.name = nameof(ActorLevel);
 
-        var bg = obj.GetComponent<Image>();
-        bg.sprite = SpriteTextureLoader.getSprite("ui/special/windowInnerSliced");
-        bg.type = Image.Type.Sliced;
-
-        var rect_transform = obj.GetComponent<RectTransform>();
-        rect_transform.sizeDelta = new Vector2(160, 30);
-
-        RawText name_text = Instantiate(RawText.Prefab, rect_transform);
-        name_text.name = nameof(Name);
-        name_text.SetSize(rect_transform.sizeDelta);
-        name_text.transform.localPosition = Vector3.zero;
-        name_text.transform.localScale = Vector3.one;
-
+        RawText order = Instantiate(RawText.Prefab, obj.transform);
+        order.name = nameof(Order);
+        order.transform.localPosition = new Vector3(-82, 13f);
+        order.transform.localScale = Vector3.one;
+        order.SetSize(new Vector2(30, 10));
 
         Prefab = obj.AddComponent<ActorLevel>();
     }
