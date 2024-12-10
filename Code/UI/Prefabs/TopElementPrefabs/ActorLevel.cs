@@ -26,7 +26,7 @@ public class ActorLevel : APrefab<ActorLevel>
     private static void _init()
     {
         var obj = new GameObject(nameof(ActorLevel), typeof(Image));
-        obj.transform.SetParent(Main.prefab_library);
+        obj.transform.SetParent(Main.prefabs);
 
         var bg = obj.GetComponent<Image>();
         bg.sprite = SpriteTextureLoader.getSprite("ui/special/windowInnerSliced");

@@ -86,7 +86,7 @@ public class WindowCreatureSavedList : AbstractWindow<WindowCreatureSavedList>
         content_rect.pivot = new Vector2(0.5f, 1);
         _pool = new ObjectPoolGenericMono<SavedActorDataCard>(SavedActorDataCard.Prefab, ContentTransform);
         _power_button = PowerButtonCreator.CreateGodPowerButton(GodPowers.place_saved_actor.id,
-            SpriteTextureLoader.getSprite("gt_windows/save_actor_list"), Main.prefab_library);
+            SpriteTextureLoader.getSprite("gt_windows/save_actor_list"), Main.prefabs);
 
         try
         {

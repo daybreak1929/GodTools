@@ -36,7 +36,7 @@ public class RawText : APrefab<RawText>
     private static void _init()
     {
         var obj = new GameObject(nameof(RawText), typeof(Text));
-        obj.transform.SetParent(Main.prefab_library);
+        obj.transform.SetParent(Main.prefabs);
         var text = obj.GetComponent<Text>();
         text.color = Color.white;
         text.font = LocalizedTextManager.currentFont;

@@ -67,7 +67,7 @@ public class SavedActorDataCard : APrefab<SavedActorDataCard>
     private static void _init()
     {
         GameObject obj = new(nameof(SavedActorDataCard), typeof(Image), typeof(Button));
-        obj.transform.SetParent(Main.prefab_library);
+        obj.transform.SetParent(Main.prefabs);
         var rect_transform = obj.GetComponent<RectTransform>();
 
         var button = obj.GetComponent<Button>();

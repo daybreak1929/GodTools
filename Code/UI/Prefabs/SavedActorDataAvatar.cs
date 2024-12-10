@@ -12,7 +12,7 @@ public class SavedActorDataAvatar : APrefab<SavedActorDataAvatar>
     private static void _init()
     {
         GameObject obj = new(nameof(SavedActorDataAvatar), typeof(Image));
-        obj.transform.SetParent(Main.prefab_library);
+        obj.transform.SetParent(Main.prefabs);
         Prefab = obj.AddComponent<SavedActorDataAvatar>();
     }
 

@@ -28,7 +28,7 @@ public class MapWarp : APrefab<MapWarp>
     private static void _init()
     {
         GameObject obj = new(nameof(MapWarp), typeof(TextMeshProUGUI));
-        obj.transform.SetParent(Main.prefab_library);
+        obj.transform.SetParent(Main.prefabs);
         obj.GetComponent<TextMeshProUGUI>().font = Main.default_font;
 
         Prefab = obj.AddComponent<MapWarp>();

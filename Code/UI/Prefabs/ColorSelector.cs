@@ -62,7 +62,7 @@ public class ColorSelector : APrefab<ColorSelector>
     private static void _init()
     {
         GameObject obj = new(nameof(ColorSelector));
-        obj.transform.SetParent(Main.prefab_library);
+        obj.transform.SetParent(Main.prefabs);
 
         HueSelector hue_selector = Instantiate(HueSelector.Prefab, obj.transform);
         hue_selector.name = nameof(HueSelector);
@@ -148,7 +148,7 @@ public class ColorSelector : APrefab<ColorSelector>
         private static void _init()
         {
             GameObject obj = new(nameof(HueSelector), typeof(Image));
-            obj.transform.SetParent(Main.prefab_library);
+            obj.transform.SetParent(Main.prefabs);
 
             GameObject pos = new("Position", typeof(Image));
             pos.transform.SetParent(obj.transform);
@@ -243,7 +243,7 @@ public class ColorSelector : APrefab<ColorSelector>
         private static void _init()
         {
             GameObject obj = new(nameof(SubColorSelector), typeof(Image));
-            obj.transform.SetParent(Main.prefab_library);
+            obj.transform.SetParent(Main.prefabs);
             GameObject pos = new("Position", typeof(Image));
             pos.transform.SetParent(obj.transform);
             pos.GetComponent<Image>().sprite = SpriteTextureLoader.getSprite("ui/icons/iconWhiteCircle");

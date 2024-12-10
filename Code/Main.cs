@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using GodTools.Abstract;
-using GodTools.Effect;
 using NeoModLoader.api;
 using NeoModLoader.utils;
 using TMPro;
@@ -15,10 +14,12 @@ namespace GodTools;
 
 internal class Main : BasicMod<Main>
 {
-    public static Transform     prefab_library;
     public static Transform     game_ui_object_temp_library;
     public static TMP_FontAsset default_font;
 
+    public static Transform prefabs;
+
+/*
     public PosShowEffect actor_select_effect;
 
     private bool initialized;
@@ -26,12 +27,12 @@ internal class Main : BasicMod<Main>
 
     public SimpleEffectController<PosShowEffect> pos_show_effect_controller =
         new(Resources.Load<GameObject>("effects/PrefabUnitSelectionEffect"));
-
+*/
     public static ModDeclare Mod { get; private set; }
 
     private void Update()
     {
-        pos_show_effect_controller.update(Time.fixedDeltaTime * C.pos_show_effect_time_scale);
+        //pos_show_effect_controller.update(Time.fixedDeltaTime * C.pos_show_effect_time_scale);
     }
 
     public void Reload()
@@ -56,9 +57,9 @@ internal class Main : BasicMod<Main>
     protected override void OnModLoad()
     {
         Mod = GetDeclaration();
-        prefab_library = new GameObject("Prefabs").transform;
-        prefab_library.SetParent(transform);
-        prefab_library.localPosition = new Vector3(9999999, 9999999, 0);
+        prefabs = PrefabLibrary;
+        prefabs.localPosition = new Vector3(9999999, 9999999, 0);
+
         game_ui_object_temp_library = new GameObject("Game UI Objects").transform;
         game_ui_object_temp_library.SetParent(transform);
         game_ui_object_temp_library.localPosition = new Vector3(9999999, 9999999, 0);

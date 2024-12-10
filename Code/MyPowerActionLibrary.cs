@@ -1,5 +1,5 @@
 ﻿namespace GodTools;
-
+/*
 internal static class MyPowerActionLibrary
 {
     private static Actor force_attack_attacker;
@@ -82,4 +82,4 @@ internal static class MyPowerActionLibrary
         force_attack_defender = null;
         return false;
     }
-}
+}*/

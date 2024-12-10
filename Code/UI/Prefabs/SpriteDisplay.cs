@@ -46,7 +46,7 @@ public class SinglePixelDisplay : APrefab<SinglePixelDisplay>
     private static void _init()
     {
         GameObject obj = new(nameof(SinglePixelDisplay), typeof(Image), typeof(Button));
-        obj.transform.SetParent(Main.prefab_library);
+        obj.transform.SetParent(Main.prefabs);
 
         Prefab = obj.AddComponent<SinglePixelDisplay>();
     }
@@ -126,8 +126,8 @@ public class SpriteDisplay : APrefab<SpriteDisplay>
 
         texture.Apply();
         return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),
-                             new Vector2(ref_sprite.pivot.x / texture.width, ref_sprite.pivot.y / texture.height),
-                             ref_sprite.pixelsPerUnit);
+            new Vector2(ref_sprite.pivot.x / texture.width, ref_sprite.pivot.y / texture.height),
+            ref_sprite.pixelsPerUnit);
     }
 
     [Hotfixable]
@@ -147,9 +147,9 @@ public class SpriteDisplay : APrefab<SpriteDisplay>
 
         _sprite_grid.cellSize = new Vector2(size.x / rect.width, size.y / rect.height);
         _sprite_grid.padding = new RectOffset((int)((_sprite_container.sizeDelta.x - size.x) / 2),
-                                              (int)((_sprite_container.sizeDelta.x - size.x) / 2),
-                                              (int)((_sprite_container.sizeDelta.y - size.y) / 2),
-                                              (int)((_sprite_container.sizeDelta.y - size.y) / 2));
+            (int)((_sprite_container.sizeDelta.x - size.x) / 2),
+            (int)((_sprite_container.sizeDelta.y - size.y) / 2),
+            (int)((_sprite_container.sizeDelta.y - size.y) / 2));
         _pixels = new SinglePixelDisplay[(int)rect.width, (int)rect.height];
         _origin_colors = new Color[(int)rect.width, (int)rect.height];
         for (var x = 0; x < rect.width; x++)
@@ -158,7 +158,7 @@ public class SpriteDisplay : APrefab<SpriteDisplay>
             Color color = texture.GetPixel((int)rect.x + x, (int)rect.y + y);
             SinglePixelDisplay pixel = _pixel_pool.getNext();
             pixel.Setup(x, y, color,
-                        pixel_display => { on_click?.Invoke(this, pixel_display.X, pixel_display.Y); });
+                pixel_display => { on_click?.Invoke(this, pixel_display.X, pixel_display.Y); });
             pixel.transform.SetAsLastSibling();
             _pixels[x, y] = pixel;
             _origin_colors[x, y] = color;
@@ -168,7 +168,7 @@ public class SpriteDisplay : APrefab<SpriteDisplay>
     private static void _init()
     {
         GameObject obj = new(nameof(SpriteDisplay), typeof(RectTransform));
-        obj.transform.SetParent(Main.prefab_library);
+        obj.transform.SetParent(Main.prefabs);
 
         var sprite_obj = new GameObject("SpriteContainer", typeof(RectTransform), typeof(GridLayoutGroup));
         sprite_obj.transform.SetParent(obj.transform);

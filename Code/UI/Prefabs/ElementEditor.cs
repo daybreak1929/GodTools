@@ -13,12 +13,12 @@ namespace GodTools.UI.Prefabs;
 
 public class ElementEditor : APrefab<ElementEditor>
 {
-    private const int         element_type_nr = Core.element_type_nr;
-    private       int[]       _elements;
-    private       SliderBar[] _sliders;
-    private       SimpleText  _title;
+    private const int element_type_nr = Core.element_type_nr;
 
     private readonly List<Action<CW_Element>> actions_on_end = new();
+    private          int[]                    _elements;
+    private          SliderBar[]              _sliders;
+    private          SimpleText               _title;
 
     protected override void Init()
     {
@@ -72,8 +72,8 @@ public class ElementEditor : APrefab<ElementEditor>
     private static void _init()
     {
         var obj = new GameObject(nameof(ElementEditor), typeof(RectTransform), typeof(VerticalLayoutGroup),
-                                 typeof(ContentSizeFitter));
-        obj.transform.SetParent(Main.prefab_library);
+            typeof(ContentSizeFitter));
+        obj.transform.SetParent(Main.prefabs);
 
         var layout = obj.GetComponent<VerticalLayoutGroup>();
         OT.InitializeNoActionVerticalLayoutGroup(layout);
