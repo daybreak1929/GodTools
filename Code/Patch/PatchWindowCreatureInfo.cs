@@ -1,5 +1,6 @@
 using System;
 using DG.Tweening;
+using GodTools.Libraries;
 using GodTools.UI;
 using HarmonyLib;
 using NeoModLoader.api.attributes;
@@ -23,6 +24,7 @@ internal static class PatchWindowCreatureInfo
     public static void OnEnable_postfix(WindowCreatureInfo __instance)
     {
         Actor actor = __instance.actor;
+        if (actor == null) return;
         if (!initialized)
         {
             initialized = true;
@@ -54,7 +56,7 @@ internal static class PatchWindowCreatureInfo
             var mood_tip_button = mood_image.gameObject.AddComponent<TipButton>();
             mood_tip_button.hoverAction = () =>
             {
-                Tooltip.show(mood_image.gameObject, "mood", new TooltipData
+                Tooltip.show(mood_image.gameObject, Tooltips.mood.id, new TooltipData
                 {
                     actor = __instance.actor
                 });

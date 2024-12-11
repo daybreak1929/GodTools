@@ -8,6 +8,7 @@
     "OptionalDependencies": [
         "启源_启源核心",
         "一米_中文名",
-        "INMNY_CUSTOMMODT001"
+        "INMNY_CUSTOMMODT001",
+        "CULTIWAY"
     ]
 }

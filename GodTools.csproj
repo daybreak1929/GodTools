@@ -6,7 +6,7 @@
         <Nullable>disable</Nullable>
         <OutputType>Library</OutputType>
         <RootNamespace>GodTools</RootNamespace>
-        <DefineConstants>启源_启源核心;一米_中文名;INMNY_CUSTOMMODT001</DefineConstants>
+        <DefineConstants>启源_启源核心;一米_中文名;INMNY_CUSTOMMODT001;CULTIWAY</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -145,6 +145,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Cultiway\Cultiway.csproj"/>
         <ProjectReference Include="..\CW_Core\Cultivation-Way-Core.csproj"/>
     </ItemGroup>
 

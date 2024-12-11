@@ -40,6 +40,9 @@ inmny.godtools.ui.keyword.vanilla.birth,年龄,Age
 inmny.godtools.ui.keyword.inmny_custommodt001,特质武道,Inmny CustomMod T1
 inmny.godtools.ui.keyword.inmny_custommodt001.talent,武道天赋,Talent
 inmny.godtools.ui.keyword.inmny_custommodt001.level,武道境界,Level
+inmny.godtools.ui.keyword.cultiway,修仙,Cultiway
+inmny.godtools.ui.keyword.cultiway.xian_level,仙路等级,Xian Level
+inmny.godtools.ui.keyword.cultiway.xian_talent,灵根品级,Xian Talent
 inmny.godtools.WindowModInfo,模组介绍,Mod Info
 inmny.godtools.debug,DEBUG窗口,Debug Window
 inmny.godtools.console,控制台,Console

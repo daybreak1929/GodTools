@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cultiway.Core;
 using GodTools.Abstract;
 using GodTools.UI.Prefabs;
 using GodTools.UI.Prefabs.TopElementPrefabs;
@@ -11,6 +12,10 @@ using NeoModLoader.General.Game.extensions;
 using NeoModLoader.General.UI.Prefabs;
 using UnityEngine;
 using UnityEngine.UI;
+#if CULTIWAY
+using Cultiway.Content.CultisysComponents;
+using Cultiway.Utils.Extension;
+#endif
 
 namespace GodTools.UI;
 
@@ -149,6 +154,36 @@ public class WindowTops : AbstractWideWindow<WindowTops>
             }
 
             return res;
+        });
+#endif
+#if CULTIWAY
+        TitledGrid cultiway_keyword_grid = new_keyword_grid("cultiway");
+        new_keyword(cultiway_keyword_grid, "xian_level", "cultiway/icons/iconCultivation", [Hotfixable](a, b) =>
+        {
+            ActorExtend a_extend = a.GetExtend();
+            ActorExtend b_extend = b.GetExtend();
+            var a_has = a_extend.HasCultisys<Xian>();
+            var b_has = b_extend.HasCultisys<Xian>();
+            if (!a_has && !b_has) return 0;
+            if (!a_has) return -1;
+            if (!b_has) return 1;
+            var a_xian = a_extend.GetCultisys<Xian>();
+            var b_xian = b_extend.GetCultisys<Xian>();
+            var res = a_xian.CurrLevel.CompareTo(b_xian.CurrLevel);
+            if (res == 0) res = a_xian.wakan.CompareTo(b_xian.wakan);
+
+            return res;
+        });
+        new_keyword(cultiway_keyword_grid, "xian_talent", "cultiway/icons/iconElement", (a, b) =>
+        {
+            ActorExtend a_extend = a.GetExtend();
+            ActorExtend b_extend = b.GetExtend();
+            var a_has = a_extend.HasElementRoot();
+            var b_has = b_extend.HasElementRoot();
+            if (!a_has && !b_has) return 0;
+            if (!a_has) return -1;
+            if (!b_has) return 1;
+            return a_extend.GetElementRoot().GetStrength().CompareTo(b_extend.GetElementRoot().GetStrength());
         });
 #endif
         TitledGrid new_filter_grid(string filter_type)
