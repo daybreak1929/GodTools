@@ -24,6 +24,9 @@ CLAN,氏族,Clan
 TILE,地块,Tile
 OTHERS,其他,Others
 DEBUG,调试,Debug
+inmny.godtools.ui.create_sub_world,创建亚空间,Create Sub World
+inmny.godtools.ui.sub_world_size,亚空间大小,Sub World Size
+inmny.godtools.ui.sub_world_size_tip,滚轮调节亚空间大小,Scroll to Change Sub World Size
 inmny.godtools.ui.switch_bw_list,切换黑/白名单,Switch to Black/White List
 inmny.godtools.ui.filter.blacklist,黑名单,Black List
 inmny.godtools.ui.filter.whitelist,白名单,White List
@@ -49,6 +52,7 @@ inmny.godtools.console,控制台,Console
 inmny.godtools.debug_info,详细信息,Detailed Debug Info
 inmny.godtools.WindowTops,世界生物相关排行,World Tops
 inmny.godtools.WindowTops Title,世界生物相关排行,World Tops
+inmny.godtools.WindowSubWorldCreator,创建亚空间,Create Sub World
 WindowModInfo,模组介绍,Mod Info
 WindowCreatureDataEditor,生物数据修改,Creature Data Editor
 WindowCreatureSpriteEditor,生物贴图修改,Creature Sprite Editor

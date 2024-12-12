@@ -14,5 +14,7 @@ internal class UIManager : IManager
         WindowCreatureSearch.CreateWindow(nameof(WindowCreatureSearch), nameof(WindowCreatureSearch));
         WindowCreatureSavedList.CreateAndInit(nameof(WindowCreatureSavedList));
         WindowTops.CreateAndInit($"{C.mod_prefix}.{nameof(WindowTops)}");
+        WindowSubWorldCreator.CreateWindow($"{C.mod_prefix}.{nameof(WindowSubWorldCreator)}",
+            $"{C.mod_prefix}.{nameof(WindowSubWorldCreator)}");
     }
 }
