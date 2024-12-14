@@ -44,7 +44,7 @@ public class WindowTops : AbstractWideWindow<WindowTops>
     private SingleRowGrid selected_keywords;
 
     private MonoObjPool<SortKeyButton> sort_button_pool;
-    private bool ui_filters_dirty = true;
+    private bool                       ui_filters_dirty = true;
 
     private bool ui_sort_keys_dirty = true;
 
@@ -59,7 +59,7 @@ public class WindowTops : AbstractWideWindow<WindowTops>
         scroll_view_rect = content_rect.parent.parent.GetComponent<RectTransform>();
         scroll_view_rect.localPosition = Vector3.zero;
         scroll_view_rect.sizeDelta = new Vector2(200, 250);
-        content_rect.pivot = new Vector2(0.5f, 1);
+        content_rect.pivot = new Vector2(0.5f,        1);
 
 
         SimpleLine line1 = Instantiate(SimpleLine.Prefab, BackgroundTransform);
@@ -184,6 +184,16 @@ public class WindowTops : AbstractWideWindow<WindowTops>
             if (!a_has) return -1;
             if (!b_has) return 1;
             return a_extend.GetElementRoot().GetStrength().CompareTo(b_extend.GetElementRoot().GetStrength());
+        });
+#endif
+#if WITCHCRAFT_WORLDBOX
+        TitledGrid wushu_keyword_grid = new_keyword_grid("wushu");
+        new_keyword(wushu_keyword_grid, "yuanneng", "ui/allactor_yuanneng", (a, b) =>
+        {
+            a.data.get("wushu.yuannengNum", out int a_level);
+            b.data.get("wushu.yuannengNum", out int b_level);
+            var res = a_level.CompareTo(b_level);
+            return res;
         });
 #endif
         TitledGrid new_filter_grid(string filter_type)
