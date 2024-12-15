@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cultiway.Core;
 using GodTools.Abstract;
 using GodTools.UI.Prefabs;
 using GodTools.UI.Prefabs.TopElementPrefabs;
@@ -15,6 +14,7 @@ using UnityEngine.UI;
 #if CULTIWAY
 using Cultiway.Content.CultisysComponents;
 using Cultiway.Utils.Extension;
+using Cultiway.Core;
 #endif
 
 namespace GodTools.UI;
@@ -132,6 +132,10 @@ public class WindowTops : AbstractWideWindow<WindowTops>
             (a, b) => a.data.kills.CompareTo(b.data.kills));
         new_keyword(vanilla_keyword_grid, "birth", "ui/icons/iconAge",
             (a, b) => a.data.getAge().CompareTo(b.data.getAge()));
+        new_keyword(vanilla_keyword_grid, "max_health", "ui/icons/iconHealth",
+            (a, b) => a.stats[S.health].CompareTo(b.stats[S.health]));
+        new_keyword(vanilla_keyword_grid, "damage", "ui/icons/iconDamage",
+            (a, b) => a.stats[S.damage].CompareTo(b.stats[S.damage]));
 
 #if INMNY_CUSTOMMODT001
         TitledGrid inmny_custommodt001_keyword_grid = new_keyword_grid("inmny_custommodt001");
@@ -185,6 +189,9 @@ public class WindowTops : AbstractWideWindow<WindowTops>
             if (!b_has) return 1;
             return a_extend.GetElementRoot().GetStrength().CompareTo(b_extend.GetElementRoot().GetStrength());
         });
+        TitledGrid cultiway_filter_grid = new_filter_grid("cultisys");
+        new_filter(cultiway_filter_grid, "xian", "cultiway/icons/iconCultivation",
+            a => a.GetExtend().HasCultisys<Xian>());
 #endif
 #if WITCHCRAFT_WORLDBOX
         TitledGrid wushu_keyword_grid = new_keyword_grid("wushu");

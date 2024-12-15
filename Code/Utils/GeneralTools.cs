@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace GodTools.Utils;
 
-internal class Helper
+internal class GeneralTools
 {
     public static Sprite get_inner_sliced()
     {

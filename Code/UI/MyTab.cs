@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using GodTools.Abstract;
+using GodTools.Libraries;
 using NeoModLoader.General;
 using NeoModLoader.General.UI.Tab;
 using UnityEngine;
@@ -46,15 +47,24 @@ internal class MyTab : IManager
         ConstructTabContainer(TabButtonType.INFO,  SpriteTextureLoader.getSprite("ui/icons/iconAbout"));
         ConstructTabContainer(TabButtonType.WORLD, SpriteTextureLoader.getSprite("ui/icons/iconWorldInfo"));
         ConstructTabContainer(TabButtonType.ACTOR, SpriteTextureLoader.getSprite("ui/icons/iconHumans"));
+        ConstructTabContainer(TabButtonType.CITY, SpriteTextureLoader.getSprite("ui/icons/iconCityLists"));
         ConstructTabContainer(TabButtonType.DEBUG, SpriteTextureLoader.getSprite("ui/icons/iconDebug"));
 
         powers_tab.UpdateLayout();
         AddInfoButtons();
         AddWorldButtons();
         AddCreatureButtons();
+        AddCityButtons();
         AddDebugButtons();
 
         SwitchTab(TabButtonType.INFO);
+    }
+
+    private static void AddCityButtons()
+    {
+        PowerButton button;
+        button = PowerButtonCreator.CreateGodPowerButton(GodPowers.split_city.id,
+            SpriteTextureLoader.getSprite("ui/icons/iconFinger"));
     }
 
     private static void AddDebugButtons()

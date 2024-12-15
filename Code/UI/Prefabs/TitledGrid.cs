@@ -66,7 +66,7 @@ public class TitledGrid : APrefab<TitledGrid>
         title.transform.SetParent(obj.transform);
         title.GetComponent<LocalizedText>().autoField = true;
         var text = title.GetComponent<Text>();
-        Helper.text_basic_setting(text);
+        GeneralTools.text_basic_setting(text);
 
         var grid = new GameObject(nameof(Grid), typeof(Image), typeof(GridLayoutGroup), typeof(ContentSizeFitter));
         grid.transform.SetParent(obj.transform);

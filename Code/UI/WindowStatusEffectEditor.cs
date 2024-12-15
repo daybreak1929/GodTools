@@ -117,7 +117,7 @@ internal class WindowStatusEffectEditor : MonoBehaviour
         instance.avatar_element.transform.localScale = new Vector3(0.6f, 0.6f);
 
         var Statuses_Background = new GameObject("Statuses Background", typeof(Image));
-        Statuses_Background.GetComponent<Image>().sprite = Helper.get_inner_sliced();
+        Statuses_Background.GetComponent<Image>().sprite = GeneralTools.get_inner_sliced();
         Statuses_Background.GetComponent<Image>().type = Image.Type.Sliced;
         Statuses_Background.transform.SetParent(TopPart.transform);
         Statuses_Background.GetComponent<RectTransform>().sizeDelta = new Vector2(164.86f, 24);
@@ -150,12 +150,12 @@ internal class WindowStatusEffectEditor : MonoBehaviour
         instance.curr_statuses_transform = statuses_grid.transform;
 
         var __statuses_group = new GameObject("Statuses Group", typeof(Image));
-        __statuses_group.GetComponent<Image>().sprite = Helper.get_inner_sliced();
+        __statuses_group.GetComponent<Image>().sprite = GeneralTools.get_inner_sliced();
         __statuses_group.GetComponent<Image>().type = Image.Type.Sliced;
         var rect = __statuses_group.GetComponent<RectTransform>();
         rect.sizeDelta = new Vector2(191.33f, 30f);
         var __statuses_grid = new GameObject("Grid", typeof(StatusEffectGroupElement), typeof(GridLayoutGroup),
-                                             typeof(ContentSizeFitter));
+            typeof(ContentSizeFitter));
         __statuses_grid.transform.SetParent(__statuses_group.transform);
         var group_element = __statuses_grid.GetComponent<StatusEffectGroupElement>();
         var grid_layout_group = __statuses_grid.GetComponent<GridLayoutGroup>();
@@ -165,7 +165,7 @@ internal class WindowStatusEffectEditor : MonoBehaviour
         grid_layout_group.constraintCount = 6;
 
         Transform basic_statuses = Instantiate(__statuses_group, content_transform).transform;
-        var advance_statuses = Instantiate(__statuses_group, content_transform).transform;
+        Transform advance_statuses = Instantiate(__statuses_group, content_transform).transform;
         basic_statuses.gameObject.name = "Basic Statuses";
         advance_statuses.gameObject.name = "Advance Statuses";
         instance.basic_statuses = basic_statuses.Find("Grid").GetComponent<StatusEffectGroupElement>();
@@ -218,19 +218,19 @@ internal class WindowStatusEffectEditor : MonoBehaviour
         basic_statuses.transform.localPosition =
             new Vector3(129.4f, -103.5f - (instance.basic_statuses.statuses.Count - 1) / 6 * 14);
         basic_statuses_text.transform.localPosition = new Vector3(129.4f,
-                                                                  basic_statuses.transform.localPosition.y +
-                                                                  basic_statuses_rect.sizeDelta.y / 2      + 8);
+            basic_statuses.transform.localPosition.y +
+            basic_statuses_rect.sizeDelta.y / 2      + 8);
         instance.basic_statuses.transform.localPosition = new Vector3(-78, basic_statuses_rect.sizeDelta.y / 2);
 
         advance_statuses_rect.sizeDelta =
             new Vector2(191.33f, 30 + (instance.advance_statuses.statuses.Count - 1) / 6 * 28);
         advance_statuses.transform.localPosition = new Vector3(129.4f,
-                                                               basic_statuses.transform.localPosition.y -
-                                                               basic_statuses_rect.sizeDelta.y   / 2    - 30f -
-                                                               advance_statuses_rect.sizeDelta.y / 2);
+            basic_statuses.transform.localPosition.y -
+            basic_statuses_rect.sizeDelta.y   / 2    - 30f -
+            advance_statuses_rect.sizeDelta.y / 2);
         advance_statuses_text.transform.localPosition = new Vector3(129.4f,
-                                                                    advance_statuses.transform.localPosition.y +
-                                                                    advance_statuses_rect.sizeDelta.y / 2      + 8);
+            advance_statuses.transform.localPosition.y +
+            advance_statuses_rect.sizeDelta.y / 2      + 8);
         instance.advance_statuses.transform.localPosition = new Vector3(-78, advance_statuses_rect.sizeDelta.y / 2);
 
 
@@ -254,7 +254,7 @@ internal class WindowStatusEffectEditor : MonoBehaviour
         slider_bg_rect.sizeDelta = slider_size;
         slider_fill_rect.sizeDelta = new Vector2(0, 0);
         slider_handle_rect.sizeDelta = new Vector2(slider_size.y, 0);
-        slider_background.GetComponent<Image>().sprite = Helper.get_inner_sliced();
+        slider_background.GetComponent<Image>().sprite = GeneralTools.get_inner_sliced();
         slider_background.GetComponent<Image>().type = Image.Type.Sliced;
         slider_handle.GetComponent<Image>().sprite = Resources.Load<Sprite>("ui/icons/iconClock");
         slider_fill.GetComponent<Image>().sprite = Resources.Load<Sprite>("gt_windows/window_bar");

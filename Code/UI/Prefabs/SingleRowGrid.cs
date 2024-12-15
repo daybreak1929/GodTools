@@ -46,7 +46,7 @@ public class SingleRowGrid : APrefab<SingleRowGrid>
         var title = new GameObject(nameof(Title), typeof(Text), typeof(LocalizedText), typeof(Shadow));
         title.transform.SetParent(obj.transform);
         var text = title.GetComponent<Text>();
-        Helper.text_basic_setting(text);
+        GeneralTools.text_basic_setting(text);
         text.color = new Color(1, 0.607f, 0.11f, 0.18f);
         var localized_text = title.GetComponent<LocalizedText>();
         localized_text.autoField = true;

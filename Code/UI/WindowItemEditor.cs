@@ -248,7 +248,7 @@ internal class WindowItemEditor : MonoBehaviour
         instance.selected_equipment_button = Instantiate(creature_window.prefabEquipment, background_transform);
         instance.selected_equipment_button.transform.localPosition = new Vector3(-75, 90);
         var item_display_bg = new GameObject("BG", typeof(Image));
-        item_display_bg.GetComponent<Image>().sprite = Helper.get_inner_sliced();
+        item_display_bg.GetComponent<Image>().sprite = GeneralTools.get_inner_sliced();
         item_display_bg.GetComponent<Image>().type = Image.Type.Sliced;
         item_display_bg.transform.SetParent(instance.selected_equipment_button.transform);
         item_display_bg.transform.localPosition = new Vector3(0, 0);
@@ -261,7 +261,7 @@ internal class WindowItemEditor : MonoBehaviour
         window_description.transform.localPosition = new Vector3(4, 60);
         window_description.transform.localScale = new Vector3(0.8f, 0.8f);
         var description_text = window_description.GetComponent<Text>();
-        Helper.text_basic_setting(description_text);
+        GeneralTools.text_basic_setting(description_text);
         description_text.resizeTextForBestFit = false;
         description_text.fontSize = 12;
         description_text.text = LocalizedTextManager.getText(C.item_editor_description);
@@ -270,7 +270,7 @@ internal class WindowItemEditor : MonoBehaviour
 
 
         var inner_bg = new GameObject("InnerBG", typeof(Image));
-        inner_bg.GetComponent<Image>().sprite = Helper.get_inner_sliced();
+        inner_bg.GetComponent<Image>().sprite = GeneralTools.get_inner_sliced();
         inner_bg.GetComponent<Image>().type = Image.Type.Sliced;
         inner_bg.GetComponent<Image>().enabled = false;
         inner_bg.transform.SetParent(content_transform);
@@ -284,7 +284,7 @@ internal class WindowItemEditor : MonoBehaviour
         name_editor.transform.SetParent(inner_bg.transform);
         name_editor.transform.localScale = new Vector3(1, 1);
         name_editor.transform.localPosition = new Vector3(0, y_offset + 60.4f);
-        name_editor.GetComponent<Image>().sprite = Helper.get_inner_sliced();
+        name_editor.GetComponent<Image>().sprite = GeneralTools.get_inner_sliced();
         name_editor.GetComponent<Image>().type = Image.Type.Sliced;
         name_editor.GetComponent<RectTransform>().sizeDelta = new Vector2(100, 15);
         var name_input_field = new GameObject("InputField", typeof(Text), typeof(InputField));
@@ -294,7 +294,7 @@ internal class WindowItemEditor : MonoBehaviour
         name_input_field.GetComponent<RectTransform>().sizeDelta = new Vector2(100, 10);
         var name_input_text_component = name_input_field.GetComponent<Text>();
         name_input_field.GetComponent<InputField>().textComponent = name_input_text_component;
-        Helper.text_basic_setting(name_input_text_component);
+        GeneralTools.text_basic_setting(name_input_text_component);
         name_input_text_component.supportRichText = true;
         instance.name_editor = name_input_field.GetComponent<InputField>();
         name_input_field.GetComponent<InputField>().onEndEdit.RemoveAllListeners();
@@ -323,7 +323,7 @@ internal class WindowItemEditor : MonoBehaviour
             selected_equipment_button.item_data.from = text;
         });
         var from_title = new GameObject("Title", typeof(Text));
-        Helper.text_basic_setting(from_title.GetComponent<Text>());
+        GeneralTools.text_basic_setting(from_title.GetComponent<Text>());
         from_title.GetComponent<Text>().text = LocalizedTextManager.getText(C.item_from);
         from_title.transform.SetParent(from_editor.transform);
         from_title.GetComponent<RectTransform>().sizeDelta = new Vector2(50, 15);
@@ -380,12 +380,12 @@ internal class WindowItemEditor : MonoBehaviour
         material_selector_title.transform.localScale = new Vector3(0.8f, 0.8f);
         material_selector_title.transform.localPosition = new Vector3(0, y_offset + 5);
         var material_selector_title_text = material_selector_title.GetComponent<Text>();
-        Helper.text_basic_setting(material_selector_title_text);
+        GeneralTools.text_basic_setting(material_selector_title_text);
         material_selector_title_text.text = LocalizedTextManager.getText(C.item_material);
         material_selector_title.GetComponent<RectTransform>().sizeDelta = new Vector2(60, 25);
 
         var material_selector = new GameObject("Material Selector", typeof(Image));
-        material_selector.GetComponent<Image>().sprite = Helper.get_inner_sliced();
+        material_selector.GetComponent<Image>().sprite = GeneralTools.get_inner_sliced();
         material_selector.GetComponent<Image>().type = Image.Type.Sliced;
         material_selector.transform.SetParent(inner_bg.transform);
         material_selector.transform.localScale = new Vector3(1, 1);
@@ -503,7 +503,7 @@ internal class WindowItemEditor : MonoBehaviour
         var modifier_editor = new GameObject("Modifier Editor Element", typeof(Image), typeof(ModifierEditorElement));
         instance.modifier_editor_prefab = modifier_editor;
         modifier_editor.transform.SetParent(inner_bg.transform);
-        modifier_editor.GetComponent<Image>().sprite = Helper.get_inner_sliced();
+        modifier_editor.GetComponent<Image>().sprite = GeneralTools.get_inner_sliced();
         modifier_editor.GetComponent<Image>().type = Image.Type.Sliced;
         rect = modifier_editor.GetComponent<RectTransform>();
         rect.sizeDelta = new Vector2(160, 20);
@@ -515,7 +515,7 @@ internal class WindowItemEditor : MonoBehaviour
         var modifier_level_up_button = new GameObject("Up", typeof(Image), typeof(Button));
         var modifier_level_down_button = new GameObject("Down", typeof(Image), typeof(Button));
 
-        Helper.text_basic_setting(modifier_text.GetComponent<Text>());
+        GeneralTools.text_basic_setting(modifier_text.GetComponent<Text>());
         var mee = modifier_editor.GetComponent<ModifierEditorElement>();
         mee.text = modifier_text.GetComponent<Text>();
         mee.text.resizeTextMaxSize = 10;
@@ -563,7 +563,7 @@ internal class WindowItemEditor : MonoBehaviour
             instance.modifier_editor_prefab.GetComponent<ModifierEditorElement>(), modifier_editor_container.transform);
 
         var empty_modifier_editor = new GameObject("Empty Modifier", typeof(Image));
-        empty_modifier_editor.GetComponent<Image>().sprite = Helper.get_inner_sliced();
+        empty_modifier_editor.GetComponent<Image>().sprite = GeneralTools.get_inner_sliced();
         empty_modifier_editor.GetComponent<Image>().type = Image.Type.Sliced;
         empty_modifier_editor.transform.SetParent(modifier_editor_container.transform);
         empty_modifier_editor.GetComponent<RectTransform>().sizeDelta = new Vector2(160, 25);
