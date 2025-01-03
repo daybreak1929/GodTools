@@ -12,7 +12,7 @@ using NeoModLoader.General.UI.Prefabs;
 using UnityEngine;
 using UnityEngine.UI;
 #if CULTIWAY
-using Cultiway.Content.CultisysComponents;
+using Cultiway.Content.Components;
 using Cultiway.Utils.Extension;
 using Cultiway.Core;
 #endif
@@ -326,7 +326,7 @@ public class WindowTops : AbstractWideWindow<WindowTops>
 
     public void ApplyFilter()
     {
-        _list = World.world.units.getSimpleList();
+        _list = World.world.units.getSimpleList().FindAll(x=>x!=null && x.isAlive());
         foreach (Filter filter in filters) _list = _list.FindAll(filter.FilterActor);
 
         content_rect.sizeDelta = new Vector2(0, _list.Count * single_element_height + 15);
@@ -336,7 +336,7 @@ public class WindowTops : AbstractWideWindow<WindowTops>
     [Hotfixable]
     public override void OnNormalEnable()
     {
-        _list = World.world.units.getSimpleList();
+        _list = World.world.units.getSimpleList().FindAll(x=>x!=null && x.isAlive());
         ApplyFilter();
     }
 
