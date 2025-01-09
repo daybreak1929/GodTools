@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using GodTools.Abstract;
 using GodTools.UI.Prefabs;
 using GodTools.UI.Prefabs.TopElementPrefabs;
@@ -12,9 +13,13 @@ using NeoModLoader.General.UI.Prefabs;
 using UnityEngine;
 using UnityEngine.UI;
 #if CULTIWAY
+using Cultiway.Content;
 using Cultiway.Content.Components;
 using Cultiway.Utils.Extension;
 using Cultiway.Core;
+#endif
+#if INMNY_CUSTOMMODT002
+using CustomModT002;
 #endif
 
 namespace GodTools.UI;
@@ -57,10 +62,12 @@ public class WindowTops : AbstractWideWindow<WindowTops>
     {
         content_rect = ContentTransform.GetComponent<RectTransform>();
         scroll_view_rect = content_rect.parent.parent.GetComponent<RectTransform>();
-        scroll_view_rect.localPosition = Vector3.zero;
-        scroll_view_rect.sizeDelta = new Vector2(200, 250);
+        scroll_view_rect.localPosition = new Vector3(0, 10);
+        scroll_view_rect.sizeDelta = new Vector2(200, 230);
         content_rect.pivot = new Vector2(0.5f,        1);
+        BackgroundTransform.Find("Scrollgradient").localPosition = new(97.8f, -106);
 
+        
 
         SimpleLine line1 = Instantiate(SimpleLine.Prefab, BackgroundTransform);
         line1.transform.localPosition = new Vector3(-100, 0);
@@ -124,18 +131,17 @@ public class WindowTops : AbstractWideWindow<WindowTops>
         new_keyword(vanilla_keyword_grid, "level", "ui/icons/iconLevels", (a, b) =>
         {
             var res = a.data.level.CompareTo(b.data.level);
-            if (res == 0) res = a.data.experience.CompareTo(b.data.experience);
 
             return res;
-        });
+        }, a => $"{a.data.level} 级");
         new_keyword(vanilla_keyword_grid, "kills", "ui/icons/iconSkulls",
-            (a, b) => a.data.kills.CompareTo(b.data.kills));
+            (a, b) => a.data.kills.CompareTo(b.data.kills), a=> $"{a.data.kills} 击杀");
         new_keyword(vanilla_keyword_grid, "birth", "ui/icons/iconAge",
-            (a, b) => a.data.getAge().CompareTo(b.data.getAge()));
+            (a, b) => a.data.getAge().CompareTo(b.data.getAge()), a => $"{a.data.getAge()} 岁");
         new_keyword(vanilla_keyword_grid, "max_health", "ui/icons/iconHealth",
-            (a, b) => a.stats[S.health].CompareTo(b.stats[S.health]));
+            (a, b) => a.stats[S.health].CompareTo(b.stats[S.health]), a => $"{a.stats[S.health]} 最大生命");
         new_keyword(vanilla_keyword_grid, "damage", "ui/icons/iconDamage",
-            (a, b) => a.stats[S.damage].CompareTo(b.stats[S.damage]));
+            (a, b) => a.stats[S.damage].CompareTo(b.stats[S.damage]), a => $"{a.stats[S.damage]} 攻击");
 
 #if INMNY_CUSTOMMODT001
         TitledGrid inmny_custommodt001_keyword_grid = new_keyword_grid("inmny_custommodt001");
@@ -144,6 +150,10 @@ public class WindowTops : AbstractWideWindow<WindowTops>
             a.data.get("inmny.custommodt001.talent", out float a_talent);
             b.data.get("inmny.custommodt001.talent", out float b_talent);
             return a_talent.CompareTo(b_talent);
+        }, a =>
+        {
+            a.data.get("inmny.custommodt001.talent", out float talent);
+            return $"{(int)talent} 武道天赋";
         });
         new_keyword(inmny_custommodt001_keyword_grid, "level", "inmny/custommodt001/cultilevel", (a, b) =>
         {
@@ -160,12 +170,37 @@ public class WindowTops : AbstractWideWindow<WindowTops>
             return res;
         });
 #endif
+#if INMNY_CUSTOMMODT002
+        TitledGrid inmny_custommodt002_keyword_grid = new_keyword_grid("inmny_custommodt002");
+        new_keyword(inmny_custommodt002_keyword_grid, "summon_count", "inmny/custommodt002/icon", [Hotfixable](a, b) =>
+        {
+            var a_count = 0;
+            foreach (var trait in Traits.AllTraits)
+            {
+                a_count += a.GetSummonList(trait).Count;
+            }
+
+            var b_count = 0;
+            foreach (var trait in Traits.AllTraits)
+            {
+                b_count += b.GetSummonList(trait).Count;
+            }
+            return a_count.CompareTo(b_count);
+        }, a => $"{a.data.traits.Sum(trait => a.GetSummonList(trait).Count)} 只召唤物");
+        new_keyword(inmny_custommodt002_keyword_grid, "summon_level", "inmny/custommodt002/icon", (a, b) =>
+        {
+            var a_count = a.GetSummonLevel();
+            var b_count = b.GetSummonLevel();
+            return a_count.CompareTo(b_count);
+        }, a => $"{a.GetSummonLevelName()}");
+#endif
 #if CULTIWAY
         TitledGrid cultiway_keyword_grid = new_keyword_grid("cultiway");
         new_keyword(cultiway_keyword_grid, "xian_level", "cultiway/icons/iconCultivation", [Hotfixable](a, b) =>
         {
             ActorExtend a_extend = a.GetExtend();
             ActorExtend b_extend = b.GetExtend();
+            return a_extend.GetCultisysLevelForSort<Xian>().CompareTo(b_extend.GetCultisysLevelForSort<Xian>());
             var a_has = a_extend.HasCultisys<Xian>();
             var b_has = b_extend.HasCultisys<Xian>();
             if (!a_has && !b_has) return 0;
@@ -174,9 +209,18 @@ public class WindowTops : AbstractWideWindow<WindowTops>
             var a_xian = a_extend.GetCultisys<Xian>();
             var b_xian = b_extend.GetCultisys<Xian>();
             var res = a_xian.CurrLevel.CompareTo(b_xian.CurrLevel);
-            if (res == 0) res = a_xian.wakan.CompareTo(b_xian.wakan);
 
             return res;
+        }, a =>
+        {
+            var ae = a.GetExtend();
+            if (ae.HasCultisys<Xian>())
+            {
+                var xian = ae.GetCultisys<Xian>();
+                return $"{Cultisyses.Xian.GetLevelName(xian.CurrLevel)}";
+            }
+
+            return "凡人";
         });
         new_keyword(cultiway_keyword_grid, "xian_talent", "cultiway/icons/iconElement", (a, b) =>
         {
@@ -188,6 +232,16 @@ public class WindowTops : AbstractWideWindow<WindowTops>
             if (!a_has) return -1;
             if (!b_has) return 1;
             return a_extend.GetElementRoot().GetStrength().CompareTo(b_extend.GetElementRoot().GetStrength());
+        }, a =>
+        {
+            var ae = a.GetExtend();
+            if (ae.HasElementRoot())
+            {
+                var er = ae.GetElementRoot();
+                return $"{(int)(er.GetStrength() * 100)} 修仙天赋";
+            }
+
+            return "无天赋";
         });
         TitledGrid cultiway_filter_grid = new_filter_grid("cultisys");
         new_filter(cultiway_filter_grid, "xian", "cultiway/icons/iconCultivation",
@@ -201,6 +255,10 @@ public class WindowTops : AbstractWideWindow<WindowTops>
             b.data.get("wushu.yuannengNum", out int b_level);
             var res = a_level.CompareTo(b_level);
             return res;
+        }, a =>
+        {
+            a.data.get("wushu.yuannengNum", out int a_level);
+            return $"{a_level} 源能";
         });
 #endif
         TitledGrid new_filter_grid(string filter_type)
@@ -222,7 +280,7 @@ public class WindowTops : AbstractWideWindow<WindowTops>
                     grid.Title.color = Color.black;
                 }
 
-                if (filters.Any(x => x.group_id == group_id)) ApplyFilter();
+                if (filters.Any(x => x.group_id == group_id)) ApplySort();
             });
             grid.Title.gameObject.AddComponent<TipButton>().textOnClick = $"{C.mod_prefix}.ui.switch_bw_list";
             return grid;
@@ -264,11 +322,11 @@ public class WindowTops : AbstractWideWindow<WindowTops>
                 }
 
                 ui_filters_dirty = true;
-                ApplyFilter();
+                ApplySort();
             });
         }
 
-        void new_keyword(TitledGrid grid, string keyword_id, string icon_path, Func<Actor, Actor, int> compare_func)
+        void new_keyword(TitledGrid grid, string keyword_id, string icon_path, Func<Actor, Actor, int> compare_func, Func<Actor,string> major_key_disp = null)
         {
             var obj = new GameObject(keyword_id, typeof(Image), typeof(Button), typeof(TipButton));
             obj.transform.SetParent(grid.Grid.GetComponent<RectTransform>());
@@ -281,13 +339,14 @@ public class WindowTops : AbstractWideWindow<WindowTops>
             var button = obj.GetComponent<Button>();
             var local_keyword_id = keyword_id;
             var local_compare = compare_func;
+            var local_disp = major_key_disp;
             Sprite local_sprite = icon.sprite;
             button.onClick.AddListener(() =>
             {
                 var key_idx = sort_keys.FindIndex(x => x.ID == local_keyword_id);
                 if (key_idx == -1)
                 {
-                    var key = new SortKey(local_keyword_id, local_compare, local_sprite);
+                    var key = new SortKey(local_keyword_id, local_compare, local_sprite, local_disp);
                     sort_keys.Add(key);
                 }
                 else
@@ -300,6 +359,29 @@ public class WindowTops : AbstractWideWindow<WindowTops>
             });
         }
 
+        var to_top_button = RawLocalizedText.Instantiate(BackgroundTransform, pName: "ToTop");
+        to_top_button.SetSize(new(30,10));
+        to_top_button.Setup($"{C.mod_prefix}.ui.to_top", alignment: TextAnchor.MiddleLeft);
+        to_top_button.transform.localPosition = new(-70, -120);
+        to_top_button.gameObject.AddComponent<Button>().onClick.AddListener(ToTop);
+        var to_bottom_button = RawLocalizedText.Instantiate(BackgroundTransform, pName: "ToBottom");
+        to_bottom_button.SetSize(new(30,10));
+        to_bottom_button.Setup($"{C.mod_prefix}.ui.to_bottom", alignment: TextAnchor.MiddleRight);
+        to_bottom_button.transform.localPosition = new(70, -120);
+        to_bottom_button.gameObject.AddComponent<Button>().onClick.AddListener(ToBottom);
+
+        var jump_input = TextInput.Instantiate(BackgroundTransform, pName: "Jump");
+        jump_input.Setup("", CheckJump);
+        jump_input.SetSize(new(80, 20));
+        jump_input.text.alignment = TextAnchor.MiddleCenter;
+        jump_input.input.characterValidation = InputField.CharacterValidation.Integer;
+        jump_input.transform.localPosition = new(0, -118);
+        var placeholder_text = RawLocalizedText.Instantiate(jump_input.input.transform, pName: "Placeholder");
+        placeholder_text.Setup($"{C.mod_prefix}.ui.jump_to", new Color(1,1,1,0.3f),alignment: TextAnchor.MiddleCenter);
+        placeholder_text.SetSize(new(60, 20));
+        placeholder_text.transform.localPosition = new(33, 0);
+        jump_input.input.placeholder = placeholder_text.Text;
+
         _pool = new ObjectPoolGenericMono<ActorLevel>(ActorLevel.Prefab, ContentTransform);
         sort_button_pool = new MonoObjPool<SortKeyButton>(SortKeyButton.Prefab, selected_keywords.Grid.transform);
         filter_button_pool = new MonoObjPool<FilterButton>(FilterButton.Prefab, selected_filters.Grid.transform);
@@ -308,6 +390,10 @@ public class WindowTops : AbstractWideWindow<WindowTops>
     [Hotfixable]
     public void ApplySort()
     {
+        _list = World.world.units.getSimpleList().FindAll([Hotfixable](x)=>x!=null && x.data != null&& x.isAlive() && !x.object_destroyed);
+        foreach (Filter filter in filters) _list = _list.FindAll(filter.FilterActor);
+
+        content_rect.sizeDelta = new Vector2(0, _list.Count * single_element_height + 15);
         _list.Sort((a, b) =>
         {
             foreach (SortKey key in sort_keys)
@@ -324,22 +410,31 @@ public class WindowTops : AbstractWideWindow<WindowTops>
         _pool.clear();
     }
 
-    public void ApplyFilter()
+    [Hotfixable]
+    public override void OnNormalEnable()
     {
-        _list = World.world.units.getSimpleList().FindAll(x=>x!=null && x.isAlive());
-        foreach (Filter filter in filters) _list = _list.FindAll(filter.FilterActor);
-
-        content_rect.sizeDelta = new Vector2(0, _list.Count * single_element_height + 15);
         ApplySort();
     }
 
     [Hotfixable]
-    public override void OnNormalEnable()
+    public void ToTop()
     {
-        _list = World.world.units.getSimpleList().FindAll(x=>x!=null && x.isAlive());
-        ApplyFilter();
+        ContentTransform.DOLocalMoveY(0, 1);
     }
-
+    [Hotfixable]
+    public void ToBottom()
+    {
+        ContentTransform.DOLocalMoveY(ContentTransform.GetComponent<RectTransform>().sizeDelta.y - scroll_view_rect.sizeDelta.y, 1);
+    }
+    [Hotfixable]
+    private void CheckJump(string num)
+    {
+        if (int.TryParse(num, out var idx))
+        {
+            idx = Math.Min(_list.Count - 1, Math.Max(0, idx));
+            ContentTransform.DOLocalMoveY(idx * single_element_height, 1);
+        }
+    }
     [Hotfixable]
     private void OnUpdate()
     {
@@ -366,13 +461,19 @@ public class WindowTops : AbstractWideWindow<WindowTops>
             }
         }
 
+        SortKey major_sort_key = null;
+        if (sort_keys.Count > 0)
+        {
+            major_sort_key = sort_keys[0];
+        }
+
         for (var i = view_start_idx; i <= view_end_idx; i++)
             if (i < last_view_start || i > last_view_end)
             {
                 // 需要显示
                 Actor actor = _list[i];
                 ActorLevel comp = _pool.getNext();
-                comp.Setup(actor, i);
+                comp.Setup(actor, i, major_sort_key?.GetMajorKeyDisplay(actor) ?? "");
                 comp.transform.localPosition = new Vector3(0, start_y - i * single_element_height);
             }
 
@@ -408,13 +509,15 @@ public class WindowTops : AbstractWideWindow<WindowTops>
     {
         private readonly Func<Actor, Actor, int> _compare;
         public readonly  Sprite                  Icon;
+        private readonly Func<Actor, string> _major_key_disp;
 
         public readonly string ID;
 
-        public SortKey(string id, Func<Actor, Actor, int> compare, Sprite icon)
+        public SortKey(string id, Func<Actor, Actor, int> compare, Sprite icon, Func<Actor, string> major_key_disp)
         {
             ID = id;
             _compare = compare;
+            _major_key_disp = major_key_disp;
             Icon = icon;
         }
 
@@ -423,6 +526,10 @@ public class WindowTops : AbstractWideWindow<WindowTops>
         public int Compare(Actor a, Actor b)
         {
             return _compare(a, b) * (IsAscend ? 1 : -1);
+        }
+        public string GetMajorKeyDisplay(Actor actor)
+        {
+            return _major_key_disp?.Invoke(actor) ?? "";
         }
 
         public void Switch()

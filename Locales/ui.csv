@@ -47,11 +47,17 @@ inmny.godtools.ui.keyword.vanilla.damage,攻击力,Damage
 inmny.godtools.ui.keyword.inmny_custommodt001,特质武道,Inmny CustomMod T1
 inmny.godtools.ui.keyword.inmny_custommodt001.talent,武道天赋,Talent
 inmny.godtools.ui.keyword.inmny_custommodt001.level,武道境界,Level
+inmny.godtools.ui.keyword.inmny_custommodt002,召唤物,Inmny CustomMod T2
+inmny.godtools.ui.keyword.inmny_custommodt002.summon_count,召唤物数量,Summon Count
+inmny.godtools.ui.keyword.inmny_custommodt002.summon_level,召唤师等级,Summon Level
 inmny.godtools.ui.keyword.cultiway,修仙,Cultiway
 inmny.godtools.ui.keyword.cultiway.xian_level,仙路等级,Xian Level
 inmny.godtools.ui.keyword.cultiway.xian_talent,灵根品级,Xian Talent
 inmny.godtools.ui.keyword.wushu,巫术秘典,Cultiway
 inmny.godtools.ui.keyword.wushu.yuanneng,源能,Yuan Neng
+inmny.godtools.ui.to_top,至顶,Goto Top
+inmny.godtools.ui.to_bottom,至底,Goto Bottom
+inmny.godtools.ui.jump_to,跳转至,Jump to
 inmny.godtools.WindowModInfo,模组介绍,Mod Info
 inmny.godtools.debug,DEBUG窗口,Debug Window
 inmny.godtools.console,控制台,Console
