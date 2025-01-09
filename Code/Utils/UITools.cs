@@ -5,14 +5,14 @@ namespace GodTools.Utils;
 
 public static class UITools
 {
-    public static Vector2 WorldToMapWarpPosition(Vector3 position)
+    public static Vector2 WorldToScreenPosition(Vector3 position, RectTransform canvas_rect)
     {
         Vector2 vector = World.world.camera.WorldToViewportPoint(position);
         return new Vector2(
-            vector.x                                        * MapNamesManager.instance.canvasRect.sizeDelta.x -
-            MapNamesManager.instance.canvasRect.sizeDelta.x * 0.5f,
-            vector.y                                        * MapNamesManager.instance.canvasRect.sizeDelta.y -
-            MapNamesManager.instance.canvasRect.sizeDelta.y * 0.5f);
+            vector.x                                        * canvas_rect.sizeDelta.x -
+            canvas_rect.sizeDelta.x * 0.5f,
+            vector.y                                        * canvas_rect.sizeDelta.y -
+            canvas_rect.sizeDelta.y * 0.5f);
     }
 
     [Hotfixable]

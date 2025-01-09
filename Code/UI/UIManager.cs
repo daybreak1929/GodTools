@@ -12,9 +12,11 @@ internal class UIManager : IManager
         WindowCreatureSpriteEditor.CreateWindow(nameof(WindowCreatureSpriteEditor), nameof(WindowCreatureSpriteEditor));
         WindowCreatureDataEditor.CreateWindow(nameof(WindowCreatureDataEditor), nameof(WindowCreatureDataEditor));
         WindowCreatureSearch.CreateWindow(nameof(WindowCreatureSearch), nameof(WindowCreatureSearch));
+        WindowCreatureTitleEditor.CreateWindow(nameof(WindowCreatureTitleEditor), nameof(WindowCreatureTitleEditor));
         WindowCreatureSavedList.CreateAndInit(nameof(WindowCreatureSavedList));
         WindowTops.CreateAndInit($"{C.mod_prefix}.{nameof(WindowTops)}");
         WindowSubWorldCreator.CreateWindow($"{C.mod_prefix}.{nameof(WindowSubWorldCreator)}",
             $"{C.mod_prefix}.{nameof(WindowSubWorldCreator)}");
+        CanvasCreatureTitle.Init();
     }
 }

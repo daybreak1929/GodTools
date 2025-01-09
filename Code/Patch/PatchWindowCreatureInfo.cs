@@ -50,6 +50,7 @@ internal static class PatchWindowCreatureInfo
 
             //AddEntryButtonForWindow(__instance, nameof(WindowCreatureSpriteEditor), "ui/icons/iconAttractive");
             AddEntryButtonForWindow(__instance, nameof(WindowCreatureDataEditor), "ui/icons/iconOptions");
+            AddEntryButtonForWindow(__instance, nameof(WindowCreatureTitleEditor), "ui/icons/iconOptions");
 
             Image mood_image = __instance.moodSprite;
             var mood_modify_button = mood_image.gameObject.AddComponent<Button>();
