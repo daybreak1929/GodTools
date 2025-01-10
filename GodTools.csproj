@@ -150,6 +150,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Cultiway\Cultiway.csproj"/>
         <ProjectReference Include="..\CustomModT002\CustomModT002.csproj" />
+        <ProjectReference Include="..\CustomMod\CustomMod.csproj" />
         <ProjectReference Include="..\CW_Core\Cultivation-Way-Core.csproj"/>
     </ItemGroup>
 

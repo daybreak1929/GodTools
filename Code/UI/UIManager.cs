@@ -10,7 +10,7 @@ internal class UIManager : IManager
     {
         WindowModInfo.CreateWindow($"{C.mod_prefix}.{nameof(WindowModInfo)}", nameof(WindowModInfo));
         WindowCreatureSpriteEditor.CreateWindow(nameof(WindowCreatureSpriteEditor), nameof(WindowCreatureSpriteEditor));
-        WindowCreatureDataEditor.CreateWindow(nameof(WindowCreatureDataEditor), nameof(WindowCreatureDataEditor));
+        WindowCreatureDataEditor.CreateAndInit(nameof(WindowCreatureDataEditor), pSize: new(300, 250));
         WindowCreatureSearch.CreateWindow(nameof(WindowCreatureSearch), nameof(WindowCreatureSearch));
         WindowCreatureTitleEditor.CreateWindow(nameof(WindowCreatureTitleEditor), nameof(WindowCreatureTitleEditor));
         WindowCreatureSavedList.CreateAndInit(nameof(WindowCreatureSavedList));

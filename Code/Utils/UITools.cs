@@ -1,5 +1,6 @@
 using NeoModLoader.api.attributes;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace GodTools.Utils;
 
@@ -48,5 +49,15 @@ public static class UITools
             rect_transform.lossyScale.x,
             (position.y - (rect_transform.position.y + rect_transform.rect.y * rect_transform.lossyScale.y)) /
             rect_transform.lossyScale.y);
+    }
+
+    public static void SetSimpleVertLayout(this VerticalLayoutGroup layout, float spacing = 4)
+    {
+        layout.spacing = spacing;
+        layout.childControlHeight = false;
+        layout.childControlWidth = false;
+        layout.childAlignment = TextAnchor.UpperCenter;
+        layout.childForceExpandHeight = false;
+        layout.childForceExpandWidth = false;
     }
 }

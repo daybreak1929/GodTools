@@ -60,6 +60,14 @@ inmny.godtools.ui.to_top,至顶,Goto Top
 inmny.godtools.ui.to_bottom,至底,Goto Bottom
 inmny.godtools.ui.jump_to,跳转至,Jump to
 inmny.godtools.ui.jump_to_year,跳转至(年),Jump to Year
+inmny.godtools.ui.data_editor.chinese_name,中文名,Chinese Name
+inmny.godtools.ui.data_editor.chinese_name.family_name,姓氏,Family Name
+inmny.godtools.ui.data_editor.inmny_custommodt001,特质武道,Inmny CustomMod T001
+inmny.godtools.ui.data_editor.inmny_custommodt001.talent,武道天赋,Talent
+inmny.godtools.ui.data_editor.inmny_custommodt001.wudao_level,武道等级,Level
+inmny.godtools.ui.data_editor.inmny_custommodt001.wudao_exp,武道经验,Experience
+inmny.godtools.ui.data_editor.cultiway,修仙,Cultiway
+inmny.godtools.ui.data_editor.cultiway.power_level,力量层次,Power Level
 inmny.godtools.WindowModInfo,模组介绍,Mod Info
 inmny.godtools.debug,DEBUG窗口,Debug Window
 inmny.godtools.console,控制台,Console
@@ -69,6 +77,8 @@ inmny.godtools.WindowTops Title,世界生物相关排行,World Tops
 inmny.godtools.WindowSubWorldCreator,创建亚空间,Create Sub World
 WindowModInfo,模组介绍,Mod Info
 WindowCreatureDataEditor,生物数据修改,Creature Data Editor
+WindowCreatureDataEditor Title,生物数据修改,Creature Data Editor
+WindowCreatureDataEditor Description,<color=yellow>警告！可能会导致bug</color>\n<color=red>谨慎使用</color>,Creature Data Editor
 WindowCreatureSpriteEditor,生物贴图修改,Creature Sprite Editor
 WindowCreatureSearch,生物搜索,Creature Search
 WindowCreatureSavedList Title,保存的生物,Saved Creatures
