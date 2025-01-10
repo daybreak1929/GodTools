@@ -35,6 +35,7 @@ inmny.godtools.ui.filter.race,种族,Race
 inmny.godtools.ui.filter.race.human,人类,Humans
 inmny.godtools.ui.filter.cultisys,修炼体系,Cultisys
 inmny.godtools.ui.filter.cultisys.xian,仙路,Xian
+inmny.godtools.ui.filter.worldlog.type,事件类型,WorldLog Type
 inmny.godtools.ui.sort.ascending,升序,Ascending
 inmny.godtools.ui.sort.descending,降序,Descending
 inmny.godtools.ui.keyword,关键词,Keywords
@@ -58,6 +59,7 @@ inmny.godtools.ui.keyword.wushu.yuanneng,源能,Yuan Neng
 inmny.godtools.ui.to_top,至顶,Goto Top
 inmny.godtools.ui.to_bottom,至底,Goto Bottom
 inmny.godtools.ui.jump_to,跳转至,Jump to
+inmny.godtools.ui.jump_to_year,跳转至(年),Jump to Year
 inmny.godtools.WindowModInfo,模组介绍,Mod Info
 inmny.godtools.debug,DEBUG窗口,Debug Window
 inmny.godtools.console,控制台,Console
@@ -72,3 +74,5 @@ WindowCreatureSearch,生物搜索,Creature Search
 WindowCreatureSavedList Title,保存的生物,Saved Creatures
 WindowCreatureSavedList,保存的生物,Saved Creatures
 WindowCreatureTitleEditor,称号编辑器,Title Editor
+WindowDetailedHistory,详细历史信息,Detailed History
+WindowDetailedHistory Title,详细历史信息,Detailed History

@@ -1,29 +1,34 @@
 using NeoModLoader.General.UI.Prefabs;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace GodTools.UI.Prefabs;
 
 public class RawText : APrefab<RawText>
 {
-    private Text mText;
+    [SerializeField]
+    private Text text;
 
-    public Text Text
+    public Text Text => text;
+    public RectTransform RectTransform => text.rectTransform;
+
+    public string Value
     {
-        get
-        {
-            Init();
-            return mText;
-        }
+        get => text.text;
+        set => text.text = value;
     }
-
-    protected override void Init()
+    public Color Color
     {
-        if (Initialized) return;
-        base.Init();
-
-        mText = GetComponent<Text>();
+        get => text.color;
+        set => text.color = value;
     }
+    public TextAnchor Alignment
+    {
+        get => text.alignment;
+        set => text.alignment = value;
+    }
+    
 
     public void Setup(string text, Color color = default, TextAnchor alignment = TextAnchor.UpperLeft)
     {
@@ -48,5 +53,6 @@ public class RawText : APrefab<RawText>
 
 
         Prefab = obj.AddComponent<RawText>();
+        Prefab.text = text;
     }
 }

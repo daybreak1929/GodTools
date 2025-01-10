@@ -48,6 +48,17 @@ public class MonoObjPool<T> where T : MonoBehaviour
         }
     }
 
+    public void MarkUnused(Func<T, bool> check)
+    {
+        for (int i=0; i<_unused_first_idx; i++)
+        {
+            T obj = _pool[i];
+            if (check(obj))
+            {
+                _pool.Swap(i--, --_unused_first_idx);
+            }
+        }
+    }
     public void Clear()
     {
         foreach (T obj in _pool)

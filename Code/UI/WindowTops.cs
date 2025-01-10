@@ -313,6 +313,10 @@ public class WindowTops : AbstractWideWindow<WindowTops>
                 var filter_idx = filters.FindIndex(x => x.ID == local_filter_id);
                 if (filter_idx == -1)
                 {
+                    if (!blacklist_filter_groups.Contains(local_group_id) && filters.Any(x => x.group_id == local_group_id))
+                    {
+                        return;
+                    }
                     var filter = new Filter(local_filter_id, local_group_id, local_filter, local_sprite);
                     filters.Add(filter);
                 }
@@ -393,7 +397,7 @@ public class WindowTops : AbstractWideWindow<WindowTops>
         _list = World.world.units.getSimpleList().FindAll([Hotfixable](x)=>x!=null && x.data != null&& x.isAlive() && !x.object_destroyed);
         foreach (Filter filter in filters) _list = _list.FindAll(filter.FilterActor);
 
-        content_rect.sizeDelta = new Vector2(0, _list.Count * single_element_height + 15);
+        content_rect.sizeDelta = new Vector2(0, (_list.Count + 1) * single_element_height);
         _list.Sort((a, b) =>
         {
             foreach (SortKey key in sort_keys)

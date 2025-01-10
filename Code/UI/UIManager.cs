@@ -17,6 +17,7 @@ internal class UIManager : IManager
         WindowTops.CreateAndInit($"{C.mod_prefix}.{nameof(WindowTops)}");
         WindowSubWorldCreator.CreateWindow($"{C.mod_prefix}.{nameof(WindowSubWorldCreator)}",
             $"{C.mod_prefix}.{nameof(WindowSubWorldCreator)}");
+        WindowDetailedHistory.CreateAndInit(nameof(WindowDetailedHistory));
         CanvasCreatureTitle.Init();
     }
 }
