@@ -10,15 +10,25 @@ using UPersian.Utils;
 
 namespace GodTools.UI.CreatureDataEditorGrids;
 
-public class WudaoLevelEditor : CreatureDataEditorGrid
+public class WudaoLevelEditor : SimpleInputEditor
 {
-    public override void Setup()
+    protected override string GetTitleKey()
     {
-        _text_input = TextInput.Instantiate(transform, pName: "TextInput");
-        _text_input.Setup("", UpdateValue);
-        _text_input.SetSize(new(200, 20));
-        _text_input.GetComponent<RectTransform>().pivot = new(0.5f, 1);
-        _text_input.input.onValidateInput += (text, charIndex, addedChar) =>
+        return "inmny.godtools.ui.data_editor.inmny_custommodt001.wudao_level";
+    }
+
+    protected override void UpdateValue(string value)
+    {
+        if (int.TryParse(value, out int int_value))
+        {
+            Actor.data.set("inmny.custommodt001.wudao_level", int_value);
+            Actor.setStatsDirty();
+        }
+    }
+
+    protected override void OnSetup()
+    {
+        TextInput.input.onValidateInput += (text, charIndex, addedChar) =>
         {
             if (addedChar < '0' || addedChar > '9')
             {
@@ -33,23 +43,12 @@ public class WudaoLevelEditor : CreatureDataEditorGrid
             }
             return addedChar;
         };
-        TitleKey = "inmny.godtools.ui.data_editor.inmny_custommodt001.wudao_level";
     }
-    private void UpdateValue(string value)
+
+    protected override string GetInitValue()
     {
-        if (int.TryParse(value, out int int_value))
-        {
-            _actor.data.set("inmny.custommodt001.wudao_level", int_value);
-            _actor.setStatsDirty();
-        }
-    }
-    private TextInput _text_input;
-    private Actor _actor;
-    public override void EnabledWith(Actor actor)
-    {
-        _actor = actor;
-        actor.data.get("inmny.custommodt001.wudao_level", out int value);
-        _text_input.Setup(value.ToString(), UpdateValue);
+        Actor.data.get("inmny.custommodt001.wudao_level", out int value);
+        return value.ToString();
     }
 }
 #endif

@@ -3,35 +3,34 @@ using NeoModLoader.api.attributes;
 using NeoModLoader.General.UI.Prefabs;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
+using UnityEngine.UI;
 using UPersian.Utils;
 
 namespace GodTools.UI.CreatureDataEditorGrids;
 
-public class FamilyNameEditor : CreatureDataEditorGrid
+public class FamilyNameEditor : SimpleInputEditor
 {
-    public override void Setup()
+    protected override string GetTitleKey()
     {
-        _text_input = TextInput.Instantiate(transform, pName: "TextInput");
-        _text_input.Setup("", UpdateFamilyName);
-        _text_input.SetSize(new(200, 20));
-        _text_input.GetComponent<RectTransform>().pivot = new(0.5f, 1);
-        TitleKey = "inmny.godtools.ui.data_editor.chinese_name.family_name";
+        return "inmny.godtools.ui.data_editor.chinese_name.family_name";
     }
-    [Hotfixable]
-    private void UpdateFamilyName(string value)
+
+    protected override void OnSetup()
     {
-        _actor.data.get("chinese_family_name", out string old_value);
-        _actor.data.set("chinese_family_name", value);
-        _actor.data.setName(_actor.data.name.ReplaceFirst(old_value, value));
+        TextInput.input.characterValidation = InputField.CharacterValidation.None;
     }
-    private TextInput _text_input;
-    private Actor _actor;
-    [Hotfixable]
-    public override void EnabledWith(Actor actor)
+
+    protected override void UpdateValue(string value)
     {
-        _actor = actor;
-        actor.getName();
-        actor.data.get("chinese_family_name", out string family_name);
-        _text_input.Setup(family_name, UpdateFamilyName);
+        Actor.data.get("chinese_family_name", out string old_value);
+        Actor.data.set("chinese_family_name", value);
+        Actor.data.setName(Actor.data.name.ReplaceFirst(old_value, value));
+    }
+
+    protected override string GetInitValue()
+    {
+        Actor.getName();
+        Actor.data.get("chinese_family_name", out string family_name);
+        return family_name;
     }
 }
