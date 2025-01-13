@@ -1,10 +1,7 @@
 using System;
-using Cultiway;
 using NeoModLoader.api.attributes;
 using NeoModLoader.General.UI.Prefabs;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace GodTools.UI.Prefabs;
@@ -141,7 +138,6 @@ public class DetailedLogItem : APrefab<DetailedLogItem>
     [Hotfixable]
     private void TryInspect()
     {
-        ModClass.LogInfo($"Try Inspect {_msg.date}");
         _inspect_action?.Invoke(_msg);
     }
 }
