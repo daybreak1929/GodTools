@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using DG.Tweening;
 using GodTools.Abstract;
+using GodTools.Features;
 using GodTools.UI.Prefabs;
 using HarmonyLib;
 using NeoModLoader.api;
@@ -72,9 +73,6 @@ public class WindowDetailedHistory : AbstractWideWindow<WindowDetailedHistory>
         
         _pool = new MonoObjPool<DetailedLogItem>(DetailedLogItem.Prefab, content_rect);
         filter_button_pool = new MonoObjPool<FilterButton>(FilterButton.Prefab, selected_filters.Grid.transform);
-
-        Harmony.CreateAndPatchAll(typeof(WindowDetailedHistory));
-        
         
 
         var to_top_button = RawLocalizedText.Instantiate(BackgroundTransform, pName: "ToTop");
@@ -102,15 +100,8 @@ public class WindowDetailedHistory : AbstractWideWindow<WindowDetailedHistory>
     }
     private MonoObjPool<DetailedLogItem> _pool;
     private MonoObjPool<FilterButton> filter_button_pool;
-    private List<WorldLogMessage> _messages = new();
     
     private List<WorldLogMessage> _list = new();
-    
-    [HarmonyPostfix, HarmonyPatch(typeof(WorldLogMessageExtensions), nameof(WorldLogMessageExtensions.add))]
-    private static void WorldLogMessageExtensions_add_postfix(WorldLogMessage pMessage)
-    {
-        Instance._messages.Add(pMessage);
-    }
 
     [Hotfixable]
     public void ToTop()
@@ -151,67 +142,6 @@ public class WindowDetailedHistory : AbstractWideWindow<WindowDetailedHistory>
             idx = Math.Min(_list.Count - 1, Math.Max(0, idx));
             ContentTransform.DOLocalMoveY(idx * single_element_height, 1);
         }
-    }
-    struct WorldLogMessageData
-    {
-        public string text;
-        public string special1;
-        public string special2;
-        public string special3;
-        public Color color_special1;
-        public Color color_special2;
-        public Color color_special3;
-        public string date;
-        public string icon;
-        public string city;
-        public string kingdom;
-        public string alliance;
-        public string unit;
-        public Vector3 location;
-    }
-    public class FieldsOnlyContractResolver : DefaultContractResolver
-    {
-        protected override List<MemberInfo> GetSerializableMembers(Type objectType)
-        {
-            // 仅包含字段
-            return objectType.GetFields(BindingFlags.Public | BindingFlags.Instance).Cast<MemberInfo>().ToList();
-        }
-    }
-    [Hotfixable]
-    [HarmonyPostfix, HarmonyPatch(typeof(SaveManager), nameof(SaveManager.saveMapData))]
-    private static void SaveManager_saveMapData_postfix(string pFolder)
-    {
-        var data = new List<WorldLogMessageData>(Instance._messages.Count);
-        foreach (var msg in Instance._messages)
-        {
-            data.Add(new WorldLogMessageData
-            {
-                text = msg.text,
-                special1 = msg.special1,
-                special2 = msg.special2,
-                special3 = msg.special3,
-                color_special1 = msg.color_special1,
-                color_special2 = msg.color_special2,
-                color_special3 = msg.color_special3,
-                date = msg.date,
-                icon = msg.icon,
-                city = msg.city?.data?.id,
-                kingdom = msg.kingdom?.data?.id,
-                alliance = msg.alliance?.data?.id,
-                unit = msg.unit?.data?.id,
-                location = msg.location
-            });
-        }
-        var folder = SaveManager.folderPath(pFolder);
-        var file = folder + "/worldlog.json";
-        
-        Main.LogInfo($"Saving world log to {file}");
-        JsonSerializerSettings settings = new JsonSerializerSettings
-        {
-            ContractResolver = new FieldsOnlyContractResolver(),
-            Formatting = Formatting.None
-        };
-        File.WriteAllText(file, JsonConvert.SerializeObject(data, settings));
     }
 
     private TitledGrid _type_filter_grid;
@@ -266,43 +196,6 @@ public class WindowDetailedHistory : AbstractWideWindow<WindowDetailedHistory>
     }
     private readonly HashSet<string> blacklist_filter_groups = new();
     private readonly List<Filter>    filters                 = new();
-    [Hotfixable]
-    [HarmonyPostfix, HarmonyPatch(typeof(SaveManager), nameof(SaveManager.loadWorld), typeof(string), typeof(bool))]
-    private static void SaveManager_loadWorld_postfix(SaveManager __instance, string pPath)
-    {
-        if (__instance.data == null) return;
-        
-        var folder = SaveManager.folderPath(pPath);
-        var file = folder + "/worldlog.json";
-        Main.LogInfo($"Loading world log from {file}");
-        if (!File.Exists(file)) return;
-        SmoothLoader.add( delegate
-        {
-            var data = JsonConvert.DeserializeObject<List<WorldLogMessageData>>(File.ReadAllText(file));
-            var list = new List<WorldLogMessage>(data.Count);
-            foreach (var msg_data in data)
-            {
-                list.Add(new WorldLogMessage
-                {
-                    text = msg_data.text,
-                    special1 = msg_data.special1,
-                    special2 = msg_data.special2,
-                    special3 = msg_data.special3,
-                    color_special1 = msg_data.color_special1,
-                    color_special2 = msg_data.color_special2,
-                    color_special3 = msg_data.color_special3,
-                    date = msg_data.date,
-                    icon = msg_data.icon,
-                    city = World.world.cities.get(msg_data.city),
-                    kingdom = World.world.kingdoms.get(msg_data.kingdom),
-                    alliance = World.world.alliances.get(msg_data.alliance),
-                    unit = World.world.units.get(msg_data.unit),
-                    location = msg_data.location
-                });
-            }
-            Instance._messages = list;
-        }, "Loading world log", false, 0.5f);
-    }
     private void Update()
     {
         if (Initialized) OnUpdate();
@@ -320,10 +213,10 @@ public class WindowDetailedHistory : AbstractWideWindow<WindowDetailedHistory>
         _list.Clear();
         if (filters.Count == 0)
         {
-            _list.AddRange(_messages);
+            _list.AddRange(DetailedHistory.Messages);
         }
         else
-            _list.AddRange(_messages.Where(msg => filters.All(x => x.FilterMsg(msg))));
+            _list.AddRange(DetailedHistory.Messages.Where(msg => filters.All(x => x.FilterMsg(msg))));
         
         content_rect.sizeDelta = new Vector2(0, (1+_list.Count) * single_element_height);
         last_view_start = 9999;
@@ -336,7 +229,7 @@ public class WindowDetailedHistory : AbstractWideWindow<WindowDetailedHistory>
     {
         _type_filter_pool.Clear();
         var icon_set = new HashSet<string>();
-        foreach (var msg in _messages)
+        foreach (var msg in DetailedHistory.Messages)
         {
             if (!icon_set.Add(msg.icon)) continue;
             var icon = msg.icon;

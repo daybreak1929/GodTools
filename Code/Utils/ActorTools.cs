@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace GodTools.Utils;
 
@@ -36,5 +37,18 @@ public static class ActorTools
             title_guids.Remove(title_guid);
             actor.data.set(title_guid_key, string.Join(",", title_guids));
         }
+    }
+    public static ActorData Copy(ActorData data)
+    {
+        var copied_data = JsonConvert.DeserializeObject<ActorData>(JsonConvert.SerializeObject(data));
+        if (copied_data.custom_data_bool?.dict == null) copied_data.custom_data_bool = null;
+
+        if (copied_data.custom_data_float?.dict == null) copied_data.custom_data_float = null;
+
+        if (copied_data.custom_data_int?.dict == null) copied_data.custom_data_int = null;
+
+        if (copied_data.custom_data_string?.dict == null) copied_data.custom_data_string = null;
+
+        return copied_data;
     }
 }

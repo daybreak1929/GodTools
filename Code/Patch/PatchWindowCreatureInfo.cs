@@ -1,5 +1,6 @@
 using System;
 using DG.Tweening;
+using GodTools.Features;
 using GodTools.Libraries;
 using GodTools.UI;
 using HarmonyLib;
@@ -88,11 +89,10 @@ internal static class PatchWindowCreatureInfo
             button.onClick = new Button.ButtonClickedEvent();
             button.onClick.AddListener([Hotfixable]() =>
             {
-                WindowCreatureSavedList save_list = WindowCreatureSavedList.Instance;
-                if (save_list.ActorSaved(__instance.actor))
-                    save_list.UnsaveActor(__instance.actor);
+                if (CreatureSavedList.ActorSaved(__instance.actor))
+                    CreatureSavedList.UnsaveActor(__instance.actor);
                 else
-                    save_list.SaveActor(__instance.actor);
+                    CreatureSavedList.SaveActor(__instance.actor);
 
                 CheckSave(__instance.actor, saved_image);
             });
@@ -119,8 +119,7 @@ internal static class PatchWindowCreatureInfo
 
     private static void CheckSave(Actor actor, Image image)
     {
-        WindowCreatureSavedList save_list = WindowCreatureSavedList.Instance;
-        if (save_list.ActorSaved(actor))
+        if (CreatureSavedList.ActorSaved(actor))
             image.color = Color.white;
         else
             image.color = Color.gray;
