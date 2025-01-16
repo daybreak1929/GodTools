@@ -89,8 +89,11 @@ internal class MyTab : IManager
          //   SpriteTextureLoader.getSprite("ui/icons/iconAbout"));
        // AddButton(TabButtonType.WORLD, button);
        button = PowerButtonCreator.CreateWindowButton(WindowDetailedHistory.WindowId, WindowDetailedHistory.WindowId,
-            SpriteTextureLoader.getSprite("ui/icons/iconWorldLog"));
-        AddButton(TabButtonType.WORLD, button);
+           SpriteTextureLoader.getSprite("ui/icons/iconWorldLog"));
+       AddButton(TabButtonType.WORLD, button);
+       button = PowerButtonCreator.CreateWindowButton(WindowWorldScript.WindowId, WindowWorldScript.WindowId,
+           SpriteTextureLoader.getSprite("ui/icons/iconWorldLaws"));
+       AddButton(TabButtonType.WORLD, button);
     }
 
     private static void AddInfoButtons()
