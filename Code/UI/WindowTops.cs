@@ -5,6 +5,8 @@ using DG.Tweening;
 using GodTools.Abstract;
 using GodTools.UI.Prefabs;
 using GodTools.UI.Prefabs.TopElementPrefabs;
+using GodTools.UI.WindowTopComponents;
+using GodTools.Utils;
 using NeoModLoader.api;
 using NeoModLoader.api.attributes;
 using NeoModLoader.General;
@@ -12,29 +14,23 @@ using NeoModLoader.General.Game.extensions;
 using NeoModLoader.General.UI.Prefabs;
 using UnityEngine;
 using UnityEngine.UI;
-#if CULTIWAY
-using Cultiway.Content;
-using Cultiway.Content.Components;
-using Cultiway.Utils.Extension;
-using Cultiway.Core;
-#endif
-#if INMNY_CUSTOMMODT002
-using CustomModT002;
-#endif
 
 namespace GodTools.UI;
 
-public class WindowTops : AbstractWideWindow<WindowTops>
+public partial class WindowTops : AbstractWideWindow<WindowTops>
 {
     private const float single_element_height = 40;
     private const float start_y               = -single_element_height / 2;
 
-    private readonly HashSet<string> blacklist_filter_groups = new();
-    private readonly List<Filter>    filters                 = new();
-
     private readonly List<SortKey>                     sort_keys = new();
+    
+    private readonly HashSet<FilterSetting> last_and_filter_settings = new();
+    private readonly HashSet<FilterSetting> last_or_filter_settings = new();
+    private readonly HashSet<FilterSetting> last_not_filter_settings = new();
+    private readonly List<FilterSetting> all_filter_settings = new();
+    
     private          List<Actor>                       _list;
-    private          ObjectPoolGenericMono<ActorLevel> _pool;
+    private          ObjectPoolGenericMono<TopElementActor> _pool;
     private          RectTransform                     content_rect;
     private          MonoObjPool<FilterButton>         filter_button_pool;
 
@@ -67,8 +63,6 @@ public class WindowTops : AbstractWideWindow<WindowTops>
         content_rect.pivot = new Vector2(0.5f,        1);
         BackgroundTransform.Find("Scrollgradient").localPosition = new(97.8f, -106);
 
-        
-
         SimpleLine line1 = Instantiate(SimpleLine.Prefab, BackgroundTransform);
         line1.transform.localPosition = new Vector3(-100, 0);
         line1.SetSize(new Vector2(2, 250));
@@ -90,18 +84,8 @@ public class WindowTops : AbstractWideWindow<WindowTops>
             ContentSizeFitter.FitMode.MinSize;
         keyword_content_rect.gameObject.AddComponent<ContentSizeFitter>().verticalFit =
             ContentSizeFitter.FitMode.MinSize;
-        set_simple_vert_layout(filter_content_rect.gameObject.AddComponent<VerticalLayoutGroup>());
-        set_simple_vert_layout(keyword_content_rect.gameObject.AddComponent<VerticalLayoutGroup>());
-
-        void set_simple_vert_layout(VerticalLayoutGroup layout_group)
-        {
-            layout_group.spacing = 4;
-            layout_group.childControlHeight = false;
-            layout_group.childControlWidth = false;
-            layout_group.childAlignment = TextAnchor.UpperCenter;
-            layout_group.childForceExpandHeight = false;
-            layout_group.childForceExpandWidth = false;
-        }
+        filter_content_rect.gameObject.AddComponent<VerticalLayoutGroup>().SetSimpleVertLayout();
+        keyword_content_rect.gameObject.AddComponent<VerticalLayoutGroup>().SetSimpleVertLayout();
 
 
         selected_filters = Instantiate(SingleRowGrid.Prefab,  filter_content_rect);
@@ -109,259 +93,21 @@ public class WindowTops : AbstractWideWindow<WindowTops>
 
         selected_filters.Setup($"{C.mod_prefix}.ui.filter", new Vector2(180,   35), new Vector2(28, 28));
         selected_keywords.Setup($"{C.mod_prefix}.ui.keyword", new Vector2(180, 35), new Vector2(28, 28));
-
-        TitledGrid race_filter_grid = new_filter_grid("race");
-        AssetManager.raceLibrary.ForEach<Race, RaceLibrary>(race_asset =>
-        {
-            if (race_asset.nature) return;
-            var local_race_id = race_asset.id;
-            try
-            {
-                LM.AddToCurrentLocale($"{C.mod_prefix}.ui.filter.race.{race_asset.nameLocale}",
-                    LM.Get(race_asset.nameLocale));
-                new_filter(race_filter_grid, race_asset.nameLocale, race_asset.path_icon, a => a.isRace(local_race_id));
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
-        });
-
-        TitledGrid vanilla_keyword_grid = new_keyword_grid("vanilla");
-        new_keyword(vanilla_keyword_grid, "level", "ui/icons/iconLevels", (a, b) =>
-        {
-            var res = a.data.level.CompareTo(b.data.level);
-
-            return res;
-        }, a => $"{a.data.level} 级");
-        new_keyword(vanilla_keyword_grid, "kills", "ui/icons/iconSkulls",
-            (a, b) => a.data.kills.CompareTo(b.data.kills), a=> $"{a.data.kills} 击杀");
-        new_keyword(vanilla_keyword_grid, "birth", "ui/icons/iconAge",
-            (a, b) => a.data.getAge().CompareTo(b.data.getAge()), a => $"{a.data.getAge()} 岁");
-        new_keyword(vanilla_keyword_grid, "max_health", "ui/icons/iconHealth",
-            (a, b) => a.stats[S.health].CompareTo(b.stats[S.health]), a => $"{a.stats[S.health]} 最大生命");
-        new_keyword(vanilla_keyword_grid, "damage", "ui/icons/iconDamage",
-            (a, b) => a.stats[S.damage].CompareTo(b.stats[S.damage]), a => $"{a.stats[S.damage]} 攻击");
-
+        
+        
+        CreateGrid_VANILLA();
 #if INMNY_CUSTOMMODT001
-        TitledGrid inmny_custommodt001_keyword_grid = new_keyword_grid("inmny_custommodt001");
-        new_keyword(inmny_custommodt001_keyword_grid, "talent", "inmny/custommodt001/talent", (a, b) =>
-        {
-            a.data.get("inmny.custommodt001.talent", out float a_talent);
-            b.data.get("inmny.custommodt001.talent", out float b_talent);
-            return a_talent.CompareTo(b_talent);
-        }, a =>
-        {
-            a.data.get("inmny.custommodt001.talent", out float talent);
-            return $"{(int)talent} 武道天赋";
-        });
-        new_keyword(inmny_custommodt001_keyword_grid, "level", "inmny/custommodt001/cultilevel", (a, b) =>
-        {
-            a.data.get("inmny.custommodt001.wudao_level", out int a_level);
-            b.data.get("inmny.custommodt001.wudao_level", out int b_level);
-            var res = a_level.CompareTo(b_level);
-            if (res == 0)
-            {
-                a.data.get("inmny.custommodt001.wudao_exp", out int a_exp);
-                b.data.get("inmny.custommodt001.wudao_exp", out int b_exp);
-                res = a_exp.CompareTo(b_exp);
-            }
-
-            return res;
-        });
+        CreateGrid_INMNY_CUSTOMMODT001();
 #endif
 #if INMNY_CUSTOMMODT002
-        TitledGrid inmny_custommodt002_keyword_grid = new_keyword_grid("inmny_custommodt002");
-        new_keyword(inmny_custommodt002_keyword_grid, "summon_count", "inmny/custommodt002/icon", [Hotfixable](a, b) =>
-        {
-            var a_count = 0;
-            foreach (var trait in Traits.AllTraits)
-            {
-                a_count += a.GetSummonList(trait).Count;
-            }
-
-            var b_count = 0;
-            foreach (var trait in Traits.AllTraits)
-            {
-                b_count += b.GetSummonList(trait).Count;
-            }
-            return a_count.CompareTo(b_count);
-        }, a => $"{a.data.traits.Sum(trait => a.GetSummonList(trait).Count)} 只召唤物");
-        new_keyword(inmny_custommodt002_keyword_grid, "summon_level", "inmny/custommodt002/icon", (a, b) =>
-        {
-            var a_count = a.GetSummonLevel();
-            var b_count = b.GetSummonLevel();
-            return a_count.CompareTo(b_count);
-        }, a => $"{a.GetSummonLevelName()}");
+        CreateGrid_INMNY_CUSTOMMODT002();
 #endif
 #if CULTIWAY
-        TitledGrid cultiway_keyword_grid = new_keyword_grid("cultiway");
-        new_keyword(cultiway_keyword_grid, "xian_level", "cultiway/icons/iconCultivation", [Hotfixable](a, b) =>
-        {
-            ActorExtend a_extend = a.GetExtend();
-            ActorExtend b_extend = b.GetExtend();
-            return a_extend.GetCultisysLevelForSort<Xian>().CompareTo(b_extend.GetCultisysLevelForSort<Xian>());
-            var a_has = a_extend.HasCultisys<Xian>();
-            var b_has = b_extend.HasCultisys<Xian>();
-            if (!a_has && !b_has) return 0;
-            if (!a_has) return -1;
-            if (!b_has) return 1;
-            var a_xian = a_extend.GetCultisys<Xian>();
-            var b_xian = b_extend.GetCultisys<Xian>();
-            var res = a_xian.CurrLevel.CompareTo(b_xian.CurrLevel);
-
-            return res;
-        }, a =>
-        {
-            var ae = a.GetExtend();
-            if (ae.HasCultisys<Xian>())
-            {
-                var xian = ae.GetCultisys<Xian>();
-                return $"{Cultisyses.Xian.GetLevelName(xian.CurrLevel)}";
-            }
-
-            return "凡人";
-        });
-        new_keyword(cultiway_keyword_grid, "xian_talent", "cultiway/icons/iconElement", (a, b) =>
-        {
-            ActorExtend a_extend = a.GetExtend();
-            ActorExtend b_extend = b.GetExtend();
-            var a_has = a_extend.HasElementRoot();
-            var b_has = b_extend.HasElementRoot();
-            if (!a_has && !b_has) return 0;
-            if (!a_has) return -1;
-            if (!b_has) return 1;
-            return a_extend.GetElementRoot().GetStrength().CompareTo(b_extend.GetElementRoot().GetStrength());
-        }, a =>
-        {
-            var ae = a.GetExtend();
-            if (ae.HasElementRoot())
-            {
-                var er = ae.GetElementRoot();
-                return $"{(int)(er.GetStrength() * 100)} 修仙天赋";
-            }
-
-            return "无天赋";
-        });
-        TitledGrid cultiway_filter_grid = new_filter_grid("cultisys");
-        new_filter(cultiway_filter_grid, "xian", "cultiway/icons/iconCultivation",
-            a => a.GetExtend().HasCultisys<Xian>());
+        CreateGrid_CULTIWAY();
 #endif
 #if WITCHCRAFT_WORLDBOX
-        TitledGrid wushu_keyword_grid = new_keyword_grid("wushu");
-        new_keyword(wushu_keyword_grid, "yuanneng", "ui/allactor_yuanneng", (a, b) =>
-        {
-            a.data.get("wushu.yuannengNum", out int a_level);
-            b.data.get("wushu.yuannengNum", out int b_level);
-            var res = a_level.CompareTo(b_level);
-            return res;
-        }, a =>
-        {
-            a.data.get("wushu.yuannengNum", out int a_level);
-            return $"{a_level} 源能";
-        });
+        CreateGrid_WITCHCRAFT_WORLDBOX();
 #endif
-        TitledGrid new_filter_grid(string filter_type)
-        {
-            TitledGrid grid = Instantiate(TitledGrid.Prefab, filter_content_rect);
-            var group_id = $"{C.mod_prefix}.ui.filter.{filter_type}";
-            grid.Setup(group_id, 180, new Vector2(28, 28), new Vector2(4, 4));
-            grid.Title.color = Color.white;
-            var bw_switch = grid.Title.gameObject.AddComponent<Button>();
-            bw_switch.onClick.AddListener(() =>
-            {
-                if (!blacklist_filter_groups.Add(group_id))
-                {
-                    blacklist_filter_groups.Remove(group_id);
-                    grid.Title.color = Color.white;
-                }
-                else
-                {
-                    grid.Title.color = Color.black;
-                }
-
-                if (filters.Any(x => x.group_id == group_id)) ApplySort();
-            });
-            grid.Title.gameObject.AddComponent<TipButton>().textOnClick = $"{C.mod_prefix}.ui.switch_bw_list";
-            return grid;
-        }
-
-        TitledGrid new_keyword_grid(string keyword_type)
-        {
-            TitledGrid grid = Instantiate(TitledGrid.Prefab, keyword_content_rect);
-            grid.Setup($"{C.mod_prefix}.ui.keyword.{keyword_type}", 180, new Vector2(28, 28), new Vector2(4, 4));
-            return grid;
-        }
-
-        void new_filter(TitledGrid grid, string filter_id, string icon_path, Func<Actor, bool> filter_func)
-        {
-            var obj = new GameObject(filter_id, typeof(Image), typeof(Button), typeof(TipButton));
-            obj.transform.SetParent(grid.Grid.GetComponent<RectTransform>());
-            obj.transform.localScale = Vector3.one;
-            var icon = obj.GetComponent<Image>();
-            icon.sprite = SpriteTextureLoader.getSprite(icon_path);
-            var tip_button = obj.GetComponent<TipButton>();
-            filter_id = $"{grid.Title.GetComponent<LocalizedText>().key}.{filter_id}";
-            tip_button.textOnClick = filter_id;
-            var button = obj.GetComponent<Button>();
-            var local_filter = filter_func;
-            var local_filter_id = filter_id;
-            Sprite local_sprite = icon.sprite;
-            var local_group_id = grid.Title.GetComponent<LocalizedText>().key;
-            button.onClick.AddListener(() =>
-            {
-                var filter_idx = filters.FindIndex(x => x.ID == local_filter_id);
-                if (filter_idx == -1)
-                {
-                    if (!blacklist_filter_groups.Contains(local_group_id) && filters.Any(x => x.group_id == local_group_id))
-                    {
-                        return;
-                    }
-                    var filter = new Filter(local_filter_id, local_group_id, local_filter, local_sprite);
-                    filters.Add(filter);
-                }
-                else
-                {
-                    filters.RemoveAt(filter_idx);
-                }
-
-                ui_filters_dirty = true;
-                ApplySort();
-            });
-        }
-
-        void new_keyword(TitledGrid grid, string keyword_id, string icon_path, Func<Actor, Actor, int> compare_func, Func<Actor,string> major_key_disp = null)
-        {
-            var obj = new GameObject(keyword_id, typeof(Image), typeof(Button), typeof(TipButton));
-            obj.transform.SetParent(grid.Grid.GetComponent<RectTransform>());
-            obj.transform.localScale = Vector3.one;
-            var icon = obj.GetComponent<Image>();
-            icon.sprite = SpriteTextureLoader.getSprite(icon_path);
-            var tip_button = obj.GetComponent<TipButton>();
-            keyword_id = $"{grid.Title.GetComponent<LocalizedText>().key}.{keyword_id}";
-            tip_button.textOnClick = keyword_id;
-            var button = obj.GetComponent<Button>();
-            var local_keyword_id = keyword_id;
-            var local_compare = compare_func;
-            var local_disp = major_key_disp;
-            Sprite local_sprite = icon.sprite;
-            button.onClick.AddListener(() =>
-            {
-                var key_idx = sort_keys.FindIndex(x => x.ID == local_keyword_id);
-                if (key_idx == -1)
-                {
-                    var key = new SortKey(local_keyword_id, local_compare, local_sprite, local_disp);
-                    sort_keys.Add(key);
-                }
-                else
-                {
-                    sort_keys.RemoveAt(key_idx);
-                }
-
-                ui_sort_keys_dirty = true;
-                ApplySort();
-            });
-        }
 
         var to_top_button = RawLocalizedText.Instantiate(BackgroundTransform, pName: "ToTop");
         to_top_button.SetSize(new(30,10));
@@ -386,7 +132,7 @@ public class WindowTops : AbstractWideWindow<WindowTops>
         placeholder_text.transform.localPosition = new(33, 0);
         jump_input.input.placeholder = placeholder_text.Text;
 
-        _pool = new ObjectPoolGenericMono<ActorLevel>(ActorLevel.Prefab, ContentTransform);
+        _pool = new ObjectPoolGenericMono<TopElementActor>(TopElementActor.Prefab, ContentTransform);
         sort_button_pool = new MonoObjPool<SortKeyButton>(SortKeyButton.Prefab, selected_keywords.Grid.transform);
         filter_button_pool = new MonoObjPool<FilterButton>(FilterButton.Prefab, selected_filters.Grid.transform);
     }
@@ -395,8 +141,32 @@ public class WindowTops : AbstractWideWindow<WindowTops>
     public void ApplySort()
     {
         _list = World.world.units.getSimpleList().FindAll([Hotfixable](x)=>x!=null && x.data != null&& x.isAlive() && !x.object_destroyed);
-        foreach (Filter filter in filters) _list = _list.FindAll(filter.FilterActor);
 
+        if (last_and_filter_settings.Count > 0)
+        {
+            foreach (FilterSetting setting in last_and_filter_settings)
+            {
+                _list = _list.FindAll(setting.FilterFunc.Invoke);
+            }
+        }
+        if (last_or_filter_settings.Count > 0)
+        {
+            List<Actor> or_list = new();
+            foreach (FilterSetting setting in last_or_filter_settings)
+            {
+                or_list.AddRange(_list.FindAll(setting.FilterFunc.Invoke));
+            }
+
+            _list = or_list;
+        }
+        if (last_not_filter_settings.Count > 0)
+        {
+            foreach (FilterSetting setting in last_not_filter_settings)
+            {
+                _list = _list.FindAll(x => !setting.FilterFunc.Invoke(x));
+            }
+        }
+        
         content_rect.sizeDelta = new Vector2(0, (_list.Count + 1) * single_element_height);
         _list.Sort((a, b) =>
         {
@@ -414,6 +184,81 @@ public class WindowTops : AbstractWideWindow<WindowTops>
         _pool.clear();
     }
 
+    private TitledGrid new_filter_grid(string filter_type)
+    {
+        TitledGrid grid = Instantiate(TitledGrid.Prefab, filter_content_rect);
+        var group_id = $"{C.mod_prefix}.ui.filter.{filter_type}";
+        grid.Setup(group_id, 180, new Vector2(28, 28), new Vector2(4, 4));
+        return grid;
+    }
+
+    private TitledGrid new_keyword_grid(string keyword_type)
+    {
+        TitledGrid grid = Instantiate(TitledGrid.Prefab, keyword_content_rect);
+        grid.Setup($"{C.mod_prefix}.ui.keyword.{keyword_type}", 180, new Vector2(28, 28), new Vector2(4, 4));
+        return grid;
+    }
+
+    private void new_filter(TitledGrid grid, string filter_id, string icon_path, Func<Actor, bool> filter_func)
+    {
+        var obj = new GameObject(filter_id, typeof(Image), typeof(Button), typeof(TipButton));
+        obj.transform.SetParent(grid.Grid.GetComponent<RectTransform>());
+        obj.transform.localScale = Vector3.one;
+        var icon = obj.GetComponent<Image>();
+        icon.sprite = SpriteTextureLoader.getSprite(icon_path);
+        var tip_button = obj.GetComponent<TipButton>();
+        filter_id = $"{grid.Title.GetComponent<LocalizedText>().key}.{filter_id}";
+        tip_button.textOnClick = filter_id;
+        var button = obj.GetComponent<Button>();
+        var local_filter = filter_func;
+        var local_filter_id = filter_id;
+        Sprite local_sprite = icon.sprite;
+        button.onClick.AddListener(() =>
+        {
+            var idx = all_filter_settings.FindIndex(x=>x.ID == local_filter_id);
+            if (idx != -1)
+            {
+                all_filter_settings.RemoveAt(idx);
+            }
+            else
+            {
+                all_filter_settings.Add(new FilterSetting(local_filter_id, local_sprite, local_filter));
+            }
+        });
+    }
+
+    private void new_keyword(TitledGrid grid, string keyword_id, string icon_path, Func<Actor, Actor, int> compare_func, Func<Actor,string> major_key_disp = null)
+    {
+        var obj = new GameObject(keyword_id, typeof(Image), typeof(Button), typeof(TipButton));
+        obj.transform.SetParent(grid.Grid.GetComponent<RectTransform>());
+        obj.transform.localScale = Vector3.one;
+        var icon = obj.GetComponent<Image>();
+        icon.sprite = SpriteTextureLoader.getSprite(icon_path);
+        var tip_button = obj.GetComponent<TipButton>();
+        keyword_id = $"{grid.Title.GetComponent<LocalizedText>().key}.{keyword_id}";
+        tip_button.textOnClick = keyword_id;
+        var button = obj.GetComponent<Button>();
+        var local_keyword_id = keyword_id;
+        var local_compare = compare_func;
+        var local_disp = major_key_disp;
+        Sprite local_sprite = icon.sprite;
+        button.onClick.AddListener(() =>
+        {
+            var key_idx = sort_keys.FindIndex(x => x.ID == local_keyword_id);
+            if (key_idx == -1)
+            {
+                var key = new SortKey(local_keyword_id, local_compare, local_sprite, local_disp);
+                sort_keys.Add(key);
+            }
+            else
+            {
+                sort_keys.RemoveAt(key_idx);
+            }
+
+            ui_sort_keys_dirty = true;
+            ApplySort();
+        });
+    }
     [Hotfixable]
     public override void OnNormalEnable()
     {
@@ -442,6 +287,7 @@ public class WindowTops : AbstractWideWindow<WindowTops>
     [Hotfixable]
     private void OnUpdate()
     {
+        CheckFilters();
         Vector3 curr_position = ContentTransform.localPosition;
 
         var view_y_start = curr_position.y;
@@ -452,7 +298,7 @@ public class WindowTops : AbstractWideWindow<WindowTops>
 
         var actual_start_y = start_y - view_start_idx * single_element_height;
         var actual_end_y = start_y   - view_end_idx   * single_element_height;
-        foreach (ActorLevel elm in _pool._elements_total)
+        foreach (TopElementActor elm in _pool._elements_total)
         {
             GameObject game_object = elm.gameObject;
             if (!game_object.activeSelf) continue;
@@ -476,7 +322,7 @@ public class WindowTops : AbstractWideWindow<WindowTops>
             {
                 // 需要显示
                 Actor actor = _list[i];
-                ActorLevel comp = _pool.getNext();
+                TopElementActor comp = _pool.getNext();
                 comp.Setup(actor, i, major_sort_key?.GetMajorKeyDisplay(actor) ?? "");
                 comp.transform.localPosition = new Vector3(0, start_y - i * single_element_height);
             }
@@ -499,13 +345,51 @@ public class WindowTops : AbstractWideWindow<WindowTops>
         if (ui_filters_dirty)
         {
             filter_button_pool.Clear();
-            foreach (Filter filter in filters)
+            foreach (FilterSetting filter in all_filter_settings)
             {
                 FilterButton button = filter_button_pool.GetNext();
                 button.Setup(filter);
             }
 
             ui_filters_dirty = false;
+        }
+    }
+
+    private void CheckFilters()
+    {
+        bool need_refresh = false;
+        if (last_not_filter_settings.Count + last_and_filter_settings.Count + last_or_filter_settings.Count !=
+            all_filter_settings.Count)
+        {
+            ui_filters_dirty = true;
+            need_refresh = true;
+        }
+        need_refresh |= last_not_filter_settings.Any(x => x.Type != FilterType.Not);
+        need_refresh |= last_and_filter_settings.Any(x => x.Type != FilterType.And);
+        need_refresh |= last_or_filter_settings.Any(x => x.Type != FilterType.Or);
+        
+        last_not_filter_settings.Clear();
+        last_and_filter_settings.Clear();
+        last_or_filter_settings.Clear();
+        foreach (var setting in all_filter_settings)
+        {
+            switch (setting.Type)
+            {
+                case FilterType.Not:
+                    last_not_filter_settings.Add(setting);
+                    break;
+                case FilterType.And:
+                    last_and_filter_settings.Add(setting);
+                    break;
+                case FilterType.Or:
+                    last_or_filter_settings.Add(setting);
+                    break;
+            }
+        }
+
+        if (need_refresh)
+        {
+            ApplySort();
         }
     }
 
@@ -572,49 +456,6 @@ public class WindowTops : AbstractWideWindow<WindowTops>
             arrow.transform.SetParent(obj.transform);
 
             Prefab = obj.AddComponent<SortKeyButton>();
-        }
-    }
-
-    private class Filter
-    {
-        private readonly Func<Actor, bool> _filter;
-        public readonly  string            group_id;
-
-        public readonly Sprite Icon;
-        public readonly string ID;
-
-        public Filter(string id, string group_id, Func<Actor, bool> filter, Sprite icon)
-        {
-            ID = id;
-            _filter = filter;
-            Icon = icon;
-            this.group_id = group_id;
-        }
-
-        public bool BlackList => Instance.blacklist_filter_groups.Contains(group_id);
-
-        public bool FilterActor(Actor actor)
-        {
-            return _filter(actor) != BlackList;
-        }
-    }
-
-    private class FilterButton : APrefab<FilterButton>
-    {
-        public void Setup(Filter filter)
-        {
-            GetComponent<Image>().sprite = filter.Icon;
-            GetComponent<TipButton>().textOnClick = filter.ID;
-            GetComponent<TipButton>().textOnClickDescription = filter.BlackList
-                ? $"{C.mod_prefix}.ui.filter.blacklist"
-                : $"{C.mod_prefix}.ui.filter.whitelist";
-        }
-
-        private static void _init()
-        {
-            var obj = new GameObject(nameof(FilterButton), typeof(Image), typeof(Button), typeof(TipButton));
-            obj.transform.SetParent(Main.prefabs);
-            Prefab = obj.AddComponent<FilterButton>();
         }
     }
 }

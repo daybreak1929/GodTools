@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GodTools.UI.Prefabs.TopElementPrefabs;
 
-public class ActorLevel : APrefab<ActorLevel>
+public class TopElementActor : APrefab<TopElementActor>
 {
     public RawText           Order   { get; private set; }
     public PrefabUnitElement Element { get; private set; }
@@ -30,7 +30,7 @@ public class ActorLevel : APrefab<ActorLevel>
     {
         GameObject obj = Instantiate(Resources.Load<WindowFavorites>("windows/favorites").element_prefab.gameObject,
             Main.prefabs);
-        obj.name = nameof(ActorLevel);
+        obj.name = nameof(TopElementActor);
 
         RawText order = Instantiate(RawText.Prefab, obj.transform);
         order.name = nameof(Order);
@@ -45,6 +45,6 @@ public class ActorLevel : APrefab<ActorLevel>
         disp.SetSize(new Vector2(100, 10));
         
 
-        Prefab = obj.AddComponent<ActorLevel>();
+        Prefab = obj.AddComponent<TopElementActor>();
     }
 }
