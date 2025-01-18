@@ -157,7 +157,7 @@ public partial class WindowTops : AbstractWideWindow<WindowTops>
                 or_list.AddRange(_list.FindAll(setting.FilterFunc.Invoke));
             }
 
-            _list = or_list;
+            _list = _list.Union(or_list).ToList();
         }
         if (last_not_filter_settings.Count > 0)
         {
