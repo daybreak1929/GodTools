@@ -189,6 +189,12 @@ public partial class WindowTops : AbstractWideWindow<WindowTops>
         TitledGrid grid = Instantiate(TitledGrid.Prefab, filter_content_rect);
         var group_id = $"{C.mod_prefix}.ui.filter.{filter_type}";
         grid.Setup(group_id, 180, new Vector2(28, 28), new Vector2(4, 4));
+        grid.Title.gameObject.AddComponent<Button>().onClick.AddListener([Hotfixable]() =>
+        {
+            grid.Grid.gameObject.SetActive(!grid.Grid.gameObject.activeSelf);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(filter_content_rect);
+        });
+        grid.Title.gameObject.AddComponent<TipButton>().textOnClick = $"{C.mod_prefix}.ui.filter.expand_or_retract";
         return grid;
     }
 
@@ -196,6 +202,12 @@ public partial class WindowTops : AbstractWideWindow<WindowTops>
     {
         TitledGrid grid = Instantiate(TitledGrid.Prefab, keyword_content_rect);
         grid.Setup($"{C.mod_prefix}.ui.keyword.{keyword_type}", 180, new Vector2(28, 28), new Vector2(4, 4));
+        grid.Title.gameObject.AddComponent<Button>().onClick.AddListener([Hotfixable]() =>
+        {
+            grid.Grid.gameObject.SetActive(!grid.Grid.gameObject.activeSelf);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(keyword_content_rect);
+        });
+        grid.Title.gameObject.AddComponent<TipButton>().textOnClick = $"{C.mod_prefix}.ui.filter.expand_or_retract";
         return grid;
     }
 

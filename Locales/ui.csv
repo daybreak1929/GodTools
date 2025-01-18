@@ -30,9 +30,10 @@ inmny.godtools.ui.sub_world_size_tip,滚轮调节亚空间大小,Scroll to Chang
 inmny.godtools.ui.switch_bw_list,切换黑/白名单,Switch to Black/White List
 inmny.godtools.ui.filter.blacklist,黑名单,Black List
 inmny.godtools.ui.filter.whitelist,白名单,White List
-inmny.godtools.ui.filter.and,与,White List
-inmny.godtools.ui.filter.not,非,White List
-inmny.godtools.ui.filter.or,或,White List
+inmny.godtools.ui.filter.and,与,And
+inmny.godtools.ui.filter.not,非,Not
+inmny.godtools.ui.filter.or,或,Or
+inmny.godtools.ui.filter.expand_or_retract,展开/收起,Expand/Collapse
 inmny.godtools.ui.filter,过滤,Filters
 inmny.godtools.ui.filter.race,种族,Race
 inmny.godtools.ui.filter.race.human,人类,Humans
