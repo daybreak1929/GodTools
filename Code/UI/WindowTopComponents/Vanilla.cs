@@ -49,11 +49,11 @@ public partial class WindowTops
                 icon_part.GetComponent<Image>().raycastTarget = false;
             });
         
-        new_filter(profession_filter_grid, "baby", "ui/icons/iconDamage", x=>x.isProfession(UnitProfession.Baby));
-        new_filter(profession_filter_grid, "unit", "ui/icons/iconDamage", x=>x.isProfession(UnitProfession.Unit));
-        new_filter(profession_filter_grid, "warrior", "ui/icons/iconDamage", x=>x.isProfession(UnitProfession.Warrior));
-        new_filter(profession_filter_grid, "king", "ui/icons/iconDamage", x=>x.isProfession(UnitProfession.King));
-        new_filter(profession_filter_grid, "leader", "ui/icons/iconDamage", x=>x.isProfession(UnitProfession.Leader));
+        new_filter(profession_filter_grid, "baby", "ui/icons/worldrules/icon_lastofus", x=>x.isProfession(UnitProfession.Baby));
+        new_filter(profession_filter_grid, "unit", "ui/icons/iconPopulation", x=>x.isProfession(UnitProfession.Unit));
+        new_filter(profession_filter_grid, "warrior", "ui/icons/items/icon_sword_adamantine", x=>x.isProfession(UnitProfession.Warrior));
+        new_filter(profession_filter_grid, "king", "ui/icons/achievements/achievements_theKing", x=>x.isProfession(UnitProfession.King));
+        new_filter(profession_filter_grid, "leader", "ui/icons/iconLeaders", x=>x.isProfession(UnitProfession.Leader));
 
         TitledGrid vanilla_keyword_grid = new_keyword_grid("vanilla");
         new_keyword(vanilla_keyword_grid, "level", "ui/icons/iconLevels", (a, b) =>
@@ -127,6 +127,6 @@ public partial class WindowTops
             sub_icon.color = kingdom.kingdomColor.getColorBanner();
             sub_icon.rectTransform.sizeDelta = kingdom_filter_grid.Grid.cellSize;
         }
-
+        LayoutRebuilder.ForceRebuildLayoutImmediate(filter_content_rect);
     }
 }
