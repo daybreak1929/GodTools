@@ -140,7 +140,7 @@ public partial class WindowTops : AbstractWideWindow<WindowTops>
     [Hotfixable]
     public void ApplySort()
     {
-        _list = World.world.units.getSimpleList().FindAll([Hotfixable](x)=>x!=null && x.data != null&& x.isAlive() && !x.object_destroyed);
+        _list = World.world.units.getSimpleList().FindAll([Hotfixable](x)=>x!=null && x.data != null&& x.isAlive() && !x.object_destroyed && x.asset.canBeInspected);
 
         if (last_and_filter_settings.Count > 0)
         {
@@ -212,33 +212,17 @@ public partial class WindowTops : AbstractWideWindow<WindowTops>
         grid.Title.gameObject.AddComponent<TipButton>().textOnClick = $"{C.mod_prefix}.ui.filter.expand_or_retract";
         return grid;
     }
-
-    private void new_filter(TitledGrid grid, string filter_id, string icon_path, Func<Actor, bool> filter_func)
+    private Dictionary<TitledGrid, MonoObjPool<FilterButtonInGrid>> filter_button_in_grid_pool_dict = new();
+    
+    private FilterButtonInGrid new_filter(TitledGrid grid, string filter_id, string icon_path, Func<Actor, bool> filter_func)
     {
-        var obj = new GameObject(filter_id, typeof(Image), typeof(Button), typeof(TipButton));
-        obj.transform.SetParent(grid.Grid.GetComponent<RectTransform>());
-        obj.transform.localScale = Vector3.one;
-        var icon = obj.GetComponent<Image>();
-        icon.sprite = SpriteTextureLoader.getSprite(icon_path);
-        var tip_button = obj.GetComponent<TipButton>();
-        filter_id = $"{grid.Title.GetComponent<LocalizedText>().key}.{filter_id}";
-        tip_button.textOnClick = filter_id;
-        var button = obj.GetComponent<Button>();
-        var local_filter = filter_func;
-        var local_filter_id = filter_id;
-        Sprite local_sprite = icon.sprite;
-        button.onClick.AddListener(() =>
+        if (!filter_button_in_grid_pool_dict.ContainsKey(grid))
         {
-            var idx = all_filter_settings.FindIndex(x=>x.ID == local_filter_id);
-            if (idx != -1)
-            {
-                all_filter_settings.RemoveAt(idx);
-            }
-            else
-            {
-                all_filter_settings.Add(new FilterSetting(local_filter_id, local_sprite, local_filter));
-            }
-        });
+            filter_button_in_grid_pool_dict[grid] = new MonoObjPool<FilterButtonInGrid>(FilterButtonInGrid.Prefab, grid.Grid.transform);
+        }
+        var button = filter_button_in_grid_pool_dict[grid].GetNext();
+        button.Setup($"{grid.Title.GetComponent<LocalizedText>().key}.{filter_id}", icon_path, filter_func, all_filter_settings);
+        return button;
     }
 
     private void new_keyword(TitledGrid grid, string keyword_id, string icon_path, Func<Actor, Actor, int> compare_func, Func<Actor,string> major_key_disp = null)
@@ -276,6 +260,7 @@ public partial class WindowTops : AbstractWideWindow<WindowTops>
     [Hotfixable]
     public override void OnNormalEnable()
     {
+        CheckDynamicGrid_VANILLA();
         ApplySort();
     }
 
