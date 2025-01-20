@@ -6,7 +6,7 @@
         <Nullable>disable</Nullable>
         <OutputType>Library</OutputType>
         <RootNamespace>GodTools</RootNamespace>
-        <DefineConstants>启源_启源核心;一米_中文名;INMNY_CUSTOMMODT001;INMNY_CUSTOMMODT002;CULTIWAY;WITCHCRAFT_WORLDBOX</DefineConstants>
+        <DefineConstants>启源_启源核心;一米_中文名;ZHETIAN;INMNY_CUSTOMMODT001;INMNY_CUSTOMMODT002;CULTIWAY;WITCHCRAFT_WORLDBOX</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

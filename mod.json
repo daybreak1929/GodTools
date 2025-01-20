@@ -1,7 +1,7 @@
 {
     "name": "GodTools",
     "author": "一米&吃鱼",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "你猜",
     "targetGameBuild": 552,
     "iconPath": "icon.png",
@@ -11,6 +11,7 @@
         "INMNY_CUSTOMMODT001",
         "INMNY_CUSTOMMODT002",
         "CULTIWAY",
-        "WITCHCRAFT_WORLDBOX"
+        "WITCHCRAFT_WORLDBOX",
+        "ZHETIAN"
     ]
 }

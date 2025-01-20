@@ -54,6 +54,10 @@ public partial class WindowCreatureDataEditor : AbstractWideWindow<WindowCreatur
         #if CULTIWAY
         RegisterGrid<PowerLevelEditor>("cultiway");
         #endif
+        #if ZHETIAN
+        RegisterGrid<ZheTianTalentEditor>("zhetian");
+        RegisterGrid<ZheTianLevelEditor>("zhetian");
+        #endif
     }
     private void RegisterGrid<T>(string page_name) where T : CreatureDataEditorGrid
     {

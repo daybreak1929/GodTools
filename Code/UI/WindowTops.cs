@@ -108,6 +108,9 @@ public partial class WindowTops : AbstractWideWindow<WindowTops>
 #if WITCHCRAFT_WORLDBOX
         CreateGrid_WITCHCRAFT_WORLDBOX();
 #endif
+#if ZHETIAN
+        CreateGrid_ZHETIAN();
+#endif
 
         var to_top_button = RawLocalizedText.Instantiate(BackgroundTransform, pName: "ToTop");
         to_top_button.SetSize(new(30,10));

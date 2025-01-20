@@ -116,7 +116,8 @@ public partial class WindowTops
             var kingdom = World.world.kingdoms.get(kingdom_id);
             LM.AddToCurrentLocale($"{C.mod_prefix}.ui.filter.kingdom.{kingdom_id}",
                 kingdom.data.name);
-            var filter_button_in_grid = new_filter(kingdom_filter_grid, kingdom_id, "ui/icons/iconDamage", a => a.kingdom.data.id == kingdom_id);
+            var filter_button_in_grid = new_filter(kingdom_filter_grid, kingdom_id, "ui/icons/iconDamage",
+                a => a.kingdom.data.id == kingdom_id);
 
             var banner_container = BannerGenerator.dict[kingdom.race.banner_id];
 

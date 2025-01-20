@@ -68,6 +68,9 @@ inmny.godtools.ui.keyword.cultiway.xian_level,仙路等级,Xian Level
 inmny.godtools.ui.keyword.cultiway.xian_talent,灵根品级,Xian Talent
 inmny.godtools.ui.keyword.wushu,巫术秘典,Cultiway
 inmny.godtools.ui.keyword.wushu.yuanneng,源能,Yuan Neng
+inmny.godtools.ui.keyword.zhetian,遮天,Cover Sky
+inmny.godtools.ui.keyword.zhetian.talent,遮天天赋,Talent
+inmny.godtools.ui.keyword.zhetian.level,遮天境界,Level
 inmny.godtools.ui.to_top,至顶,Goto Top
 inmny.godtools.ui.to_bottom,至底,Goto Bottom
 inmny.godtools.ui.jump_to,跳转至,Jump to
@@ -80,6 +83,9 @@ inmny.godtools.ui.data_editor.inmny_custommodt001.wudao_level,武道等级,Level
 inmny.godtools.ui.data_editor.inmny_custommodt001.wudao_exp,武道经验,Experience
 inmny.godtools.ui.data_editor.cultiway,修仙,Cultiway
 inmny.godtools.ui.data_editor.cultiway.power_level,力量层次,Power Level
+inmny.godtools.ui.data_editor.zhetian,遮天,Cover Sky
+inmny.godtools.ui.data_editor.zhetian.talent,遮天天赋,Talent
+inmny.godtools.ui.data_editor.zhetian.zhetian_level,遮天等级,Level
 inmny.godtools.WindowModInfo,模组介绍,Mod Info
 inmny.godtools.debug,DEBUG窗口,Debug Window
 inmny.godtools.console,控制台,Console
