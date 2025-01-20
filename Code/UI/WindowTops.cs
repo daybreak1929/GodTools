@@ -197,7 +197,7 @@ public partial class WindowTops : AbstractWideWindow<WindowTops>
         grid.Title.gameObject.AddComponent<Button>().onClick.AddListener([Hotfixable]() =>
         {
             grid.Grid.gameObject.SetActive(!grid.Grid.gameObject.activeSelf);
-            LayoutRebuilder.ForceRebuildLayoutImmediate(filter_content_rect);
+            LayoutRebuilder.MarkLayoutForRebuild(filter_content_rect);
         });
         grid.Title.gameObject.AddComponent<TipButton>().textOnClick = $"{C.mod_prefix}.ui.filter.expand_or_retract";
         return grid;
@@ -210,7 +210,7 @@ public partial class WindowTops : AbstractWideWindow<WindowTops>
         grid.Title.gameObject.AddComponent<Button>().onClick.AddListener([Hotfixable]() =>
         {
             grid.Grid.gameObject.SetActive(!grid.Grid.gameObject.activeSelf);
-            LayoutRebuilder.ForceRebuildLayoutImmediate(keyword_content_rect);
+            LayoutRebuilder.MarkLayoutForRebuild(keyword_content_rect);
         });
         grid.Title.gameObject.AddComponent<TipButton>().textOnClick = $"{C.mod_prefix}.ui.filter.expand_or_retract";
         return grid;
@@ -355,8 +355,9 @@ public partial class WindowTops : AbstractWideWindow<WindowTops>
 
             ui_filters_dirty = false;
         }
+        LayoutRebuilder.ForceRebuildLayoutImmediate(filter_content_rect);
     }
-
+    [Hotfixable]
     private void CheckFilters()
     {
         bool need_refresh = false;

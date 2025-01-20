@@ -52,6 +52,7 @@ public class TitledGrid : APrefab<TitledGrid>
     {
         var obj = new GameObject(nameof(TitledGrid), typeof(VerticalLayoutGroup), typeof(ContentSizeFitter));
         obj.transform.SetParent(Main.prefabs);
+        obj.GetComponent<RectTransform>().pivot = new(0.5f, 1);
 
         var vert_layout = obj.GetComponent<VerticalLayoutGroup>();
         vert_layout.childAlignment = TextAnchor.UpperCenter;
