@@ -362,7 +362,7 @@ public partial class WindowTops : AbstractWideWindow<WindowTops>
     {
         bool need_refresh = false;
         if (last_not_filter_settings.Count + last_and_filter_settings.Count + last_or_filter_settings.Count !=
-            all_filter_settings.Count)
+            all_filter_settings.Count ||  all_filter_settings.Any(x => x.ToBeRemoved)) 
         {
             ui_filters_dirty = true;
             need_refresh = true;
@@ -374,6 +374,7 @@ public partial class WindowTops : AbstractWideWindow<WindowTops>
         last_not_filter_settings.Clear();
         last_and_filter_settings.Clear();
         last_or_filter_settings.Clear();
+        all_filter_settings.RemoveAll(x => x.ToBeRemoved);
         foreach (var setting in all_filter_settings)
         {
             switch (setting.Type)

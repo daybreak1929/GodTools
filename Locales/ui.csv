@@ -35,6 +35,7 @@ inmny.godtools.ui.filter.not,非,Not
 inmny.godtools.ui.filter.or,或,Or
 inmny.godtools.ui.filter.expand_or_retract,展开/收起,Expand/Collapse
 inmny.godtools.ui.filter,过滤,Filters
+inmny.godtools.ui.filter.right_click,右键去除,Right Click to Remove
 inmny.godtools.ui.filter.asset,生物类型,Actor Type
 inmny.godtools.ui.filter.profession,职业,Profession
 inmny.godtools.ui.filter.profession.baby,小孩,Baby

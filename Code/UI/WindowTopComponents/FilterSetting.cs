@@ -9,6 +9,7 @@ public class FilterSetting
     public readonly string ID;
     public readonly Sprite Icon;
     public FilterType Type;
+    public bool ToBeRemoved { get; internal set; }
 
     public FilterSetting(string id, Sprite icon, Func<Actor, bool> filter_func)
     {
