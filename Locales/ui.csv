@@ -43,6 +43,7 @@ inmny.godtools.ui.filter.profession.warrior,士兵,Warrior
 inmny.godtools.ui.filter.profession.king,国王,King
 inmny.godtools.ui.filter.profession.leader,城主,Leader
 inmny.godtools.ui.filter.kingdom,国家,Kingdom
+inmny.godtools.ui.filter.trait,特质,Trait
 inmny.godtools.ui.filter.race,种族,Race
 inmny.godtools.ui.filter.race.human,人类,Humans
 inmny.godtools.ui.filter.cultisys,修炼体系,Cultisys

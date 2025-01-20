@@ -36,8 +36,11 @@ public partial class WindowTops
             }
         });
         asset_filter_grid = new_filter_grid("asset");
-        profession_filter_grid = new_filter_grid("profession");
         kingdom_filter_grid = new_filter_grid("kingdom");
+        trait_filter_grid = new_filter_grid("trait");
+        asset_filter_grid.Grid.gameObject.SetActive(false);
+        kingdom_filter_grid.Grid.gameObject.SetActive(false);
+        trait_filter_grid.Grid.gameObject.SetActive(false);
         filter_button_in_grid_pool_dict[kingdom_filter_grid] = new MonoObjPool<FilterButtonInGrid>(
             FilterButtonInGrid.Prefab, kingdom_filter_grid.Grid.transform,
             obj =>
@@ -49,6 +52,7 @@ public partial class WindowTops
                 icon_part.GetComponent<Image>().raycastTarget = false;
             });
         
+        var profession_filter_grid = new_filter_grid("profession");
         new_filter(profession_filter_grid, "baby", "ui/icons/worldrules/icon_lastofus", x=>x.isProfession(UnitProfession.Baby));
         new_filter(profession_filter_grid, "unit", "ui/icons/iconPopulation", x=>x.isProfession(UnitProfession.Unit));
         new_filter(profession_filter_grid, "warrior", "ui/icons/items/icon_sword_adamantine", x=>x.isProfession(UnitProfession.Warrior));
@@ -73,7 +77,7 @@ public partial class WindowTops
 
     }
     private TitledGrid asset_filter_grid;
-    private TitledGrid profession_filter_grid;
+    private TitledGrid trait_filter_grid;
     private TitledGrid kingdom_filter_grid;
     [Hotfixable]
     private void CheckDynamicGrid_VANILLA()
@@ -86,9 +90,14 @@ public partial class WindowTops
         {
             pool.Clear();
         }
+        if (filter_button_in_grid_pool_dict.TryGetValue(trait_filter_grid, out pool))
+        {
+            pool.Clear();
+        }
         
         var asset_set = new HashSet<string>();
         var kingdom_set = new HashSet<string>();
+        var trait_set = new HashSet<string>();
         foreach (var actor in World.world.units.getSimpleList())
         {
             if (actor != null && actor.data != null && actor.isAlive() && !actor.object_destroyed && actor.asset.canBeInspected)
@@ -96,6 +105,8 @@ public partial class WindowTops
                 asset_set.Add(actor.asset.id);
                 if (actor.kingdom != null)
                     kingdom_set.Add(actor.kingdom.data.id);
+                
+                trait_set.UnionWith(actor.data.s_traits_ids);
             }
         }
         
@@ -108,6 +119,14 @@ public partial class WindowTops
             LM.AddToCurrentLocale($"{C.mod_prefix}.ui.filter.asset.{asset.nameLocale}",
                 LM.Get(asset.nameLocale));
             new_filter(asset_filter_grid, asset.nameLocale, icon_path, a => a.asset.id == asset_id);
+        }
+
+        foreach (var trait_id in trait_set)
+        {
+            var asset = AssetManager.traits.get(trait_id);
+            LM.AddToCurrentLocale($"{C.mod_prefix}.ui.filter.trait.{trait_id}",
+                LM.Get($"trait_{asset.id}"));
+            new_filter(trait_filter_grid, asset.id, asset.path_icon, a => a.hasTrait(trait_id));
         }
 
         foreach (var kingdom_id in kingdom_set)
@@ -128,6 +147,5 @@ public partial class WindowTops
             sub_icon.color = kingdom.kingdomColor.getColorBanner();
             sub_icon.rectTransform.sizeDelta = kingdom_filter_grid.Grid.cellSize;
         }
-        LayoutRebuilder.ForceRebuildLayoutImmediate(filter_content_rect);
     }
 }
