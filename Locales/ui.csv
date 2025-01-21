@@ -88,6 +88,9 @@ inmny.godtools.ui.data_editor.cultiway.power_level,力量层次,Power Level
 inmny.godtools.ui.data_editor.zhetian,遮天,Cover Sky
 inmny.godtools.ui.data_editor.zhetian.talent,遮天天赋,Talent
 inmny.godtools.ui.data_editor.zhetian.zhetian_level,遮天等级,Level
+inmny.godtools.ui.world_script.enabled,已启用,Enabled
+inmny.godtools.ui.world_script.disabled,已禁用,Disabled
+inmny.godtools.ui.world_script.delete,删除,Delete
 inmny.godtools.WindowModInfo,模组介绍,Mod Info
 inmny.godtools.debug,DEBUG窗口,Debug Window
 inmny.godtools.console,控制台,Console
@@ -106,3 +109,5 @@ WindowCreatureSavedList,保存的生物,Saved Creatures
 WindowCreatureTitleEditor,称号编辑器,Title Editor
 WindowDetailedHistory,详细历史信息,Detailed History
 WindowDetailedHistory Title,详细历史信息,Detailed History
+WindowWorldScript,世界脚本,World Script
+WindowWorldScript Title,世界脚本,World Script
