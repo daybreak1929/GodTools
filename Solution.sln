@@ -12,6 +12,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cultiway", "..\Cultiway\Cul
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chinese_Name", "..\Chinese_Name\Chinese_Name.csproj", "{38CCEFCD-AA55-4B2E-81FB-1E05422F5339}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowAttack", "..\witchcraft\WindowAttack.csproj", "{5E56BC60-AEAE-45D8-8437-4B685683A715}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoverSky", "..\Cover-Sky\CoverSky.csproj", "{AD503FB8-9D79-45FF-9C33-008BAA2798EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +46,13 @@ Global
 		{38CCEFCD-AA55-4B2E-81FB-1E05422F5339}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38CCEFCD-AA55-4B2E-81FB-1E05422F5339}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38CCEFCD-AA55-4B2E-81FB-1E05422F5339}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E56BC60-AEAE-45D8-8437-4B685683A715}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E56BC60-AEAE-45D8-8437-4B685683A715}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E56BC60-AEAE-45D8-8437-4B685683A715}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E56BC60-AEAE-45D8-8437-4B685683A715}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD503FB8-9D79-45FF-9C33-008BAA2798EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD503FB8-9D79-45FF-9C33-008BAA2798EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD503FB8-9D79-45FF-9C33-008BAA2798EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD503FB8-9D79-45FF-9C33-008BAA2798EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
