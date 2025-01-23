@@ -24,4 +24,21 @@ public class WorldScripts : IManager
         }
         Scripts ??= new ();
     }
+
+    public static ScriptInstance NewScript()
+    {
+        var script = new ScriptInstance
+        {
+            Name = "New Script",
+            Enabled = true,
+            TriggerCondition = new TriggerCondition()
+            {
+                Type = TriggerConditionType.Always
+            },
+            Filters = new List<TargetFilter>(),
+            Actions = new List<ScriptAction>()
+        };
+        Scripts.Add(script);
+        return script;
+    }
 }

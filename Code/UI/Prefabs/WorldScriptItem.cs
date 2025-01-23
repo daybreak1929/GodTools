@@ -1,4 +1,5 @@
 using System;
+using GodTools.Features;
 using GodTools.Features.WorldScript;
 using NeoModLoader.General.UI.Prefabs;
 using UnityEngine;
@@ -17,6 +18,13 @@ public class WorldScriptItem : APrefab<WorldScriptItem>
     {
         switchButton.Button.onClick.AddListener(toggle);
         deleteButton.Button.onClick.AddListener(deleteSelf);
+        name.Text.resizeTextMaxSize = 8;
+        name.GetComponent<Button>().onClick.AddListener(select);
+    }
+
+    private void select()
+    {
+        WindowWorldScript.Instance.Select(script);
     }
 
     private void toggle()
@@ -27,7 +35,8 @@ public class WorldScriptItem : APrefab<WorldScriptItem>
 
     private void deleteSelf()
     {
-        
+        WindowWorldScript.Instance.UnSelect(script);
+        WorldScripts.Scripts.Remove(script);
     }
 
     public void Setup(ScriptInstance script)
@@ -37,7 +46,7 @@ public class WorldScriptItem : APrefab<WorldScriptItem>
     }
     private static void _init()
     {
-        var obj = new GameObject(nameof(WorldScriptItem), typeof(HorizontalLayoutGroup));
+        var obj = new GameObject(nameof(WorldScriptItem), typeof(HorizontalLayoutGroup), typeof(ContentSizeFitter));
         obj.transform.SetParent(Main.prefabs, false);
 
         var switch_button = TextButton.Instantiate(obj.transform, pName: nameof(switchButton));
@@ -50,6 +59,9 @@ public class WorldScriptItem : APrefab<WorldScriptItem>
         switch_button.Localization.autoField = true;
         delete_button.Localization.autoField = true;
 
+        name_obj.gameObject.AddComponent<Button>();
+
+        obj.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
         Prefab = obj.AddComponent<WorldScriptItem>();
         Prefab.switchButton = switch_button;

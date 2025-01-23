@@ -91,6 +91,7 @@ inmny.godtools.ui.data_editor.zhetian.zhetian_level,遮天等级,Level
 inmny.godtools.ui.world_script.enabled,已启用,Enabled
 inmny.godtools.ui.world_script.disabled,已禁用,Disabled
 inmny.godtools.ui.world_script.delete,删除,Delete
+inmny.godtools.ui.world_script.add_script,添加脚本,Add Script
 inmny.godtools.WindowModInfo,模组介绍,Mod Info
 inmny.godtools.debug,DEBUG窗口,Debug Window
 inmny.godtools.console,控制台,Console
