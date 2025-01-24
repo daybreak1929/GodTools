@@ -4,6 +4,7 @@ using GodTools.Features.WorldScript;
 using GodTools.UI.Prefabs;
 using GodTools.Utils;
 using NeoModLoader.api;
+using NeoModLoader.General.UI.Prefabs;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -46,6 +47,8 @@ public class WindowWorldScript : AbstractWideWindow<WindowWorldScript>
         
         scriptConfigureContent = script_configure_scroll_view.Find("Viewport/Content").GetComponent<RectTransform>();
         detailConfigureContent = detail_configure_scroll_view.Find("Viewport/Content").GetComponent<RectTransform>();
+        
+        SetupScriptConfiguration();
 
 
         allScriptContent.GetComponent<VerticalLayoutGroup>().childControlWidth = true;
@@ -58,6 +61,9 @@ public class WindowWorldScript : AbstractWideWindow<WindowWorldScript>
             var item = _allScriptPool.GetNext(-2);
             item.Setup(script);
         });
+        
+        scriptConfigureContent.gameObject.SetActive(false);
+        detailConfigureContent.gameObject.SetActive(false);
     }
     private MonoObjPool<WorldScriptItem> _allScriptPool;
     public override void OnFirstEnable()
@@ -69,13 +75,60 @@ public class WindowWorldScript : AbstractWideWindow<WindowWorldScript>
             item.Setup(script);
         }
     }
-
-    public void Select(ScriptInstance script)
+    private WorldScriptItem _selectedScript;
+    public void Select(WorldScriptItem script)
     {
-        
+        _selectedScript = script;
+        foreach (var item in _allScriptPool.ActiveObjs)
+        {
+            item.name.GetComponent<Button>().interactable = true;
+        }
+        script.name.GetComponent<Button>().interactable = false;
+        scriptConfigureContent.gameObject.SetActive(true);
+        UpdateScriptConfiguration();
     }
-    public void UnSelect(ScriptInstance script_to_confirm = null)
+
+    public void UpdateDetailPage(string page)
     {
-        
+        if (string.IsNullOrEmpty(page))
+        {
+            detailConfigureContent.gameObject.SetActive(false);
+        }
+    }
+
+    public void UnSelect(WorldScriptItem script_to_confirm = null)
+    {
+        if (script_to_confirm != null && _selectedScript != script_to_confirm)
+        {
+            return;
+        }
+        _selectedScript = null;
+        foreach (var item in _allScriptPool.ActiveObjs)
+        {
+            item.name.GetComponent<Button>().interactable = true;
+        }
+        scriptConfigureContent.gameObject.SetActive(false);
+    }
+    public void Delete(WorldScriptItem script)
+    {
+        if (_selectedScript == script)
+        {
+            UnSelect(script);
+        }
+        WorldScripts.Scripts.Remove(script.script);
+        _allScriptPool.Return(script);
+    }
+    private TextInput _nameEditor;
+    private void SetupScriptConfiguration()
+    {
+        _nameEditor = TextInput.Instantiate(scriptConfigureContent, pName: "NameEditor");
+        _nameEditor.Setup("", value => _selectedScript.Rename(value));
+        _nameEditor.SetSize(new(150, 20));
+        _nameEditor.GetComponent<RectTransform>().pivot = new(0.5f, 1);
+        _nameEditor.text.alignment = TextAnchor.MiddleCenter;
+    }
+    private void UpdateScriptConfiguration()
+    {
+        _nameEditor.input.SetTextWithoutNotify(_selectedScript.name.Value);
     }
 }

@@ -24,7 +24,7 @@ public class WorldScriptItem : APrefab<WorldScriptItem>
 
     private void select()
     {
-        WindowWorldScript.Instance.Select(script);
+        WindowWorldScript.Instance.Select(this);
     }
 
     private void toggle()
@@ -35,10 +35,13 @@ public class WorldScriptItem : APrefab<WorldScriptItem>
 
     private void deleteSelf()
     {
-        WindowWorldScript.Instance.UnSelect(script);
-        WorldScripts.Scripts.Remove(script);
+        WindowWorldScript.Instance.Delete(this);
     }
-
+    public void Rename(string new_name)
+    {
+        script.Name = new_name;
+        name.Value = new_name;
+    }
     public void Setup(ScriptInstance script)
     {
         this.script = script;

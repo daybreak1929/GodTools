@@ -1,21 +1,16 @@
 using System;
 using NeoModLoader.General.UI.Prefabs;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace GodTools.UI.Prefabs;
 
 public class InputBar : APrefab<InputBar>
 {
-    public InputField InputField { get; private set; }
-
-    protected override void Init()
-    {
-        if (Initialized) return;
-        base.Init();
-
-        InputField = transform.Find("Input").GetComponent<InputField>();
-    }
+    public InputField InputField => inputField;
+    [SerializeField]
+    private InputField inputField;
 
     public void Setup(string         text_on_empty      = "", Action<string> on_value_changed = null,
                       Action<string> on_value_submitted = null)
@@ -52,5 +47,6 @@ public class InputBar : APrefab<InputBar>
 
 
         Prefab = obj.AddComponent<InputBar>();
+        Prefab.inputField = input;
     }
 }
