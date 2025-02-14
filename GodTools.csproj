@@ -137,7 +137,6 @@
             <HintPath>..\..\worldbox_Data\Managed\UnityEngine.UIModule.dll</HintPath>
         </Reference>
     </ItemGroup>
-
     <ItemGroup>
         <None Include="GameResources\**"/>
         <None Include="Locales\**"/>
@@ -147,16 +146,16 @@
         <None Include="packages.config"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Cultiway\Cultiway.csproj"/>
-        <ProjectReference Include="..\CustomModT002\CustomModT002.csproj" />
-        <ProjectReference Include="..\CustomMod\CustomMod.csproj" />
-        <ProjectReference Include="..\CW_Core\Cultivation-Way-Core.csproj"/>
-        <ProjectReference Include="..\witchcraft\WindowAttack.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="Plugins\"/>
-    </ItemGroup>
-
-</Project>
+        <ItemGroup>
+            <ProjectReference Include="..\Cultiway\Cultiway.csproj"/>
+            <ProjectReference Include="..\CustomModT002\CustomModT002.csproj" />
+            <ProjectReference Include="..\CustomMod\CustomMod.csproj" />
+            <ProjectReference Include="..\CW_Core\Cultivation-Way-Core.csproj"/>
+            <ProjectReference Include="..\witchcraft\WindowAttack.csproj" />
+        </ItemGroup>
+    
+        <ItemGroup>
+            <Folder Include="Plugins\"/>
+        </ItemGroup>
+    
+    </Project>
