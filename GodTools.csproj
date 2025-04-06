@@ -6,7 +6,8 @@
         <Nullable>disable</Nullable>
         <OutputType>Library</OutputType>
         <RootNamespace>GodTools</RootNamespace>
-        <DefineConstants>启源_启源核心;一米_中文名;ZHETIAN;INMNY_CUSTOMMODT001;INMNY_CUSTOMMODT002;CULTIWAY;WITCHCRAFT_WORLDBOX</DefineConstants>
+        <DefineConstants>启源_启源核心;一米_中文名;ZHETIAN;INMNY_CUSTOMMODT001;CULTIWAY;WITCHCRAFT_WORLDBOX</DefineConstants>
+        <DefineConstants>DISABLE_STATUS_EDITOR;DISABLE_ITEM_EDITOR;DISABLE_SPRITE_EDITOR</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -44,7 +45,7 @@
             <HintPath>..\..\worldbox_Data\Managed\Purchasing.Common.dll</HintPath>
         </Reference>
         <Reference Include="Unity.TextMeshPro">
-            <HintPath>..\..\worldbox_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+            <HintPath>Assemblies\Unity.TextMeshPro.dll</HintPath>
         </Reference>
         <Reference Include="UnityEngine">
             <HintPath>..\..\worldbox_Data\Managed\UnityEngine.dll</HintPath>
@@ -135,6 +136,9 @@
         </Reference>
         <Reference Include="UnityEngine.UIModule">
             <HintPath>..\..\worldbox_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UPersian">
+          <HintPath>..\..\worldbox_Data\Managed\UPersian.dll</HintPath>
         </Reference>
     </ItemGroup>
     <ItemGroup>

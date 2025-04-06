@@ -16,18 +16,28 @@ public class FilterButtonInGrid : APrefab<FilterButtonInGrid>
     private Button button;
     [SerializeField]
     private TipButton tipButton;
-    
-    private string filter_id;
     private List<FilterSetting> target_list;
-    private Func<Actor, bool> filter_action;
+    private FilterSetting _filter;
 
+    public void Setup(FilterSetting filter, List<FilterSetting> target_list)
+    {
+        _filter = filter;
+        icon.sprite = filter.Icon;
+        icon.color = filter.IconColor;
+        tipButton.textOnClick = filter.ID;
+        
+        this.target_list = target_list;
+        
+        button.onClick.RemoveAllListeners();
+        button.onClick.AddListener(Toggle);
+    }
     public void Setup(string filter_id, string icon_path, Func<Actor, bool> filter_action, List<FilterSetting> target_list)
     {
         icon.sprite = SpriteTextureLoader.getSprite(icon_path);
+        icon.color = Color.white;
         tipButton.textOnClick = filter_id;
-        this.filter_id = filter_id;
+        _filter = new FilterSetting(filter_id, icon.sprite, filter_action);
         this.target_list = target_list;
-        this.filter_action = filter_action;
         
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(Toggle);
@@ -36,21 +46,21 @@ public class FilterButtonInGrid : APrefab<FilterButtonInGrid>
     private void Toggle()
     {
         
-        var idx = target_list.FindIndex(x=>x.ID == filter_id);
+        var idx = target_list.FindIndex(x=>x.ID == _filter.ID);
         if (idx != -1)
         {
             target_list.RemoveAt(idx);
         }
         else
         {
-            target_list.Add(new FilterSetting(filter_id, icon.sprite, filter_action));
+            target_list.Add(_filter);
         }
     }
     private static void _init()
     {
         var obj = new GameObject(nameof(FilterButtonInGrid), typeof(Image), typeof(Button), typeof(TipButton));
         obj.transform.SetParent(Main.prefabs);
-       
+        
         Prefab = obj.AddComponent<FilterButtonInGrid>();
         Prefab.icon = obj.GetComponent<Image>();
         Prefab.button = obj.GetComponent<Button>();

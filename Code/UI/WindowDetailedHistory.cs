@@ -8,6 +8,7 @@ using DG.Tweening;
 using GodTools.Abstract;
 using GodTools.Features;
 using GodTools.UI.Prefabs;
+using GodTools.Utils;
 using HarmonyLib;
 using NeoModLoader.api;
 using NeoModLoader.api.attributes;
@@ -122,7 +123,7 @@ public class WindowDetailedHistory : AbstractWideWindow<WindowDetailedHistory>
             var idx = 0;
             for (int i = 0; i < _list.Count; i++)
             {
-                Match match = Regex.Match(_list[i].date, year_pattern);
+                Match match = Regex.Match(_list[i].GetDate(), year_pattern);
 
                 if (match.Success)
                 {
@@ -231,12 +232,13 @@ public class WindowDetailedHistory : AbstractWideWindow<WindowDetailedHistory>
         var icon_set = new HashSet<string>();
         foreach (var msg in DetailedHistory.Messages)
         {
-            if (!icon_set.Add(msg.icon)) continue;
-            var icon = msg.icon;
+            var asset = msg.getAsset();
+            if (!icon_set.Add(asset.path_icon)) continue;
+            var icon = asset.path_icon;
             var group_id = _type_filter_grid.Title.GetComponent<LocalizedText>().key;
-            var icon_filter = new Filter($"{group_id}.{icon}", group_id, msg => msg.icon == icon, SpriteTextureLoader.getSprite($"ui/icons/{icon}"));
+            var icon_filter = new Filter($"{group_id}.{icon}", group_id, msg => msg.getAsset().path_icon == icon, SpriteTextureLoader.getSprite($"ui/icons/{icon}"));
             var button = _type_filter_pool.GetNext();
-            var tip_name = LM.Has(icon_filter.ID) ? icon_filter.ID : LM.Has(msg.text) ? msg.text : "";
+            var tip_name = LM.Has(icon_filter.ID) ? icon_filter.ID : LM.Has(msg.getAsset().getLocaleID()) ? msg.getAsset().getLocaleID() : "";
             button.Setup([Hotfixable]() =>
             {
                 var filter_idx = filters.FindIndex(x => x.ID == icon_filter.ID);
@@ -333,7 +335,7 @@ public class WindowDetailedHistory : AbstractWideWindow<WindowDetailedHistory>
 
     private void InspectMsg(WorldLogMessage msg)
     {
-        Main.LogInfo($"Inspect {msg.date}");
+        Main.LogInfo($"Inspect {msg.GetDate()}");
     }
     
     private class FilterButton : APrefab<FilterButton>

@@ -83,15 +83,15 @@ public class WindowCreatureSavedList : AbstractWindow<WindowCreatureSavedList>
     public static bool SpawnSelectedSavedActor(WorldTile tile, string power_id)
     {
         ActorData data = ActorTools.Copy(_selected_data);
-        data.id = World.world.mapStats.getNextId("unit");
-        if (World.world.cities.get(data.cityID) == null) data.cityID = "";
+        data.id = World.world.map_stats.getNextId("unit");
+        if (World.world.cities.get(data.cityID) == null) data.cityID = -1;
 
-        if (World.world.clans.get(data.clan) == null) data.clan = "";
+        if (World.world.clans.get(data.clan) == null) data.clan = -1;
 
-        if (World.world.cultures.get(data.culture) == null) data.culture = "";
+        if (World.world.cultures.get(data.culture) == null) data.culture = -1;
 
-        data.homeBuildingID = "";
-        data.transportID = "";
+        data.homeBuildingID = -1;
+        data.transportID = -1;
         data.x = tile.pos.x;
         data.y = tile.pos.y;
         World.world.units.loadObject(data);

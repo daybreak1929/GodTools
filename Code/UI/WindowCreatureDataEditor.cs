@@ -108,7 +108,7 @@ public partial class WindowCreatureDataEditor : AbstractWideWindow<WindowCreatur
     private string _current_page;
     public override void OnNormalEnable()
     {
-        _selected_actor = Config.selectedUnit;
+        _selected_actor = SelectedUnit.unit;
         UpdatePage();
     }
 }

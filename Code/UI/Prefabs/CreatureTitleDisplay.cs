@@ -17,7 +17,7 @@ public class CreatureTitleDisplay : APrefab<CreatureTitleDisplay>
     {
         text.text = string.Join("\n", titles);
 
-        transform.localPosition = UITools.WorldToScreenPosition(actor.transform.localPosition + new Vector3(0, actor.stats[S.scale] * actor.spriteRenderer.size.y), canvas_rect);
+        transform.localPosition = UITools.WorldToScreenPosition(actor.cur_transform_position + new Vector3(0, actor.stats[S.scale] * actor.getSpriteToRender().rect.height), canvas_rect);
         transform.localScale = Vector3.one / World.world.camera.orthographicSize * 8;
     }
     private static void _init()
@@ -28,7 +28,7 @@ public class CreatureTitleDisplay : APrefab<CreatureTitleDisplay>
         obj.GetComponent<RectTransform>().pivot = new(0.5f, 0);
         
         var text = obj.GetComponent<Text>();
-        text.font = LocalizedTextManager.currentFont;
+        text.font = LocalizedTextManager.current_font;
         text.color = Color.white;
         text.alignment = TextAnchor.UpperCenter;
         text.fontSize = 8;

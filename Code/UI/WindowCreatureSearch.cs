@@ -1,3 +1,4 @@
+using Cultiway;
 using GodTools.UI.Prefabs;
 using NeoModLoader.api.attributes;
 using NeoModLoader.General.UI.Window;
@@ -22,13 +23,20 @@ public class WindowCreatureSearch : SingleAutoLayoutWindow<WindowCreatureSearch>
         display_group = this.BeginVertGroup(pSpacing: 8);
         display_group.GetComponent<RectTransform>().pivot = new Vector2(0.5f, 1f);
         _pool = new ObjectPoolGenericMono<PrefabUnitElement>(
-            Resources.Load<WindowFavorites>("windows/favorites").element_prefab, display_group.transform);
+            Resources.Load<ListWindow>("windows/list_favorite_units")._list_element_prefab.GetComponent<PrefabUnitElement>(), display_group.transform);
+    }
+    private string _search_text;
+    public override void OnNormalEnable()
+    {
+        base.OnNormalEnable();
+        ApplySearch(_search_text);
     }
 
     [Hotfixable]
     private void ApplySearch(string name)
     {
         _pool.clear();
+        _search_text = name;
         if (string.IsNullOrEmpty(name)) return;
         var list = World.world.units.getSimpleList();
         foreach (Actor unit in list)

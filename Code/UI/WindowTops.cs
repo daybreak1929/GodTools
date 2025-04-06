@@ -60,16 +60,18 @@ public partial class WindowTops : AbstractWideWindow<WindowTops>
         scroll_view_rect = content_rect.parent.parent.GetComponent<RectTransform>();
         scroll_view_rect.localPosition = new Vector3(0, 10);
         scroll_view_rect.sizeDelta = new Vector2(200, 230);
+        scroll_view_rect.Find("Scrollbar Vertical Mask").gameObject.SetActive(false);
         content_rect.pivot = new Vector2(0.5f,        1);
-        BackgroundTransform.Find("Scrollgradient").localPosition = new(97.8f, -106);
-
+        BackgroundTransform.Find("Scrollgradient").localPosition = new(105, -106);
+        BackgroundTransform.Find("Scrollgradient").GetComponent<RectTransform>().sizeDelta = new(40, 210);
+/*
         SimpleLine line1 = Instantiate(SimpleLine.Prefab, BackgroundTransform);
         line1.transform.localPosition = new Vector3(-100, 0);
         line1.SetSize(new Vector2(2, 250));
         SimpleLine line2 = Instantiate(SimpleLine.Prefab, BackgroundTransform);
         line2.transform.localPosition = new Vector3(100, 0);
         line2.SetSize(new Vector2(2, 250));
-
+*/
         RectTransform filter_scroll_view = Instantiate(scroll_view_rect, BackgroundTransform);
         filter_scroll_view.localPosition = new Vector3(-200, 0);
         filter_scroll_view.name = "Filter Scroll View";
@@ -143,7 +145,7 @@ public partial class WindowTops : AbstractWideWindow<WindowTops>
     [Hotfixable]
     public void ApplySort()
     {
-        _list = World.world.units.getSimpleList().FindAll([Hotfixable](x)=>x!=null && x.data != null&& x.isAlive() && !x.object_destroyed && x.asset.canBeInspected);
+        _list = World.world.units.getSimpleList().FindAll([Hotfixable](x)=>x!=null && x.data != null&& x.isAlive() && x.asset.can_be_inspected);
 
         if (last_and_filter_settings.Count > 0)
         {
@@ -225,6 +227,24 @@ public partial class WindowTops : AbstractWideWindow<WindowTops>
         }
         var button = filter_button_in_grid_pool_dict[grid].GetNext();
         button.Setup($"{grid.Title.GetComponent<LocalizedText>().key}.{filter_id}", icon_path, filter_func, all_filter_settings);
+        return button;
+    }private FilterButtonInGrid new_filter(TitledGrid grid, FilterSetting filter_setting)
+    {
+        if (!filter_button_in_grid_pool_dict.ContainsKey(grid))
+        {
+            filter_button_in_grid_pool_dict[grid] = new MonoObjPool<FilterButtonInGrid>(FilterButtonInGrid.Prefab, grid.Grid.transform);
+        }
+        var button = filter_button_in_grid_pool_dict[grid].GetNext();
+        var id_replaced_filter_setting =
+            new FilterSetting($"{grid.Title.GetComponent<LocalizedText>().key}.{filter_setting.ID}",
+                filter_setting.Icon, filter_setting.FilterFunc)
+            {
+                InnerIcon = filter_setting.InnerIcon,
+                IconColor = filter_setting.IconColor,
+                InnerColor = filter_setting.InnerColor,
+                Type = filter_setting.Type
+            };
+        button.Setup(id_replaced_filter_setting, all_filter_settings);
         return button;
     }
 
@@ -309,7 +329,7 @@ public partial class WindowTops : AbstractWideWindow<WindowTops>
             if (y > actual_start_y || y < actual_end_y)
             {
                 game_object.SetActive(false);
-                _pool._elements_inactive.Push(elm);
+                _pool._elements_inactive.Enqueue(elm);
             }
         }
 

@@ -48,7 +48,7 @@ public class ColorSelector : APrefab<ColorSelector>
             for (var i = 0; i < fast_color_options.Length; i++)
             {
                 Color color = fast_color_options[i].Key;
-                SimpleButton button = _fast_color_option_pool.getNext(i + 1);
+                SimpleButton button = _fast_color_option_pool.getNext();
 
                 button.Setup(() => on_color_selected(color), null, null, new Vector2(10, 10), "tip", new TooltipData
                 {

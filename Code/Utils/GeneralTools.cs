@@ -3,8 +3,12 @@ using UnityEngine.UI;
 
 namespace GodTools.Utils;
 
-internal class GeneralTools
+internal static class GeneralTools
 {
+    public static string GetDate(this WorldLogMessage msg)
+    {
+        return $"y:{Date.getYear(msg.timestamp)}, m:{Date.getMonth(msg.timestamp)}";
+    }
     public static Sprite get_inner_sliced()
     {
         return SpriteTextureLoader.getSprite("ui/special/windowInnerSliced");
@@ -17,7 +21,7 @@ internal class GeneralTools
 
     public static void text_basic_setting(Text text)
     {
-        text.font = LocalizedTextManager.currentFont;
+        text.font = LocalizedTextManager.current_font;
         text.fontStyle = FontStyle.Bold;
         text.fontSize = 14;
         text.alignment = TextAnchor.MiddleCenter;

@@ -7,6 +7,7 @@ using HarmonyLib;
 using NeoModLoader.api.attributes;
 using NeoModLoader.General;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
@@ -21,8 +22,8 @@ internal static class PatchWindowCreatureInfo
     private static Image saved_image;
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(WindowCreatureInfo), nameof(WindowCreatureInfo.OnEnable))]
-    public static void OnEnable_postfix(WindowCreatureInfo __instance)
+    [HarmonyPatch(typeof(UnitWindow), nameof(UnitWindow.OnEnable))]
+    public static void OnEnable_postfix(UnitWindow __instance)
     {
         Actor actor = __instance.actor;
         if (actor == null) return;
@@ -30,7 +31,7 @@ internal static class PatchWindowCreatureInfo
         {
             initialized = true;
             var gender = new GameObject("Gender", typeof(Image), typeof(Button));
-            gender.transform.SetParent(__instance.avatarElement.transform);
+            gender.transform.SetParent(__instance._avatar_element.transform);
             var gender_rect = gender.GetComponent<RectTransform>();
             gender_rect.localPosition = new Vector3(17.5f, -16.8f);
             gender_rect.localScale = Vector3.one;
@@ -39,47 +40,28 @@ internal static class PatchWindowCreatureInfo
             gender.GetComponent<Button>().onClick.AddListener(() =>
             {
                 Actor actor = __instance.actor;
-                if (actor.data.gender != ActorGender.Male)
-                    actor.data.gender = ActorGender.Male;
+                if (actor.data.sex != ActorSex.Male)
+                    actor.data.sex = ActorSex.Male;
                 else
-                    actor.data.gender = ActorGender.Female;
+                    actor.data.sex = ActorSex.Female;
 
                 actor.clearSprites();
-                __instance.avatarElement.show(actor);
+                __instance._avatar_element.show(actor);
                 CheckGender(actor);
             });
-
-            //AddEntryButtonForWindow(__instance, nameof(WindowCreatureSpriteEditor), "ui/icons/iconAttractive");
+#if ENABLE_SPRITE_EDITOR
+            AddEntryButtonForWindow(__instance, nameof(WindowCreatureSpriteEditor), "ui/icons/iconAttractive");
+#endif
             AddEntryButtonForWindow(__instance, nameof(WindowCreatureDataEditor), "ui/icons/iconOptions");
             AddEntryButtonForWindow(__instance, nameof(WindowCreatureTitleEditor), "ui/icons/iconOptions");
-
-            Image mood_image = __instance.moodSprite;
-            var mood_modify_button = mood_image.gameObject.AddComponent<Button>();
-            var mood_tip_button = mood_image.gameObject.AddComponent<TipButton>();
-            mood_tip_button.hoverAction = () =>
+            AddSideButton(__instance, "RemoveScar", () =>
             {
-                Tooltip.show(mood_image.gameObject, Tooltips.mood.id, new TooltipData
-                {
-                    actor = __instance.actor
-                });
-                mood_image.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
-                mood_image.transform.DOKill();
-                mood_image.transform.DOScale(1f, 0.1f)
-                    .SetEase(Ease.InBack);
-            };
-            mood_modify_button.onClick.AddListener(() =>
-            {
-                var mood_list = AssetManager.moods.list;
-                var curr_mood_idx = mood_list.FindIndex(x => x == AssetManager.moods.get(__instance.actor.data.mood));
-                MoodAsset new_mood =
-                    mood_list[Math.Min(mood_list.Count - 1, Math.Max(0, (curr_mood_idx + 1) % (mood_list.Count - 1)))];
-                __instance.actor.changeMood(new_mood.id);
-                mood_image.sprite = new_mood.getSprite();
-            });
+                SelectedUnit.unit.removeTrait("scar_of_divinity");
+            },"ui/icons/iconDivineScar");
 
-
+#if ENABLE_SAVE_ACTOR
             GameObject save_actor =
-                Object.Instantiate(__instance.buttonTraitEditor, __instance.transform.Find("Background"));
+                Object.Instantiate(__instance._button_trait_editor.gameObject, __instance.transform.Find("Background"));
             save_actor.transform.localPosition = new Vector3(116.8f, -112f);
             save_actor.transform.localScale = new Vector3(1,         1);
             saved_image = save_actor.transform.Find("Button Trait/Icon").GetComponent<Image>();
@@ -97,12 +79,15 @@ internal static class PatchWindowCreatureInfo
                 CheckSave(__instance.actor, saved_image);
             });
             button.GetComponent<TipButton>().textOnClick = "save_actor";
+#endif
 #if 一米_中文名
-            __instance.nameInput.addListener(new_name => { });
+            __instance.name_input.addListener(new_name => { });
 #endif
         }
-
+#if ENABLE_STATUS_EDITOR
         WindowStatusEffectEditor.init(__instance);
+#endif
+#if ENABLE_ITEM_EDITOR
         if (actor.asset.use_items)
         {
             WindowItemEditor.init(__instance);
@@ -112,9 +97,12 @@ internal static class PatchWindowCreatureInfo
         {
             WindowItemEditor.entry_button.SetActive(false);
         }
+#endif
 
         CheckGender(actor);
+#if ENABLE_SAVE_ACTOR
         CheckSave(actor, saved_image);
+#endif
     }
 
     private static void CheckSave(Actor actor, Image image)
@@ -127,7 +115,7 @@ internal static class PatchWindowCreatureInfo
 
     private static void CheckGender(Actor actor)
     {
-        if (actor.data.gender == ActorGender.Unknown)
+        if (actor.data.sex == ActorSex.None)
         {
             gender_image.enabled = false;
         }
@@ -135,13 +123,13 @@ internal static class PatchWindowCreatureInfo
         {
             gender_image.enabled = true;
             gender_image.sprite =
-                SpriteTextureLoader.getSprite(actor.data.gender == ActorGender.Male
+                SpriteTextureLoader.getSprite(actor.data.sex == ActorSex.Male
                     ? "gt_windows/male"
                     : "gt_windows/female");
         }
     }
 
-    private static void AddEntryButtonForWindow(WindowCreatureInfo target_window, string entry_window_id, string icon)
+    private static void AddEntryButtonForWindow(UnitWindow target_window, string entry_window_id, string icon)
     {
         PowerButtonCreator.CreateWindowButton(entry_window_id, entry_window_id,
             SpriteTextureLoader.getSprite(icon),
@@ -149,9 +137,9 @@ internal static class PatchWindowCreatureInfo
         _last_y -= 40;
     }
 
-    private static void AddSideButton(WindowCreatureInfo target_window, string entry_window_id, string icon)
+    private static void AddSideButton(UnitWindow target_window, string id, UnityAction action, string icon)
     {
-        PowerButtonCreator.CreateWindowButton(entry_window_id, entry_window_id,
+        PowerButtonCreator.CreateSimpleButton(id, action,
             SpriteTextureLoader.getSprite(icon),
             target_window.transform.Find("Background"), new Vector2(156, _last_y));
         _last_y -= 40;

@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace GodTools.UI;
-
+#if ENABLE_ITEM_EDITOR
 internal class ModifierEditorElement : MonoBehaviour
 {
     public Text   text;
@@ -191,7 +191,7 @@ internal class WindowItemEditor : MonoBehaviour
         }
     }
 
-    public static void init(WindowCreatureInfo creature_window)
+    public static void init(UnitWindow creature_window)
     {
         if (initialized) return;
         add_entry_button(creature_window);
@@ -584,7 +584,7 @@ internal class WindowItemEditor : MonoBehaviour
         initialized = true;
     }
 
-    private static void add_entry_button(WindowCreatureInfo creature_window)
+    private static void add_entry_button(UnitWindow creature_window)
     {
         var entry = Instantiate(creature_window.buttonTraitEditor, creature_window.transform.Find("Background"));
         entry.transform.localPosition = new Vector3(116.8f, -74.5f);
@@ -816,3 +816,4 @@ internal class WindowItemEditor : MonoBehaviour
         load_item(newItemButton.slot.data);
     }
 }
+#endif

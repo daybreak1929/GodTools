@@ -5,14 +5,14 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace GodTools.UI;
-
+#if ENABLE_STATUS_EDITOR
 internal class StatusEffectGroupElement : MonoBehaviour
 {
     public static List<StatusEffectButton> all_buttons = new();
     public Text               title;
-    public List<StatusEffect> statuses = new();
+    public List<StatusAsset> statuses = new();
 
-    public void add_status(StatusEffect status, StatusEffectButton prefab)
+    public void add_status(StatusAsset status, StatusEffectButton prefab)
     {
         statuses.Add(status);
         var status_button = Instantiate(prefab, transform);
@@ -22,19 +22,18 @@ internal class StatusEffectGroupElement : MonoBehaviour
 
         status_button.button.onClick.AddListener(() =>
         {
-            var actor = Config.selectedUnit;
-            WindowStatusEffectEditor.instance.display_status_button.load(status_button.data);
+            var actor = SelectedUnit.unit;
+            WindowStatusEffectEditor.instance.display_status_button.load(status_button.status);
             WindowStatusEffectEditor.instance.selected_status_button = status_button;
             WindowStatusEffectEditor.instance.status_effect_time_text.text =
-                (int)(float)status_button.data.getRemainingTime() + "s";
-            Main.LogInfo($"{status_button.data.getRemainingTime()}");
+                (int)(float)status_button.status.getRemainingTime() + "s";
             WindowStatusEffectEditor.instance.status_effect_time_slider.value =
-                Mathf.Log10((float)status_button.data.getRemainingTime()) / 5;
+                Mathf.Log10((float)status_button.status.getRemainingTime()) / 5;
             WindowStatusEffectEditor.instance.reload_statuses();
         });
-        if (WindowStatusEffectEditor.instance.display_status_button.data == null)
+        if (WindowStatusEffectEditor.instance.display_status_button.status == null)
         {
-            WindowStatusEffectEditor.instance.display_status_button.load(status_button.data);
+            WindowStatusEffectEditor.instance.display_status_button.load(status_button.status);
             WindowStatusEffectEditor.instance.selected_status_button = status_button;
         }
     }
@@ -55,7 +54,7 @@ internal class WindowStatusEffectEditor : MonoBehaviour
     internal       Slider                   status_effect_time_slider;
     internal       Text                     status_effect_time_text;
 
-    private Actor actor => Config.selectedUnit;
+    private Actor actor => SelectedUnit.unit;
 
     private void OnEnable()
     {
@@ -65,12 +64,12 @@ internal class WindowStatusEffectEditor : MonoBehaviour
         advance_statuses.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(10, 0);
         clear_statuses();
         instance.status_effect_time_slider.value =
-            Mathf.Log10((float)instance.display_status_button.data.getRemainingTime()) / 5;
+            Mathf.Log10((float)instance.display_status_button.status.getRemainingTime()) / 5;
         avatar_element.avatarLoader.load(actor);
         load_current_actor_statuses();
     }
 
-    public static void init(WindowCreatureInfo creature_window)
+    public static void init(UnitWindow creature_window)
     {
         if (initialized) return;
         add_entry_button(creature_window);
@@ -88,7 +87,7 @@ internal class WindowStatusEffectEditor : MonoBehaviour
         instance.display_status_button.button.onClick.AddListener(() =>
         {
             var selected_actor = instance.actor;
-            var data = instance.display_status_button.data;
+            var data = instance.display_status_button.status;
             var selected_button = instance.selected_status_button;
 
             if (selected_actor.hasStatus(data.asset.id))
@@ -109,7 +108,7 @@ internal class WindowStatusEffectEditor : MonoBehaviour
 
         var TopPart = new GameObject("TopPart", typeof(RectTransform));
         TopPart.transform.SetParent(content_transform);
-        instance.avatar_element = Instantiate(creature_window.avatarElement, TopPart.transform);
+        instance.avatar_element = Instantiate(creature_window._avatar_element, TopPart.transform);
         TopPart.transform.localScale = new Vector3(1, 1);
         TopPart.GetComponent<RectTransform>().sizeDelta = new Vector2(193.28f, 26.30f);
         instance.avatar_element.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(48, 48);
@@ -278,18 +277,18 @@ internal class WindowStatusEffectEditor : MonoBehaviour
         instance.status_effect_time_slider.handleRect = slider_handle_rect;
         instance.status_effect_time_slider.onValueChanged.AddListener(val =>
         {
-            var status_data = instance.display_status_button.data;
+            var status_data = instance.display_status_button.status;
             if (status_data == null) return;
             var new_timer = Mathf.Pow(10, val * 5);
 
             if (new_timer > status_data.asset.duration)
             {
-                status_data.setTimer(status_data.asset.duration > new_timer ? status_data.asset.duration : new_timer);
+                status_data.setDuration(status_data.asset.duration > new_timer ? status_data.asset.duration : new_timer);
                 var actor = instance.actor;
 
-                if (actor.activeStatus_dict != null &&
-                    actor.activeStatus_dict.TryGetValue(status_data.asset.id, out var status_data_in_actor))
-                    status_data_in_actor.setTimer((float)status_data.getRemainingTime());
+                if (actor._active_status_dict != null &&
+                    actor._active_status_dict.TryGetValue(status_data.asset.id, out var status_data_in_actor))
+                    status_data_in_actor.setDuration((float)status_data.getRemainingTime());
             }
             else
             {
@@ -303,9 +302,9 @@ internal class WindowStatusEffectEditor : MonoBehaviour
         initialized = true;
     }
 
-    private static void add_entry_button(WindowCreatureInfo creature_window)
+    private static void add_entry_button(UnitWindow creature_window)
     {
-        var entry = Instantiate(creature_window.buttonTraitEditor, creature_window.transform.Find("Background"));
+        var entry = Instantiate(creature_window._button_trait_editor, creature_window.transform.Find("Background"));
         entry.transform.localPosition = new Vector3(116.8f, -34.5f);
         entry.transform.localScale = new Vector3(1, 1);
         entry.transform.Find("Button Trait/Icon").GetComponent<Image>().sprite =
@@ -333,7 +332,7 @@ internal class WindowStatusEffectEditor : MonoBehaviour
         }
 
         foreach (var button in StatusEffectGroupElement.all_buttons)
-            if (selected_status_button == null || button.data.asset.id != selected_status_button.data.asset.id)
+            if (selected_status_button == null || button.status.asset.id != selected_status_button.status.asset.id)
             {
                 button.transform.Find("SelectedIcon").GetComponent<Image>().enabled = false;
             }
@@ -347,22 +346,23 @@ internal class WindowStatusEffectEditor : MonoBehaviour
 
     private void load_current_actor_statuses()
     {
-        if (actor.activeStatus_dict != null)
-            foreach (var status in actor.activeStatus_dict.Values)
+        if (actor._active_status_dict != null)
+            foreach (var status in actor._active_status_dict.Values)
                 load_status_button(status);
     }
 
-    private void load_status_button(StatusEffectData status)
+    private void load_status_button(Status status)
     {
         var button = Instantiate(prefab_status_button, curr_statuses_transform);
         button.load(status);
         button.name = status.asset.id;
         foreach (var button_to_select in StatusEffectGroupElement.all_buttons)
         {
-            if (button_to_select.data.asset.id != status.asset.id) continue;
+            if (button_to_select.status.asset.id != status.asset.id) continue;
             var image = button_to_select.transform.Find("SelectedIcon").GetComponent<Image>();
             image.enabled = true;
             image.color = new Color(0.584f, 0.867f, 0.365f, 1);
         }
     }
 }
+#endif

@@ -10,7 +10,7 @@ using NeoModLoader.General.UI.Window.Utils.Extensions;
 using UnityEngine;
 
 namespace GodTools.UI;
-
+#if ENABLE_SPRITE_EDITOR
 public class WindowCreatureSpriteEditor : AutoLayoutWindow<WindowCreatureSpriteEditor>
 {
     private static          bool                                              patched;
@@ -123,7 +123,7 @@ public class WindowCreatureSpriteEditor : AutoLayoutWindow<WindowCreatureSpriteE
     {
         if (!actor.asset.unit)
         {
-            actor.data.head = Mathf.Clamp(actor.data.head + offset, 0, actor.animationContainer.heads.Length - 1);
+            actor.data.head = Mathf.Clamp(actor.data.head + offset, 0, actor.animation_container.heads.Length - 1);
             actor.dirty_sprite_head = true;
             actor.checkSpriteHead();
 
@@ -145,7 +145,7 @@ public class WindowCreatureSpriteEditor : AutoLayoutWindow<WindowCreatureSpriteE
     [Hotfixable]
     public override void OnNormalEnable()
     {
-        actor = Config.selectedUnit;
+        actor = SelectedUnit.unit;
         if (actor.asset.has_override_sprite) return;
 
         _head_sprite_title.gameObject.SetActive(actor.asset.body_separate_part_head);
@@ -155,7 +155,7 @@ public class WindowCreatureSpriteEditor : AutoLayoutWindow<WindowCreatureSpriteE
         available_mains.Clear();
 
         cached_head = actor.cached_sprite_head;
-        cached_main = actor.animationContainer;
+        cached_main = actor.animation_container;
 
         Sprite main_sprite = actor._last_main_sprite;
         if (modified_units_sprites.TryGetValue(actor.data.id, out var sprite_dict))
@@ -411,3 +411,4 @@ public class WindowCreatureSpriteEditor : AutoLayoutWindow<WindowCreatureSpriteE
         }
     }
 }
+#endif

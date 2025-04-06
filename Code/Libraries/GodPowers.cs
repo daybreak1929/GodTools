@@ -7,7 +7,6 @@ namespace GodTools.Libraries;
 public class GodPowers : ExtendLibrary<GodPower, GodPowers>
 {
     public static GodPower place_saved_actor { get; private set; }
-    public static GodPower split_city { get; private set; }
 
     protected override void OnInit()
     {
@@ -32,10 +31,5 @@ public class GodPowers : ExtendLibrary<GodPower, GodPowers>
         place_saved_actor.name = place_saved_actor.id;
         place_saved_actor.path_icon = "gt_windows/save_actor_list";
         place_saved_actor.click_action = WindowCreatureSavedList.SpawnSelectedSavedActor;
-
-        split_city.name = split_city.id;
-        split_city.path_icon = "ui/icons/iconFinger";
-        split_city.select_button_action = CitySplit.ResetCitySplitState;
-        split_city.click_special_action = null;
     }
 }

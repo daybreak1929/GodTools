@@ -44,7 +44,7 @@ public class RawText : APrefab<RawText>
         obj.transform.SetParent(Main.prefabs);
         var text = obj.GetComponent<Text>();
         text.color = Color.white;
-        text.font = LocalizedTextManager.currentFont;
+        text.font = LocalizedTextManager.current_font;
         text.resizeTextForBestFit = true;
         text.resizeTextMaxSize = 12;
         text.resizeTextMinSize = 1;

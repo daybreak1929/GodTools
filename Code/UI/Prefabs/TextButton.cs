@@ -37,7 +37,7 @@ public class TextButton : APrefab<TextButton>
 
         var text = obj.GetComponent<Text>();
         text.alignment = TextAnchor.MiddleCenter;
-        text.font = LocalizedTextManager.currentFont;
+        text.font = LocalizedTextManager.current_font;
         text.fontSize = 8;
 
         var fitter = obj.GetComponent<ContentSizeFitter>();

@@ -21,23 +21,6 @@ public class DetailedHistory : IManager
     {
         Messages.Add(pMessage);
     }
-    struct WorldLogMessageData
-    {
-        public string text;
-        public string special1;
-        public string special2;
-        public string special3;
-        public Color color_special1;
-        public Color color_special2;
-        public Color color_special3;
-        public string date;
-        public string icon;
-        public string city;
-        public string kingdom;
-        public string alliance;
-        public string unit;
-        public Vector3 location;
-    }
     public class FieldsOnlyContractResolver : DefaultContractResolver
     {
         protected override List<MemberInfo> GetSerializableMembers(Type objectType)
@@ -50,26 +33,10 @@ public class DetailedHistory : IManager
     [HarmonyPostfix, HarmonyPatch(typeof(SaveManager), nameof(SaveManager.saveMapData))]
     private static void SaveManager_saveMapData_postfix(string pFolder)
     {
-        var data = new List<WorldLogMessageData>(Messages.Count);
+        var data = new List<WorldLogMessage>(Messages.Count);
         foreach (var msg in Messages)
         {
-            data.Add(new WorldLogMessageData
-            {
-                text = msg.text,
-                special1 = msg.special1,
-                special2 = msg.special2,
-                special3 = msg.special3,
-                color_special1 = msg.color_special1,
-                color_special2 = msg.color_special2,
-                color_special3 = msg.color_special3,
-                date = msg.date,
-                icon = msg.icon,
-                city = msg.city?.data?.id,
-                kingdom = msg.kingdom?.data?.id,
-                alliance = msg.alliance?.data?.id,
-                unit = msg.unit?.data?.id,
-                location = msg.location
-            });
+            data.Add(msg);
         }
         var folder = SaveManager.folderPath(pFolder);
         var file = folder + "/worldlog.json";

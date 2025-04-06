@@ -28,8 +28,8 @@ public class WindowCreatureTitleEditor : SingleAutoLayoutWindow<WindowCreatureTi
         {
             var item = _pool.GetNext();
             var title_uid = $"GodTools.Title.{Guid.NewGuid().ToString()}";
-            Config.selectedUnit.AddTitleGuid(title_uid);
-            item.Setup(Config.selectedUnit, title_uid, obj =>
+            SelectedUnit.unit.AddTitleGuid(title_uid);
+            item.Setup(SelectedUnit.unit, title_uid, obj =>
             {
                 _pool.Return(obj.GetComponent<CreatureTitleItem>());
                 UpdateLayout();
@@ -54,7 +54,7 @@ public class WindowCreatureTitleEditor : SingleAutoLayoutWindow<WindowCreatureTi
     private MonoObjPool<CreatureTitleItem> _pool;
     public override void OnNormalEnable()
     {
-        var actor = Config.selectedUnit;
+        var actor = SelectedUnit.unit;
         if (actor == null) return;
         _pool.Clear();
         var title_guids = actor.GetTitleGuids();

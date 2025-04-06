@@ -55,7 +55,7 @@ public class CreatureTitleItem : APrefab<CreatureTitleItem>
         }, SpriteTextureLoader.getSprite("ui/icons/iconClose"), pSize: new(18, 18));
         colorButton.Setup([Hotfixable]() =>
         {
-            var color = new Color(Toolbox.randomFloat(0,1), Toolbox.randomFloat(0,1), Toolbox.randomFloat(0,1), Toolbox.randomFloat(0,1));
+            var color = new Color(Randy.randomFloat(0,1), Randy.randomFloat(0,1), Randy.randomFloat(0,1), Randy.randomFloat(0,1));
             _color = color;
             UpdateTitle();
         }, SpriteTextureLoader.getSprite("ui/icons/iconCustomWorld"), pSize: new(18, 18));

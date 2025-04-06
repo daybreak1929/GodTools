@@ -48,9 +48,18 @@ public class DetailedLogItem : APrefab<DetailedLogItem>
     public void Setup(WorldLogMessage msg, Action<WorldLogMessage> inspect_action)
     {
         _msg = msg;
-        date.Value = msg.date;
-        message.Value = msg.getFormatedText(message.Text, true, true);
-        typeIcon.sprite = SpriteTextureLoader.getSprite($"ui/icons/{msg.icon}");
+        date.Value = $"y: {(global::Date.getYear(msg.timestamp))}, m: {(global::Date.getMonth(msg.timestamp))}";
+        message.Value = msg.getFormatedText(message.Text);
+        var icon_path = msg.getAsset().path_icon;
+        if (string.IsNullOrEmpty(icon_path))
+        {
+            typeIcon.gameObject.SetActive(false);
+        }
+        else
+        {
+            typeIcon.gameObject.SetActive(true);
+            typeIcon.sprite = SpriteTextureLoader.getSprite(icon_path);
+        }
         _inspect_action = inspect_action;
     }
     private static void _init()

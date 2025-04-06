@@ -33,7 +33,7 @@ public class CanvasCreatureTitle : MonoBehaviour
     private void OnUpdate()
     {
         _pool.ResetToStart();
-        if (ScrollWindow.currentWindows.Count == 0)
+        if (!ScrollWindow.isWindowActive())
             foreach (var unit in World.world.units.getSimpleList())
             {
                 if (unit == null) continue;

@@ -24,6 +24,7 @@ CLAN,氏族,Clan
 TILE,地块,Tile
 OTHERS,其他,Others
 DEBUG,调试,Debug
+RemoveScar,去除圣痕,Remove Scar
 inmny.godtools.ui.create_sub_world,创建亚空间,Create Sub World
 inmny.godtools.ui.sub_world_size,亚空间大小,Sub World Size
 inmny.godtools.ui.sub_world_size_tip,滚轮调节亚空间大小,Scroll to Change Sub World Size

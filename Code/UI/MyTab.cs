@@ -54,19 +54,11 @@ internal class MyTab : IManager
         AddInfoButtons();
         AddWorldButtons();
         AddCreatureButtons();
-        //AddCityButtons();
         AddDebugButtons();
 
         SwitchTab(TabButtonType.INFO);
     }
-
-    private static void AddCityButtons()
-    {
-        PowerButton button;
-        button = PowerButtonCreator.CreateGodPowerButton(GodPowers.split_city.id,
-            SpriteTextureLoader.getSprite("ui/icons/iconFinger"));
-    }
-
+    
     private static void AddDebugButtons()
     {
         PowerButton button;
@@ -128,6 +120,7 @@ internal class MyTab : IManager
         }
 
         button.transform.SetParent(group);
+        button.transform.localScale = Vector3.one;
     }
 
     private static void ConstructTabContainer(TabButtonType type, Sprite icon)

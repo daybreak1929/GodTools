@@ -39,7 +39,7 @@ public class InputBar : APrefab<InputBar>
         var text = input_obj.GetComponent<Text>();
 
         input.textComponent = text;
-        text.font = LocalizedTextManager.currentFont;
+        text.font = LocalizedTextManager.current_font;
         text.resizeTextForBestFit = true;
         text.resizeTextMinSize = 1;
         text.resizeTextMaxSize = 10;

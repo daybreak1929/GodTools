@@ -30,8 +30,8 @@ internal class PosShowEffect : SimpleEffect
                     return;
                 }
 
-                effect.transform.position = selected_object.currentPosition;
-                effect.transform.localScale = selected_object.currentScale;
+                effect.transform.position = selected_object.current_position;
+                effect.transform.localScale = selected_object.current_scale;
             }
         }
     }
@@ -70,7 +70,7 @@ internal class PosShowEffect : SimpleEffect
     {
         effect.gameObject.SetActive(true);
         left_time = time * C.pos_show_effect_time_scale;
-        effect.transform.position = actor.currentPosition;
+        effect.transform.position = actor.current_position;
         effect.transform.localScale = scale;
         selected_object = actor;
     }

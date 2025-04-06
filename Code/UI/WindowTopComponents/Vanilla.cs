@@ -19,22 +19,24 @@ public partial class WindowTops
 {
     private void CreateGrid_VANILLA()
     {
+        /*
         TitledGrid race_filter_grid = new_filter_grid("race");
-        AssetManager.raceLibrary.ForEach<Race, RaceLibrary>(race_asset =>
+        AssetManager.actor_library.ForEach<ActorAsset, ActorAssetLibrary>(actor_asset =>
         {
-            if (race_asset.nature) return;
-            var local_race_id = race_asset.id;
+            if (!LM.Has(actor_asset.name_locale) ||
+                string.IsNullOrEmpty(actor_asset.path_icon) || SpriteTextureLoader.getSprite(actor_asset.path_icon) == null) return;
+            var local_race_id = actor_asset.id;
             try
             {
-                LM.AddToCurrentLocale($"{C.mod_prefix}.ui.filter.race.{race_asset.nameLocale}",
-                    LM.Get(race_asset.nameLocale));
-                new_filter(race_filter_grid, race_asset.nameLocale, race_asset.path_icon, a => a.isRace(local_race_id));
+                LM.AddToCurrentLocale($"{C.mod_prefix}.ui.filter.race.{actor_asset.name_locale}",
+                    LM.Get(actor_asset.name_locale));
+                new_filter(race_filter_grid, actor_asset.name_locale, actor_asset.path_icon, a => a.asset.id == local_race_id);
             }
             catch (Exception)
             {
                 // ignored
             }
-        });
+        });*/
         asset_filter_grid = new_filter_grid("asset");
         kingdom_filter_grid = new_filter_grid("kingdom");
         trait_filter_grid = new_filter_grid("trait");
@@ -53,7 +55,7 @@ public partial class WindowTops
             });
         
         var profession_filter_grid = new_filter_grid("profession");
-        new_filter(profession_filter_grid, "baby", "ui/icons/worldrules/icon_lastofus", x=>x.isProfession(UnitProfession.Baby));
+        //new_filter(profession_filter_grid, "baby", "ui/icons/worldrules/icon_lastofus", x=>x.isProfession(UnitProfession.Nothing));
         new_filter(profession_filter_grid, "unit", "ui/icons/iconPopulation", x=>x.isProfession(UnitProfession.Unit));
         new_filter(profession_filter_grid, "warrior", "ui/icons/items/icon_sword_adamantine", x=>x.isProfession(UnitProfession.Warrior));
         new_filter(profession_filter_grid, "king", "ui/icons/achievements/achievements_theKing", x=>x.isProfession(UnitProfession.King));
@@ -96,17 +98,17 @@ public partial class WindowTops
         }
         
         var asset_set = new HashSet<string>();
-        var kingdom_set = new HashSet<string>();
+        var kingdom_set = new HashSet<long>();
         var trait_set = new HashSet<string>();
         foreach (var actor in World.world.units.getSimpleList())
         {
-            if (actor != null && actor.data != null && actor.isAlive() && !actor.object_destroyed && actor.asset.canBeInspected)
+            if (actor != null && actor.data != null && actor.isAlive() && actor.asset.can_be_inspected)
             {
                 asset_set.Add(actor.asset.id);
                 if (actor.kingdom != null)
                     kingdom_set.Add(actor.kingdom.data.id);
                 
-                trait_set.UnionWith(actor.data.s_traits_ids);
+                trait_set.UnionWith(actor.traits.Select(x => x.id));
             }
         }
         
@@ -116,9 +118,9 @@ public partial class WindowTops
             if (asset.id.StartsWith("_")) continue;
             var icon_path = string.IsNullOrEmpty(asset.icon) || SpriteTextureLoader.getSprite($"ui/icons/{asset.icon}") == null ?
                 "ui/icons/iconQuestionMark" : $"ui/icons/{asset.icon}";
-            LM.AddToCurrentLocale($"{C.mod_prefix}.ui.filter.asset.{asset.nameLocale}",
-                LM.Get(asset.nameLocale));
-            new_filter(asset_filter_grid, asset.nameLocale, icon_path, a => a.asset.id == asset_id);
+            LM.AddToCurrentLocale($"{C.mod_prefix}.ui.filter.asset.{asset.name_locale}",
+                LM.Get(asset.name_locale));
+            new_filter(asset_filter_grid, asset.name_locale, icon_path, a => a.asset.id == asset_id);
         }
 
         foreach (var trait_id in trait_set)
@@ -131,19 +133,20 @@ public partial class WindowTops
 
         foreach (var kingdom_id in kingdom_set)
         {
-            if (World.world.kingdoms.dict_hidden.ContainsKey(kingdom_id)) continue;
+            if (World.world.kingdoms_wild.dict.ContainsKey(kingdom_id)) continue;
             var kingdom = World.world.kingdoms.get(kingdom_id);
             LM.AddToCurrentLocale($"{C.mod_prefix}.ui.filter.kingdom.{kingdom_id}",
                 kingdom.data.name);
-            var filter_button_in_grid = new_filter(kingdom_filter_grid, kingdom_id, "ui/icons/iconDamage",
-                a => a.kingdom.data.id == kingdom_id);
+            var filter_button_in_grid = new_filter(kingdom_filter_grid,
+                new FilterSetting(kingdom_id.ToString(), kingdom.getElementBackground(), a => a.kingdom.data.id == kingdom_id)
+                {
+                    InnerColor = kingdom.kingdomColor.getColorBanner(),
+                    InnerIcon = kingdom.getElementIcon(),
+                    IconColor = kingdom.kingdomColor.getColorMain2()
+                });
 
-            var banner_container = BannerGenerator.dict[kingdom.race.banner_id];
-
-            filter_button_in_grid.icon.sprite = banner_container.backrounds[kingdom.data.banner_background_id];
-            filter_button_in_grid.icon.color = kingdom.kingdomColor.getColorMain2();
             var sub_icon = filter_button_in_grid.transform.Find("Icon").GetComponent<Image>();
-            sub_icon.sprite = banner_container.icons[kingdom.data.banner_icon_id];
+            sub_icon.sprite = kingdom.getElementIcon();
             sub_icon.color = kingdom.kingdomColor.getColorBanner();
             sub_icon.rectTransform.sizeDelta = kingdom_filter_grid.Grid.cellSize;
         }
