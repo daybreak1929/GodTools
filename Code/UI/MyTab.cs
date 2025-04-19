@@ -72,6 +72,10 @@ internal class MyTab : IManager
             () => { DebugConfig.createTool("Game Info"); },
             SpriteTextureLoader.getSprite("ui/icons/iconNewWorld"));
         AddButton(TabButtonType.DEBUG, button);
+        button = PowerButtonCreator.CreateSimpleButton($"{C.mod_prefix}.benchmark",
+            () => { DebugConfig.createTool("Benchmark All"); },
+            SpriteTextureLoader.getSprite("ui/icons/iconStatistics"));
+        AddButton(TabButtonType.DEBUG, button);
     }
 
     private static void AddWorldButtons()
