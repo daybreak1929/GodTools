@@ -8,6 +8,7 @@ using GodTools.UI.WindowTopComponents;
 using NeoModLoader.api.attributes;
 using NeoModLoader.General;
 using NeoModLoader.General.Game.extensions;
+using strings;
 using UnityEngine;
 using UnityEngine.UI;
 

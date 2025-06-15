@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using GodTools.Utils;
 using NeoModLoader.api.attributes;
 using NeoModLoader.General.UI.Prefabs;
+using strings;
 using UnityEngine;
 using UnityEngine.UI;
 
