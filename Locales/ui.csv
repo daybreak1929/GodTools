@@ -1,4 +1,7 @@
 key,cz,en
+Default,默认,Default
+InsideToOutside,内向外,Inside to Outside
+OutsideToInside,外向内,Outside to Inside
 Weapon,武器,Weapon
 Boots,靴子,Boots
 Helmet,头盔,Helmet
@@ -108,6 +111,7 @@ WindowCreatureSearch,生物搜索,Creature Search
 WindowCreatureSavedList Title,保存的生物,Saved Creatures
 WindowCreatureSavedList,保存的生物,Saved Creatures
 WindowCreatureTitleEditor,称号编辑器,Title Editor
+WindowPrinterEditor,打印蚁编辑器,Printer Editor
 WindowDetailedHistory,详细历史信息,Detailed History
 WindowDetailedHistory Title,详细历史信息,Detailed History
 WindowWorldScript,世界脚本,World Script
