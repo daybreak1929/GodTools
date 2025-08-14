@@ -90,6 +90,9 @@ internal class MyTab : IManager
        button = PowerButtonCreator.CreateWindowButton(WindowWorldScript.WindowId, WindowWorldScript.WindowId,
            SpriteTextureLoader.getSprite("ui/icons/iconWorldLaws"));
        AddButton(TabButtonType.WORLD, button);
+       button = PowerButtonCreator.CreateWindowButton(WindowPrinterEditor.WindowId, WindowPrinterEditor.WindowId,
+           SpriteTextureLoader.getSprite("ui/icons/iconWorldLaws"));
+       AddButton(TabButtonType.WORLD, button);
     }
 
     private static void AddInfoButtons()
