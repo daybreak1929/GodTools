@@ -6,14 +6,8 @@
         <Nullable>disable</Nullable>
         <OutputType>Library</OutputType>
         <RootNamespace>GodTools</RootNamespace>
-<<<<<<< HEAD
         <DefineConstants>启源_启源核心;一米_中文名;ZHETIAN;INMNY_CUSTOMMODT001;CULTIWAY;WITCHCRAFT_WORLDBOX</DefineConstants>
         <DefineConstants>DISABLE_STATUS_EDITOR;DISABLE_ITEM_EDITOR;DISABLE_SPRITE_EDITOR</DefineConstants>
-=======
-        <!--
-        <DefineConstants>启源_启源核心;一米_中文名;ZHETIAN;INMNY_CUSTOMMODT001;INMNY_CUSTOMMODT002;CULTIWAY;WITCHCRAFT_WORLDBOX</DefineConstants>
-        -->
->>>>>>> 0.22.9
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -149,9 +143,6 @@
         <Reference Include="UPersian">
           <HintPath>..\..\worldbox_Data\Managed\UPersian.dll</HintPath>
        </Reference>
-        <Reference Include="UPersian">
-          <HintPath>..\..\worldbox_Data\Managed\UPersian.dll</HintPath>
-        </Reference>
     </ItemGroup>
     <ItemGroup>
         <None Include="GameResources\**"/>

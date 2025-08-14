@@ -42,12 +42,11 @@ internal class MyTab : IManager
         {
             "Controller", "Container"
         });
-        powers_tab.PutElement("Container", top_container, new Vector2(0, -16));
+        powers_tab.PutElement("Container", top_container, new Vector2(-13, -19));
 
         ConstructTabContainer(TabButtonType.INFO,  SpriteTextureLoader.getSprite("ui/icons/iconAbout"));
         ConstructTabContainer(TabButtonType.WORLD, SpriteTextureLoader.getSprite("ui/icons/iconWorldInfo"));
         ConstructTabContainer(TabButtonType.ACTOR, SpriteTextureLoader.getSprite("ui/icons/iconHumans"));
-        //ConstructTabContainer(TabButtonType.CITY, SpriteTextureLoader.getSprite("ui/icons/iconCityLists"));
         ConstructTabContainer(TabButtonType.DEBUG, SpriteTextureLoader.getSprite("ui/icons/iconDebug"));
 
         powers_tab.UpdateLayout();

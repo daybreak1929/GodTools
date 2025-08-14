@@ -20,16 +20,16 @@ public class PrinterEditor : IManager
         if (WindowPrinterEditor.SelectedTileType == null) return true;
         
         
-        MusicBox.playSound("event:/SFX/UNIQUE/PrinterStep", pActor.currentTile, false, false);
-        MapAction.terraformMain(pActor.currentTile, WindowPrinterEditor.SelectedTileType, AssetManager.terraform.get("destroy"));
-        BehaviourActionBase<Actor>.world.setTileDirty(pActor.currentTile);
-        BehaviourActionBase<Actor>.world.conwayLayer.remove(pActor.currentTile);
+        MusicBox.playSound("event:/SFX/UNIQUE/PrinterStep", pActor.current_tile, false, false);
+        MapAction.terraformMain(pActor.current_tile, WindowPrinterEditor.SelectedTileType, AssetManager.terraform.get("destroy"));
+        BehaviourActionBase<Actor>.world.setTileDirty(pActor.current_tile);
+        BehaviourActionBase<Actor>.world.conway_layer.remove(pActor.current_tile);
         return false;
     }
 
     internal static void RecalcAllPrintSteps(WindowPrinterEditor.PrintDirection direction)
     {
-        foreach (var template in World.world.printLibrary.list)
+        foreach (var template in PrintLibrary._instance.list)
         {
             if (!template.name.Contains("quake"))
             {
@@ -51,7 +51,7 @@ public class PrinterEditor : IManager
 
     private static void calcSteps(PrintTemplate template)
     {
-        var print_library = World.world.printLibrary;
+        var print_library = PrintLibrary._instance;
         List<PrintStep> list = new List<PrintStep>();
         int width = (int)(template.graphics.width * WindowPrinterEditor.WidthScale);
         int height = (int)(template.graphics.height * WindowPrinterEditor.HeightScale);
@@ -64,7 +64,7 @@ public class PrinterEditor : IManager
                 ii = Math.Min(ii, template.graphics.width - 1);
                 jj = Math.Min(jj, template.graphics.height - 1);
                 Color pixel = template.graphics.GetPixel(ii, jj);
-                if (pixel == print_library.color0) continue;
+                if (pixel == print_library._color_0) continue;
                 PrintStep print_step = new PrintStep
                 {
                     x = i - 1 - width / 2,
@@ -72,11 +72,11 @@ public class PrinterEditor : IManager
                     action = 1
                 };
                 list.Add(print_step);
-                if (pixel == print_library.color2)
+                if (pixel == print_library._color_2)
                 {
                     list.Add(print_step);
                 }
-                else if (pixel == print_library.color3)
+                else if (pixel == print_library._color_3)
                 {
                     list.Add(print_step);
                     list.Add(print_step);
@@ -84,7 +84,7 @@ public class PrinterEditor : IManager
             }
         }
         template.steps = list.ToArray();
-        template.stepsPerTick = (int)((float)template.steps.Length * 0.005f + 1f);
+        template.steps_per_tick = (int)((float)template.steps.Length * 0.005f + 1f);
     }
     private static void calcI2OSteps(PrintTemplate template)
     {
