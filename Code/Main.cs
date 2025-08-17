@@ -128,5 +128,12 @@ internal class Main : BasicMod<Main>, IReloadable
             {
                 LogWarning($"Failed to initialize manager: {t.FullName}\n{e.Message}\n{e.StackTrace}");
             }
+        
+        var dict = LocalizedTextManager.instance._localized_text;
+        foreach (var k in dict.Keys.ToList())
+        {
+            dict[k.Underscore()] = dict[k];
+        }
+        LocalizedTextManager.updateTexts();
     }
 }
