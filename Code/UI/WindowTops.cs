@@ -113,7 +113,9 @@ public partial class WindowTops : AbstractWideWindow<WindowTops>
 #if ZHETIAN
         CreateGrid_ZHETIAN();
 #endif
-
+#if DOUPOCANGQIONG
+        CreateGrid_DOUPOCANGQIONG();
+#endif
         var to_top_button = RawLocalizedText.Instantiate(BackgroundTransform, pName: "ToTop");
         to_top_button.SetSize(new(30,10));
         to_top_button.Setup($"{C.mod_prefix}.ui.to_top", alignment: TextAnchor.MiddleLeft);
