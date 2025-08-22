@@ -49,11 +49,12 @@ public class FilterButtonInGrid : APrefab<FilterButtonInGrid>
         var idx = target_list.FindIndex(x=>x.ID == _filter.ID);
         if (idx != -1)
         {
-            target_list.RemoveAt(idx);
+            _filter.ToBeRemoved = true;
         }
         else
         {
             target_list.Add(_filter);
+            _filter.ToBeRemoved = false;
         }
     }
     private static void _init()
