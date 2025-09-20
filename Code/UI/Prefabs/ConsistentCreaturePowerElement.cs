@@ -7,12 +7,28 @@ namespace GodTools.UI.Prefabs;
 
 public class ConsistentCreaturePowerElement : APrefab<ConsistentCreaturePowerElement>
 {
+    protected override void Init()
+    {
+        if (Initialized) return;
+        inspect.Button.onClick.RemoveAllListeners();
+        inspect.Button.onClick.AddListener(inspectTarget);
+        base.Init();
+    }
+
     public void Setup(ConsistentCreaturePowerTop.CreaturePowerData data, int rank)
     {
+        Init();
         _id = data.ID;
         icon.sprite = data.Sprite;
         title.text = data.Name;
-        power.text = $"{data.Power:g2}";
+        if (data.Power > 1e6)
+        {
+            power.text = $"{data.Power:g2}";
+        }
+        else
+        {
+            power.text = $"{data.Power:F1}";
+        }
         if (World.world.units.get(data.ID) != null)
         {
             inspect.gameObject.SetActive(true);

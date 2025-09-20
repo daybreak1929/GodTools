@@ -101,17 +101,15 @@ public class ConsistentCreaturePowerTop : IManager
 
     private static double CalcPower(Actor actor)
     {
-        var value = 0.0;
-        value += actor.stats[S.damage] * 30;
-        value += actor.stats[S.health] * 20;
-        foreach (var stat_container in actor.stats.getList())
-        {
-            if (stat_container.asset.multiplier) continue;
-            if (stat_container.asset.hidden) continue;
-            value += stat_container.value * 50;
-        }
+        var live_time = actor.stats[S.health] / Mathf.Max(1f, 100 - actor.stats[S.armor]);
+        var attack_speed = actor.asset.skip_fight_logic ? 1f : (1f / Mathf.Clamp(actor.getAttackCooldown(), 0.016f, 100));
+        var attack_fluctuation = (actor.stats[S.damage_range] + 1) * 0.5f;
+        var critical_bonus = Mathf.Max(0, actor.stats[S.critical_chance]) *
+                             Mathf.Max(0, actor.stats[S.critical_damage_multiplier] - 1);
+        var dps = attack_speed * Mathf.Max(1f, actor.stats[S.damage]) *
+                  attack_fluctuation * (1 + critical_bonus);
 
-        return value;
+        return ((double)live_time) * ((double)dps) * 0.182699;
     }
     public void Initialize()
     {
