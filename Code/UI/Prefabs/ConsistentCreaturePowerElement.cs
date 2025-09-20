@@ -75,7 +75,7 @@ public class ConsistentCreaturePowerElement : APrefab<ConsistentCreaturePowerEle
         avatar_item.GetComponent<Image>().sprite = SpriteTextureLoader.getSprite("ui/special/windowAvatarElement");
         
         var avatar_frame = new GameObject("Background", typeof(Image));
-        avatar_frame.transform.SetParent(obj.transform);
+        avatar_frame.transform.SetParent(avatar_item.transform);
         avatar_frame.GetComponent<RectTransform>().sizeDelta = new Vector2(48,48);
         avatar_frame.GetComponent<Image>().sprite = SpriteTextureLoader.getSprite("ui/special/windowAvatarElement");
 

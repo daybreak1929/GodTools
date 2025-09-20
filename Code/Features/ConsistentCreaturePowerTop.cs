@@ -32,9 +32,24 @@ public class ConsistentCreaturePowerTop : IManager
     public static void Check(Actor actor)
     {
         var power = CalcPower(actor);
+        try
+        {
+            actor.getName();
+        }
+        catch
+        {
+            Main.LogInfo($"Failed to get name for {actor.data.id}");
+        }
         if (_creaturePowerData.TryGetValue(actor.data.id, out var data))
         {
-            data.Name = actor.getName();
+            try
+            {
+                data.Name = actor.getName();
+            }
+            catch
+            {
+                data.Name = "无法获取";
+            }
             if (power > data.Power)
             {
                 data.Power = power;
@@ -45,15 +60,24 @@ public class ConsistentCreaturePowerTop : IManager
         }
 
         var lowest_power = _sortedCreaturesInTop.Count > 0 ? _creaturePowerData[_sortedCreaturesInTop[0]].Power : -1;
-        if (power < lowest_power)
+        if (power < lowest_power && _sortedCreaturesInTop.Count >= MaxCount)
         {
             return;
         }
 
+        var actor_name = "无法获取";
+        try
+        {
+            actor_name = actor.getName();
+        }
+        catch
+        {
+            // ignore
+        }
         var new_data = new CreaturePowerData()
         {
             ID = actor.data.id,
-            Name = actor.getName(),
+            Name = actor_name,
             Power = power,
             Sprite = actor._last_colored_sprite ?? actor.asset.getSpriteIcon()
         };
@@ -98,19 +122,26 @@ public class ConsistentCreaturePowerTop : IManager
     {
         Check(__instance);
     }
-    [HarmonyPostfix,HarmonyPatch(typeof(MapBox), nameof(MapBox.cleanUpWorld))]
+    [HarmonyPostfix,HarmonyPatch(typeof(MapBox), nameof(MapBox.clearWorld))]
     private static void OnCleanUp()
     {
         _creaturePowerData.Clear();
         _sortedCreaturesInTop.Clear();
     }
 
+    private struct RawRectInt(int posX, int posY, int fitWidth, int fitHeight)
+    {
+        public int x;
+        public int y;
+        public int width;
+        public int height;
+    }
     private struct CreaturePowerDataForSave
     {
         public long ID;
         public string Name;
         public double Power;
-        public RectInt SpriteRect;
+        public RawRectInt SpriteRect;
     }
     [HarmonyPostfix,HarmonyPatch(typeof(SaveManager), nameof(SaveManager.loadWorld), [typeof(string), typeof(bool)])]
     private static void LoadSave(string pPath)
@@ -162,7 +193,7 @@ public class ConsistentCreaturePowerTop : IManager
         File.WriteAllBytes(texture_save_path, texture.EncodeToPNG());
     }
 
-    private static (Texture2D, List<RectInt>) CombineSprites(List<Sprite> sprites)
+    private static (Texture2D, List<RawRectInt>) CombineSprites(List<Sprite> sprites)
     {
         var sizes = sprites.Select(s => new Vector2Int((int)s.textureRect.width, (int)s.textureRect.height)).ToList();
         (var positions, var tex_size) = CalcLayout(sprites, sizes);
@@ -179,7 +210,7 @@ public class ConsistentCreaturePowerTop : IManager
         }
         combined_texture.SetPixels(clear_pixels);
 
-        var rects = new List<RectInt>();
+        var rects = new List<RawRectInt>();
         for (int i = 0; i < sprites.Count; i++)
         {
             Sprite sprite = sprites[i];
@@ -206,7 +237,7 @@ public class ConsistentCreaturePowerTop : IManager
                 
             }
             combined_texture.SetPixels(pos.x, pos.y, fit_width, fit_height, pixels);
-            rects.Add(new RectInt(pos.x, pos.y, fit_width, fit_height));
+            rects.Add(new RawRectInt(pos.x, pos.y, fit_width, fit_height));
         }
         
         combined_texture.Apply();
