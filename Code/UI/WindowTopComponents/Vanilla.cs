@@ -143,7 +143,7 @@ public partial class WindowTops
                 {
                     InnerColor = kingdom.kingdomColor.getColorBanner(),
                     InnerIcon = kingdom.getElementIcon(),
-                    IconColor = kingdom.kingdomColor.getColorMain2()
+                    IconColor = kingdom.kingdomColor.getColorMainSecond()
                 });
 
             var sub_icon = filter_button_in_grid.transform.Find("Icon").GetComponent<Image>();

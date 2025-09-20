@@ -110,6 +110,12 @@ public partial class WindowTops : AbstractWideWindow<WindowTops>
 #if WITCHCRAFT_WORLDBOX
         CreateGrid_WITCHCRAFT_WORLDBOX();
 #endif
+#if WITCHCRAFT_KNIGHT
+        CreateGrid_WITCHCRAFT_KNIGHT();
+#endif
+#if XULIE
+        CreateGrid_XULIE();
+#endif
 #if ZHETIAN
         CreateGrid_ZHETIAN();
 #endif

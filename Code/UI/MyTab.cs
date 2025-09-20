@@ -115,6 +115,9 @@ internal class MyTab : IManager
         button = PowerButtonCreator.CreateWindowButton(WindowTops.WindowId, WindowTops.WindowId,
             SpriteTextureLoader.getSprite("inmny/godtools/icons/iconCreatureTop"));
         AddButton(TabButtonType.ACTOR, button);
+        button = PowerButtonCreator.CreateWindowButton(WindowConsistentCreaturePowerTop.WindowId, WindowConsistentCreaturePowerTop.WindowId,
+            SpriteTextureLoader.getSprite("inmny/godtools/icons/iconCreatureTop"));
+        AddButton(TabButtonType.ACTOR, button);
     }
 
     private static void AddButton(TabButtonType type, PowerButton button)

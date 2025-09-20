@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net48</TargetFramework>
-        <LangVersion>11</LangVersion>
+        <LangVersion>12</LangVersion>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>disable</Nullable>
         <OutputType>Library</OutputType>
@@ -67,6 +67,9 @@
         </Reference>
         <Reference Include="UnityEngine.GridModule">
             <HintPath>..\..\worldbox_Data\Managed\UnityEngine.GridModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.ImageConversionModule">
+          <HintPath>..\..\worldbox_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
         </Reference>
         <Reference Include="UnityEngine.IMGUIModule">
             <HintPath>..\..\worldbox_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>

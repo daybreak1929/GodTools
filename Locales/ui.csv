@@ -77,8 +77,12 @@ inmny.godtools.ui.keyword.wushu.yuanneng,源能,Yuan Neng
 inmny.godtools.ui.keyword.zhetian,遮天,Cover Sky
 inmny.godtools.ui.keyword.zhetian.talent,遮天天赋,Talent
 inmny.godtools.ui.keyword.zhetian.level,遮天境界,Level
+inmny.godtools.ui.keyword.doupocangqiong,斗破苍穹,DouPoCangQiong
 inmny.godtools.ui.keyword.doupocangqiong.talent,斗破天赋,Talent
 inmny.godtools.ui.keyword.doupocangqiong.level,斗破境界,Level
+inmny.godtools.ui.keyword.guimi_mod,诡秘之主,GuiMi
+inmny.godtools.ui.keyword.guimi_mod.xulie,灵性,Xu Lie
+inmny.godtools.ui.keyword.guimi_mod.jin_bang,金磅,Jin Bang
 inmny.godtools.ui.to_top,至顶,Goto Top
 inmny.godtools.ui.to_bottom,至底,Goto Bottom
 inmny.godtools.ui.jump_to,跳转至,Jump to

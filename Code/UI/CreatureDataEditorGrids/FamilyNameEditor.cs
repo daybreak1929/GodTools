@@ -24,7 +24,8 @@ public class FamilyNameEditor : SimpleInputEditor
     {
         Actor.data.get("chinese_family_name", out string old_value);
         Actor.data.set("chinese_family_name", value);
-        Actor.data.setName(Actor.data.name.Replace(old_value, value));
+        Actor.data.custom_name = true;
+        Actor.setName(Actor.data.name.Replace(old_value, value), true);
     }
 
     protected override string GetInitValue()
