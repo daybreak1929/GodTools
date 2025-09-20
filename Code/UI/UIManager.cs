@@ -16,6 +16,7 @@ internal class UIManager : IManager
         WindowCreatureSearch.CreateWindow(nameof(WindowCreatureSearch), nameof(WindowCreatureSearch));
         WindowCreatureTitleEditor.CreateWindow(nameof(WindowCreatureTitleEditor), nameof(WindowCreatureTitleEditor));
         WindowCreatureSavedList.CreateAndInit(nameof(WindowCreatureSavedList));
+        WindowConsistentCreaturePowerTop.CreateWindow(nameof(WindowConsistentCreaturePowerTop), nameof(WindowConsistentCreaturePowerTop));
         WindowPrinterEditor.CreateWindow(nameof(WindowPrinterEditor), nameof(WindowPrinterEditor));
         WindowTops.CreateAndInit($"{C.mod_prefix}.{nameof(WindowTops)}");
         WindowDetailedHistory.CreateAndInit(nameof(WindowDetailedHistory));
