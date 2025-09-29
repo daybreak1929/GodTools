@@ -1,3 +1,4 @@
+using System;
 using GodTools.Features;
 using NeoModLoader.General.UI.Prefabs;
 using UnityEngine;
@@ -10,14 +11,17 @@ public class ConsistentCreaturePowerElement : APrefab<ConsistentCreaturePowerEle
     protected override void Init()
     {
         if (Initialized) return;
+        place.Button.onClick.RemoveAllListeners();
+        place.Button.onClick.AddListener(selectTargetToPlace);
         inspect.Button.onClick.RemoveAllListeners();
         inspect.Button.onClick.AddListener(inspectTarget);
         base.Init();
     }
 
-    public void Setup(ConsistentCreaturePowerTop.CreaturePowerData data, int rank)
+    public void Setup(ConsistentCreaturePowerTop.CreaturePowerData data, int rank, Action onClickPlace)
     {
         Init();
+        this.onClickPlace = onClickPlace;
         _id = data.ID;
         icon.sprite = data.Sprite;
         title.text = data.Name;
@@ -51,10 +55,16 @@ public class ConsistentCreaturePowerElement : APrefab<ConsistentCreaturePowerEle
                 break;
         }
     }
-
+    private Action onClickPlace;
     private void inspectTarget()
     {
         ActionLibrary.openUnitWindow(World.world.units.get(_id));
+    }
+
+    private void selectTargetToPlace()
+    {
+        ConsistentCreaturePowerTop.SelectCreatureToPlace(_id);
+        onClickPlace?.Invoke();
     }
 
     private long _id;
@@ -67,6 +77,8 @@ public class ConsistentCreaturePowerElement : APrefab<ConsistentCreaturePowerEle
     private Image icon;
     [SerializeField]
     private SimpleButton inspect;
+    [SerializeField]
+    private SimpleButton place;
     [SerializeField]
     private Text title;
     [SerializeField]
@@ -123,10 +135,12 @@ public class ConsistentCreaturePowerElement : APrefab<ConsistentCreaturePowerEle
         bottom_part.GetComponent<RectTransform>().sizeDelta = new(100, 24);
         bottom_part.GetComponent<RectTransform>().pivot = new(0, 0.5f);
         var power_text = RawText.Instantiate(bottom_part.transform, pName: "Power");
+        var place_button = SimpleButton.Instantiate(bottom_part.transform, pName: "Place");
 
         var element = obj.AddComponent<ConsistentCreaturePowerElement>();
         element.icon = avatar_icon.GetComponent<Image>();
         element.inspect = inspect_button;
+        element.place = place_button;
         element.title = name_text.Text;
         element.power = power_text.Text;
         element.rank = avatar_rank.Text;
@@ -145,6 +159,8 @@ public class ConsistentCreaturePowerElement : APrefab<ConsistentCreaturePowerEle
         avatar_rank.RectTransform.localPosition = new(-32, 0, 0);
         inspect_button.Setup(element.inspectTarget, SpriteTextureLoader.getSprite("ui/icons/iconinspect"), pSize:new Vector2(16, 16));
         inspect_button.transform.localPosition = new(129, 0, 0);
+        place_button.Setup(element.selectTargetToPlace, SpriteTextureLoader.getSprite("ui/icons/iconFinger"), pSize:new Vector2(16, 16));
+        place_button.transform.localPosition = new(129, 0, 0);
 
         Prefab = element;
     }
