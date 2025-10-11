@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Reflection;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace GodTools.Utils;
@@ -18,7 +21,15 @@ internal static class GeneralTools
     {
         return SpriteTextureLoader.getSprite("ui/special/button");
     }
-
+    public static readonly JsonSerializerSettings private_members_visit_settings = new()
+    {
+        ContractResolver = new DefaultContractResolver
+        {
+#pragma warning disable 618
+            DefaultMembersSearchFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance
+#pragma warning restore 618
+        }
+    };
     public static void text_basic_setting(Text text)
     {
         text.font = LocalizedTextManager.current_font;

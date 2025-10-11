@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using GodTools.Abstract;
 using GodTools.Utils;
 using HarmonyLib;
@@ -24,6 +25,7 @@ public class ConsistentCreaturePowerTop : IManager
         public ClanData ClanData;
         public CultureData CultureData;
         public SubspeciesData SubspeciesData;
+        public List<ItemData> ItemDatas;
     }
 
     public const int MaxCount = 100;
@@ -39,11 +41,11 @@ public class ConsistentCreaturePowerTop : IManager
     public static bool SpawnSelectedSavedActor(WorldTile tile, string power_id)
     {
         var power_data = _creaturePowerData[_select_id];
-        var subspecies_data = power_data.SubspeciesData;
-        var language_data = power_data.LanguageData;
-        var culture_data = power_data.CultureData;
-        var clan_data = power_data.ClanData;
-        var data = power_data.Data;
+        var subspecies_data = power_data.SubspeciesData.Copy();
+        var language_data = power_data.LanguageData.Copy();
+        var culture_data = power_data.CultureData.Copy();
+        var clan_data = power_data.ClanData.Copy();
+        var data = power_data.Data.Copy();
 
         if (subspecies_data != null)
         {
@@ -77,7 +79,20 @@ public class ConsistentCreaturePowerTop : IManager
             World.world.clans.loadObject(clan_data);
         }
 
-        data.id = World.world.map_stats.getNextId("unit");
+        var item_datas = power_data.ItemDatas;
+        if (item_datas != null)
+        {
+            foreach (var _item_data in item_datas)
+            {
+                var item_data = _item_data.Copy();
+                item_data.id = World.world.map_stats.getNextId("item");
+                item_data.created_time = World.world.map_stats.world_time;
+                World.world.items.loadObject(item_data);
+                data.saved_items[data.saved_items.FindIndex(x => x == _item_data.id)] = item_data.id;
+            }
+        }
+        if (World.world.units.get(data.id)!= null)
+            data.id = World.world.map_stats.getNextId("unit");
 
 
         if (World.world.cities.get(data.cityID) == null) data.cityID = -1;
@@ -86,17 +101,22 @@ public class ConsistentCreaturePowerTop : IManager
         data.transportID = -1;
         data.x = tile.pos.x;
         data.y = tile.pos.y;
-        World.world.units.loadObject(data);
+        _check_lock = true;
+        World.world.units.loadObject(data).setStatsDirty();
+        _check_lock = false;
         return true;
     }
 
+    private static bool _check_lock = false;
     public static List<CreaturePowerData> GetSortedCreaturePowerData()
     {
         return _sortedCreaturesInTop.Select(id => _creaturePowerData[id]).ToList();
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public static void Check(Actor actor)
     {
+        if (_check_lock) return;
         var power = CalcPower(actor);
         try
         {
@@ -118,9 +138,32 @@ public class ConsistentCreaturePowerTop : IManager
                 data.Name = "无法获取";
             }
 
+            data.Data.name = data.Name;
+
             if (power > data.Power)
             {
                 data.Power = power;
+                data.Sprite = actor._last_colored_sprite ?? actor.asset.getSpriteIcon();
+                actor.prepareForSave();
+                actor.clan?.save();
+                actor.language?.save();
+                actor.subspecies?.save();
+                actor.culture?.save();
+                if (actor.canUseItems())
+                {
+                    var items = new List<ItemData>();
+                    foreach (var item in actor.equipment.getItems())
+                    {
+                        item.save();
+                        items.Add(item.data.Copy());
+                    }
+                    data.ItemDatas = items;
+                }
+                data.Data = actor.data.Copy();
+                data.ClanData = actor.clan?.data.Copy();
+                data.CultureData = actor.culture?.data.Copy();
+                data.LanguageData = actor.language?.data.Copy();
+                data.SubspeciesData = actor.subspecies?.data.Copy();
                 Sort();
             }
 
@@ -160,23 +203,29 @@ public class ConsistentCreaturePowerTop : IManager
             LanguageData = actor.language?.data.Copy(),
             SubspeciesData = actor.subspecies?.data.Copy()
         };
+        if (actor.canUseItems())
+        {
+            var items = new List<ItemData>();
+            foreach (var item in actor.equipment.getItems())
+            {
+                item.save();
+                items.Add(item.data.Copy());
+            }
+            new_data.ItemDatas = items;
+        }
 
         if (_sortedCreaturesInTop.Count > MaxCount)
         {
             _creaturePowerData.Remove(_sortedCreaturesInTop[0]);
-            _sortedCreaturesInTop[0] = actor.data.id;
         }
-        else
-        {
-            _sortedCreaturesInTop.Add(actor.data.id);
-        }
-
         _creaturePowerData.Add(actor.data.id, new_data);
         Sort();
     }
 
     private static void Sort()
     {
+        _sortedCreaturesInTop.Clear();
+        _sortedCreaturesInTop.AddRange(_creaturePowerData.Keys);
         _sortedCreaturesInTop.Sort((a, b) => _creaturePowerData[a].Power.CompareTo(_creaturePowerData[b].Power));
     }
 
@@ -215,10 +264,10 @@ public class ConsistentCreaturePowerTop : IManager
 
     private struct RawRectInt(int posX, int posY, int fitWidth, int fitHeight)
     {
-        public int x;
-        public int y;
-        public int width;
-        public int height;
+        public int x = posX;
+        public int y = posY;
+        public int width = fitWidth;
+        public int height = fitHeight;
     }
 
     private struct CreaturePowerDataForSave
@@ -232,8 +281,41 @@ public class ConsistentCreaturePowerTop : IManager
         public ClanData ClanData;
         public CultureData CultureData;
         public SubspeciesData SubspeciesData;
+        public List<ItemData> ItemDatas;
     }
 
+    private static List<CreaturePowerDataForSave> _cache_save_data = null;
+    private static Texture2D _cache_texture = null;
+
+    [HarmonyPostfix, HarmonyPatch(typeof(MapBox), nameof(MapBox.finishingUpLoading))]
+    private static void LoadToWorld()
+    {
+        if (_cache_texture == null || _cache_save_data == null) return;
+        _creaturePowerData.Clear();
+        foreach (var data in _cache_save_data)
+        {
+            if (_creaturePowerData.ContainsKey(data.ID)) continue;
+            _creaturePowerData.Add(data.ID, new CreaturePowerData()
+            {
+                ID = data.ID, Name = data.Name, Power = data.Power,
+                Sprite = Sprite.Create(_cache_texture,
+                    new Rect(data.SpriteRect.x, data.SpriteRect.y, data.SpriteRect.width, data.SpriteRect.height),
+                    new Vector2(0.5f, 0), 1),
+                Data = data.Data,
+                ClanData = data.ClanData,
+                CultureData = data.CultureData,
+                LanguageData = data.LanguageData,
+                SubspeciesData = data.SubspeciesData,
+                ItemDatas = data.ItemDatas
+            });
+        }
+
+        Sort();
+        _cache_save_data = null;
+        _cache_texture = null;
+
+        _check_lock = false;
+    }
     [HarmonyPostfix, HarmonyPatch(typeof(SaveManager), nameof(SaveManager.loadWorld), [typeof(string), typeof(bool)])]
     private static void LoadSave(string pPath)
     {
@@ -246,28 +328,11 @@ public class ConsistentCreaturePowerTop : IManager
             return;
         }
 
-        var save_data = JsonConvert.DeserializeObject<List<CreaturePowerDataForSave>>(File.ReadAllText(list_save_path));
-        var texture = new Texture2D(0, 0);
-        texture.LoadImage(File.ReadAllBytes(texture_save_path));
+        _cache_save_data = JsonConvert.DeserializeObject<List<CreaturePowerDataForSave>>(File.ReadAllText(list_save_path), GeneralTools.private_members_visit_settings);
+        _cache_texture = new Texture2D(0, 0);
+        _cache_texture.LoadImage(File.ReadAllBytes(texture_save_path));
 
-        foreach (var data in save_data)
-        {
-            _creaturePowerData.Add(data.ID, new CreaturePowerData()
-            {
-                ID = data.ID, Name = data.Name, Power = data.Power,
-                Sprite = Sprite.Create(texture,
-                    new Rect(data.SpriteRect.x, data.SpriteRect.y, data.SpriteRect.width, data.SpriteRect.height),
-                    new Vector2(0.5f, 0), 1),
-                Data = data.Data,
-                ClanData = data.ClanData,
-                CultureData = data.CultureData,
-                LanguageData = data.LanguageData,
-                SubspeciesData = data.SubspeciesData
-            });
-        }
-
-        _sortedCreaturesInTop = save_data.Select(x => x.ID).ToList();
-        Sort();
+        _check_lock = true;
     }
 
     [HarmonyPostfix, HarmonyPatch(typeof(SaveManager), nameof(SaveManager.saveMapData))]
@@ -293,11 +358,12 @@ public class ConsistentCreaturePowerTop : IManager
                 LanguageData = data[i].LanguageData,
                 ClanData = data[i].ClanData,
                 CultureData = data[i].CultureData,
-                SubspeciesData = data[i].SubspeciesData
+                SubspeciesData = data[i].SubspeciesData,
+                ItemDatas = data[i].ItemDatas
             });
         }
 
-        File.WriteAllText(list_save_path, JsonConvert.SerializeObject(save_data));
+        File.WriteAllText(list_save_path, JsonConvert.SerializeObject(save_data, Formatting.None, GeneralTools.private_members_visit_settings));
         File.WriteAllBytes(texture_save_path, texture.EncodeToPNG());
     }
 
