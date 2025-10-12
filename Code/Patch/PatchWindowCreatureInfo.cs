@@ -59,15 +59,14 @@ internal static class PatchWindowCreatureInfo
                 SelectedUnit.unit.removeTrait("scar_of_divinity");
             },"ui/icons/iconDivineScar");
 
-#if ENABLE_SAVE_ACTOR
             GameObject save_actor =
-                Object.Instantiate(__instance._button_trait_editor.gameObject, __instance.transform.Find("Background"));
+                Object.Instantiate(__instance._icon_favorite.transform.parent.gameObject, __instance._icon_favorite.transform.parent.parent);
             save_actor.transform.localPosition = new Vector3(116.8f, -112f);
             save_actor.transform.localScale = new Vector3(1,         1);
-            saved_image = save_actor.transform.Find("Button Trait/Icon").GetComponent<Image>();
+            saved_image = save_actor.transform.Find("Icon").GetComponent<Image>();
             saved_image.sprite =
                 Resources.Load<Sprite>("gt_windows/save_actor");
-            var button = save_actor.transform.Find("Button Trait").GetComponent<Button>();
+            var button = save_actor.GetComponent<Button>();
             button.onClick = new Button.ButtonClickedEvent();
             button.onClick.AddListener([Hotfixable]() =>
             {
@@ -79,7 +78,7 @@ internal static class PatchWindowCreatureInfo
                 CheckSave(__instance.actor, saved_image);
             });
             button.GetComponent<TipButton>().textOnClick = "save_actor";
-#endif
+
 #if 一米_中文名
             __instance.name_input.addListener(new_name => { });
 #endif
@@ -100,9 +99,7 @@ internal static class PatchWindowCreatureInfo
 #endif
 
         CheckGender(actor);
-#if ENABLE_SAVE_ACTOR
         CheckSave(actor, saved_image);
-#endif
     }
 
     private static void CheckSave(Actor actor, Image image)

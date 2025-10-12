@@ -31,7 +31,7 @@ public class GodPowers : ExtendLibrary<GodPower, GodPowers>
         */
         place_saved_actor.name = place_saved_actor.id;
         place_saved_actor.path_icon = "gt_windows/save_actor_list";
-        place_saved_actor.click_action = WindowCreatureSavedList.SpawnSelectedSavedActor;
+        place_saved_actor.click_action = CreatureSavedList.SpawnSelectedSavedActor;
         place_saved_actor_in_top.name = place_saved_actor_in_top.id;
         place_saved_actor_in_top.path_icon = "gt_windows/save_actor_list";
         place_saved_actor_in_top.click_action = ConsistentCreaturePowerTop.SpawnSelectedSavedActor;

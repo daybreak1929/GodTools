@@ -1,45 +1,48 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Reflection;
 using GodTools.Features;
-using GodTools.Libraries;
 using GodTools.UI.Prefabs;
-using GodTools.Utils;
 using NeoModLoader.api;
-using NeoModLoader.api.attributes;
-using NeoModLoader.General;
-using Newtonsoft.Json;
+using NeoModLoader.General.UI.Prefabs;
 using UnityEngine;
 
 namespace GodTools.UI;
 
-public class WindowCreatureSavedList : AbstractWindow<WindowCreatureSavedList>
+public class WindowMetaObjectSavedList<TWindow, TCard, TList, TObject, TData> : AbstractWindow<TWindow> 
+    where TData : MetaObjectData, new()
+    where TObject : MetaObject<TData>, new()
+    where TList : MetaObjectSavedList<TList, TObject, TData>
+    where TCard : SavedMetaObjectCard<TCard, TObject, TData>
+    where TWindow : WindowMetaObjectSavedList<TWindow, TCard, TList, TObject, TData>
 {
     private const float single_element_height = 56;
     private const float start_y               = -single_element_height / 2;
 
-    private static ActorData _selected_data;
+    private static TData _selected_data;
 
-    private List<CreatureSavedList.SavedActorPacket>                           _list;
-    private ObjectPoolGenericMono<SavedActorDataCard> _pool;
+    private TList _t_list;
+    private List<TData>                           _list;
+    private ObjectPoolGenericMono<TCard> _pool;
     private PowerButton                               _power_button;
 
     private RectTransform                 content_rect;
     private RectTransform                 scroll_view_rect;
-
-    private void Update()
-    {
-        OnUpdate();
-    }
-
     protected override void Init()
     {
         content_rect = ContentTransform.GetComponent<RectTransform>();
         scroll_view_rect = content_rect.parent.parent.GetComponent<RectTransform>();
         content_rect.pivot = new Vector2(0.5f, 1);
-        _pool = new ObjectPoolGenericMono<SavedActorDataCard>(SavedActorDataCard.Prefab, ContentTransform);
-        _power_button = PowerButtonCreator.CreateGodPowerButton(GodPowers.place_saved_actor.id,
-            SpriteTextureLoader.getSprite("gt_windows/save_actor_list"), Main.prefabs);
+        _pool = new ObjectPoolGenericMono<TCard>(
+            typeof(TCard).GetProperty("Prefab", BindingFlags.Static | BindingFlags.Public)?.GetMethod
+                .Invoke(null, []) as TCard, ContentTransform);
+        
+        _t_list = typeof(TList).GetProperty("Instance", BindingFlags.Static | BindingFlags.Public)?.GetMethod.Invoke(null, []) as TList;
+    }
+
+    private void Update()
+    {
+        OnUpdate();
     }
 
     private void OnUpdate()
@@ -57,16 +60,17 @@ public class WindowCreatureSavedList : AbstractWindow<WindowCreatureSavedList>
         for (var i = view_start_idx; i <= view_end_idx; i++)
         {
             var idx = i;
-            ActorData data = _list[idx].ActorData;
-            SavedActorDataCard card = _pool.getNext();
+            var data = _list[idx];
+            var card = _pool.getNext();
             card.Setup(data, () =>
             {
                 ScrollWindow.hideAllEvent();
-                CreatureSavedList.SelectActorToPlace(data);
+                
+                //CreatureSavedList.SelectActorToPlace(data);
                 _power_button.clickActivePower();
             }, () =>
             {
-                CreatureSavedList.UnsaveActorData(data);
+                _t_list.UnsaveData(data);
                 _list.RemoveAt(idx);
                 Main.LogInfo("delete");
             });
@@ -76,6 +80,6 @@ public class WindowCreatureSavedList : AbstractWindow<WindowCreatureSavedList>
 
     public override void OnNormalEnable()
     {
-        _list = new (CreatureSavedList.SavedActors.Values);
+        _list = _t_list.GetAll();
     }
 }
