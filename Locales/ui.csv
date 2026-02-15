@@ -89,6 +89,8 @@ inmny.godtools.ui.to_top,至顶,Goto Top
 inmny.godtools.ui.to_bottom,至底,Goto Bottom
 inmny.godtools.ui.jump_to,跳转至,Jump to
 inmny.godtools.ui.jump_to_year,跳转至(年),Jump to Year
+inmny.godtools.ui.segment_chart.no_data,暂无可统计数据,No data to display
+inmny.godtools.ui.segment_chart.select_keyword,选择关键词后显示分段分布,Select a keyword to display distribution
 inmny.godtools.ui.data_editor.chinese_name,中文名,Chinese Name
 inmny.godtools.ui.data_editor.chinese_name.family_name,姓氏,Family Name
 inmny.godtools.ui.data_editor.inmny_custommodt001,特质武道,Inmny CustomMod T001
