@@ -254,6 +254,16 @@ public class ConsistentCreaturePowerTop : IManager
     {
         Check(__instance);
     }
+    [HarmonyPrefix, HarmonyPatch(typeof(BabyMaker), nameof(BabyMaker.makeBaby))]
+    private static void makeBaby_prefix()
+    {
+        _check_lock = true;
+    }
+    [HarmonyPostfix, HarmonyPatch(typeof(BabyMaker), nameof(BabyMaker.makeBaby))]
+    private static void makeBaby_postfix()
+    {
+        _check_lock = false;
+    }
 
     [HarmonyPostfix, HarmonyPatch(typeof(MapBox), nameof(MapBox.clearWorld))]
     private static void OnCleanUp()
