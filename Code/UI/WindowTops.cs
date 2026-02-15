@@ -82,7 +82,7 @@ public partial class WindowTops : AbstractWideWindow<WindowTops>
 
         
         scroll_view_rect.Find("Scrollbar Vertical Mask").gameObject.SetActive(true);
-        scroll_view_rect.Find("Scrollbar Vertical Mask").transform.localPosition = new(304.5f, 0, 0);
+        scroll_view_rect.Find("Scrollbar Vertical Mask").transform.localPosition = new(307.5f, 0, 0);
 
         filter_content_rect = filter_scroll_view.Find("Viewport/Content").GetComponent<RectTransform>();
         keyword_content_rect = keyword_scroll_view.Find("Viewport/Content").GetComponent<RectTransform>();
