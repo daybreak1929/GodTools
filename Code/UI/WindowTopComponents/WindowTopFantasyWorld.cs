@@ -1,4 +1,4 @@
-﻿
+﻿#if Thefantasyworld
 using GodTools.UI.Prefabs;
 
 // ReSharper disable CheckNamespace
@@ -11,7 +11,6 @@ public partial class WindowTops
     {
         try
         {
-            // 直接创建排行榜，不再进行模组检查
             TitledGrid fantasy_keyword_grid = new_keyword_grid("fantasy_mod");
             // 基于经验的排行榜
             new_keyword(fantasy_keyword_grid, "experience", "ui/careerexperience", (a, b) =>
@@ -25,7 +24,6 @@ public partial class WindowTops
                 a.data.get("wushu.careerexperienceNum", out float a_experience, 0f);
                 return $"{a_experience:F1} 经验";
             });
-            // 基于经验的排行榜
             new_keyword(fantasy_keyword_grid, "Determination", "ui/Determination", (a, b) =>
             {
                 a.data.get("wushu.DeterminationNum", out float a_experience, 0f);
@@ -278,3 +276,4 @@ public partial class WindowTops
     }
 }
 
+#endif

@@ -1,3 +1,4 @@
+#if XIAN_NI_MOD
 using System;
 using GodTools.UI.Prefabs;
 using strings;
@@ -280,3 +281,4 @@ public partial class WindowTops
         return stage;
     }
 }
+#endif
