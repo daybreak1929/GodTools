@@ -151,7 +151,7 @@ public partial class WindowTops : AbstractWideWindow<WindowTops>
         CreateGrid_FANTASY_WORLD();
 #endif
 #if CHEVALIER
-        CreateGrid_CHEVALIER()
+        CreateGrid_CHEVALIER();
 #endif
         var to_top_button = RawLocalizedText.Instantiate(BackgroundTransform, pName: "ToTop");
         to_top_button.SetSize(new(30,10));
