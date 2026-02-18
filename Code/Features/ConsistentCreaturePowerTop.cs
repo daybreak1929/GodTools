@@ -264,6 +264,16 @@ public class ConsistentCreaturePowerTop : IManager
     {
         _check_lock = false;
     }
+    [HarmonyPrefix, HarmonyPatch(typeof(SaveManager), nameof(SaveManager.loadActors))]
+    private static void loadActors_prefix()
+    {
+        _check_lock = true;
+    }
+    [HarmonyPostfix, HarmonyPatch(typeof(SaveManager), nameof(SaveManager.loadActors))]
+    private static void loadActors_postfix()
+    {
+        _check_lock = false;
+    }
 
     [HarmonyPostfix, HarmonyPatch(typeof(MapBox), nameof(MapBox.clearWorld))]
     private static void OnCleanUp()
